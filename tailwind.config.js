@@ -1,6 +1,7 @@
 module.exports = {
   content: [
-    './src/**/*.{js,jsx,ts,tsx}', // Tùy vào file dự án của bạn
+    './index.html',
+    './src/**/*.{js,jsx,ts,tsx}', // Bao gồm các file JS và TS
   ],
   theme: {
     extend: {},
