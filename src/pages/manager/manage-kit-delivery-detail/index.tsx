@@ -4,7 +4,7 @@ const ManageKitDeliveryDetail = () => {
     // const [mode, setMode] = useState<'left' | 'alternate' | 'right'>('left');
     return (
         <>
-            <h1 className="text-center font-bold">ManageKitDelivery</h1>
+            <h1 className="text-center font-bold">Manage Kit Delivery Detail</h1>
             <Row>
                 <Col span={12}>
                     <p className="font-bold my-5"> Delivery Address</p>

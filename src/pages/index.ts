@@ -1,5 +1,7 @@
 export {default as HomePage} from './home'
 export {default as AboutPage} from './about'
 export {default as ManageKit} from './manager/manage-kit'
+export {default as ManageUser} from './manager/manage-user'
 export {default as ManageLab} from './manager/manage-lab'
+export {default as ManageKitDelivery} from './manager/manage-kit-delivery'
 export {default as ManageKitDeliveryDetail} from './manager/manage-kit-delivery-detail'
