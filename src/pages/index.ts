@@ -1,4 +1,5 @@
 export {default as HomePage} from './home'
+export {default as Login} from './login'
 export {default as AboutPage} from './about'
 export {default as ManageKit} from './manager/manage-kit'
 export {default as ManageUser} from './manager/manage-user'
