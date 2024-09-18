@@ -5,6 +5,7 @@ import { kitStatus, kitStatusColor } from "../../../consts";
 
 const ManageKit = () => {
     const [open, setOpen] = useState(false);
+    const [openConfirmDeketeKit, setOpenConfirmDeleteKit] = useState(false);
     const [openChaneStatusKit, setOpenChangeStautsKit] = useState(false);
     const [openKitDetail, setOpenKitDetail] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -12,6 +13,10 @@ const ManageKit = () => {
 
     const showModal = () => {
         setOpen(true);
+    };
+
+    const showModalConfirmDeleteKit = () => {
+        setOpenConfirmDeleteKit(true);
     };
 
     const showModalKitDetail = () => {
@@ -30,6 +35,7 @@ const ManageKit = () => {
             setOpenKitDetail(false);
             setOpenChangeStautsKit(false);
             setConfirmLoading(false);
+            setOpenConfirmDeleteKit(false);
         }, 2000);
     };
 
@@ -38,6 +44,7 @@ const ManageKit = () => {
         setOpen(false);
         setOpenKitDetail(false);
         setOpenChangeStautsKit(false);
+        setOpenConfirmDeleteKit(false);
     };
 
     // const handleChangeStatus = (value: string) => {
@@ -90,16 +97,26 @@ const ManageKit = () => {
             render: () => (
                 <>
                     <EditOutlined className="m-2 text-blue-500" />
-                    <DeleteOutlined className="m-2 text-red-500" />
+                    <DeleteOutlined onClick={showModalConfirmDeleteKit} className="m-2 text-red-500" />
                 </>
             )
         },
     ];
 
     return (
-        <>
+        <>  
+             <Modal
+                title="Delete KIT"
+                open={openConfirmDeketeKit}
+                onOk={handleOk}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancel}
+            >
+                <p>Do you want to delete this KIT ?</p>
+            </Modal>
             <Modal
                 title="Kit detail"
+                footer=""
                 open={openKitDetail}
                 onOk={handleOk}
                 confirmLoading={confirmLoading}

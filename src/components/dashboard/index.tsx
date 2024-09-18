@@ -1,23 +1,60 @@
-import React from 'react';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { DesktopOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, MenuProps, theme } from 'antd';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
-  (icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: `nav ${index + 1}`,
-  }),
-);
+// const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
+//   (icon, index) => ({
+//     key: String(index + 1),
+//     icon: React.createElement(icon),
+//     label: `nav ${index + 1}`,
+//   }),
+// );
 
 const Dashboard: React.FC = () => {
+  const [items, setItems] = useState<MenuItem[]>([]);
+    const navigate = useNavigate(); 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  type MenuItem = Required<MenuProps>['items'][number];
+
+    function getItem(
+        label: React.ReactNode,
+        key: React.Key,
+        icon?: React.ReactNode,
+        children?: MenuItem[],
+    ): MenuItem {
+        return {
+            key,
+            icon,
+            children,
+            label,
+        } as MenuItem;
+    }
+
+    useEffect(() => {
+        loadItems();
+    }, []);
+
+    const loadItems = async () => {
+        const currentPath = window.location.pathname;
+        if (currentPath.startsWith('/manager')) {
+            setItems([
+                getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
+                getItem('Manage KIT', '/manager/manage-kit', <UserOutlined />),
+                getItem('Manage LAB', '/manager/manage-lab', <DesktopOutlined />),
+                getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
+            ]);
+        }
+    };
+
+    const handleClick = (e: { key: React.Key }) => {
+      navigate(e.key as string); // Navigate to the selected key
+  };
   return (
     <Layout>
       <Sider
@@ -31,7 +68,7 @@ const Dashboard: React.FC = () => {
         }}
       >
         <div className="demo-logo-vertical" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
+        <Menu onClick={handleClick} theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
