@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom"
-import { AboutPage, HomePage, Login, ManageKit, ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManageUser } from "../pages"
+import { AboutPage, HomePage, Login, ManageKit, ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManageUser, Register } from "../pages"
 import Dashboard from "../components/dashboard"
 
 const AppRouter = () => {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
 
