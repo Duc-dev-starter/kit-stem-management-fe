@@ -8,8 +8,8 @@ const Navbar = () => {
                 className='cursor-pointer'
                 />
                 <div className=''>
-                <img 
-                    width={100}
+                <Image 
+                    width={125}
                     src="https://www.crunchlabs.com/cdn/shop/files/dark-logo.svg?v=1676481560&width=500"
                 />
                 </div>
