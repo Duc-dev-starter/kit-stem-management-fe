@@ -1,0 +1,16 @@
+.breadcrumb {
+  margin: 16px 0;
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link span {
+  margin-left: 4px;
+}
+
+.modal-form {
+  width: 400px;
+}

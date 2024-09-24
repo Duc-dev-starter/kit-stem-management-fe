@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom"
-import { AboutPage, HomePage, Login, ManageKit, ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManageUser, Register } from "../pages"
+import { AboutPage, HomePage, Login, ManageKit, ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, ManageUser, Register } from "../pages"
 import Dashboard from "../components/dashboard"
 
 const AppRouter = () => {
@@ -12,6 +12,7 @@ const AppRouter = () => {
 
             <Route path="/manager/*" element={<Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
+                <Route path="dashboard" element={<ManagerDashboard />} />
                 <Route path="manage-user" element={<ManageUser />} />
                 <Route path="manage-kit" element={<ManageKit />} />
                 <Route path="manage-lab" element={<ManageLab />} />
