@@ -40,17 +40,21 @@ const LoginPage: React.FC = () => {
   const modalFormRef = useRef<FormInstance>(null);
 
   const onFinish = async (values: LoginFieldType) => {
+    console.log("pressed")
     const { email, password } = values;
+    console.log("values", values)
     setLoading(true);
     try {
       const authResult = await login(email, password);
+      console.log("authResult:", authResult)
       if (authResult && "token" in authResult) {
         const { token } = authResult;
         localStorage.setItem("token", token);
         await handleNavigateRole(token, navigate);
       }
-    } finally {
-      setLoading(false);
+      setLoading(false)
+    }catch(error){
+      console.log("login error: ", error)
     }
   };
 

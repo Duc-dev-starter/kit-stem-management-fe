@@ -20,11 +20,13 @@ export function getUserFromLocalStorage(){
 
 export async function login(email: string, password: string){
 
-    const response = await axiosInstance.post("/login", { email, password });
+    const response = await axiosInstance.post("/api/auth/login", { email, password });
+    console.log("res: ", response)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    if (response.success) {
-      const token = response.data.token;
+    if (response.data.success) {
+      const token = response.data.data.token;
+      console.log("token: ", token)
       const decodedToken: JwtPayload = jwtDecode(token);
       if (decodedToken.role === roles.ADMIN || decodedToken.role === roles.CUSTOMER || decodedToken.role === roles.MANAGER || decodedToken.role === roles.MEMBER) {
         if (window.location.pathname.includes('/admin')) {
@@ -100,10 +102,9 @@ export async function login(email: string, password: string){
 
 
 export const handleNavigateRole = async (token: string, navigate: ReturnType<typeof useNavigate>) => {
-    const response = await axiosInstance.get("/login");
-    const user = response.data;
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
+    // const response = await axiosInstance.get("/api/auth/login");
+    const user: JwtPayload = jwtDecode(token);
+    localStorage.setItem('userData', JSON.stringify(user));
     switch (user.role) {
       case roles.MEMBER:
         navigate(paths.HOME);
