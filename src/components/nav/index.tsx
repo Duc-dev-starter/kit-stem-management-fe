@@ -11,31 +11,32 @@ import {
     return (
       <Row
         className="navbar"
-        justify="space-between"
+        justify="space-around"
         align="middle"
         style={{
-          padding: "0px 200px", 
+          // margin: "0 200px",
+          padding: "0px 130px",
           backgroundColor: "#fff", 
         }}
       >
         {/* Left Links Section */}
-        <Col xs={24} sm={12} md={8} lg={6} style={{ display: "flex", justifyContent: "center" }}>
-          <Row gutter={20} align="middle" style={{marginLeft: "0px"}}>
-            <Col style={{ padding: '28px 18px' }}>
+        <Col xs={24} sm={12} md={8} lg={6} style={{ display: "flex", justifyContent: "center",marginLeft: '0px' }}>
+          <Row gutter={20} align="middle" style={{display: "flex",paddingLeft: '70px'}}>
+            <Col style={{ padding: '28px 8px' }}>
               <Text style={{ color: "black", textDecoration: "none" }}>
                 <a href="#" className="navbar-link"> {/* Updated to use class */}
                   Subscription Boxes
                 </a>
               </Text>
             </Col>
-            <Col style={{ padding: '28px 18px' }}>
+            <Col style={{ padding: '28px 8px' }}>
               <Text>
                 <a href="#" className="navbar-link">
                   Our Company
                 </a>
               </Text>
             </Col>
-            <Col style={{ padding: '28px 18px' }}>
+            <Col style={{ padding: '28px 8px' }}>
               <Text>
                 <a href="#" className="navbar-link">
                   Shop
@@ -62,9 +63,9 @@ import {
         </Col>
   
         {/* Right Icons Section */}
-        <Col xs={24} sm={12} md={8} lg={6} style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Col xs={24} sm={12} md={8} lg={6} style={{ display: "flex", justifyContent:"center" }}>
           <Row gutter={20} align="middle">
-            <Col style={{ padding: '28px 18px' }}>
+            <Col style={{ padding: '28px 8px' }}>
               <Text>
                 <a href="#" className="navbar-link">
                   Schools & Groups
