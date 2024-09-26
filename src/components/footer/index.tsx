@@ -8,6 +8,10 @@ const FooterComponent = () => {
   return (
     <div>
       <Footer style={{ backgroundColor: '#00416c', padding: '20px 0' }}>
+      <Row>
+      <Col flex={2}>2 / 5</Col>
+      <Col flex={3}>3 / 5</Col>
+    </Row>
         <Row justify="space-around" gutter={[24, 24]}>
           <Col xs={24} sm={12} md={6}>
             <Title style={{ color: 'white' }} level={4}>Contact Us</Title>
