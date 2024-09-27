@@ -25,7 +25,7 @@ export const paths = {
   USER_DETAIL: "/user/:id",
   INTERNAL_SERVER_ERROR: "/internal-server-error",
   //Manager
-  MANAGER_HOME: "/manager/dashboard",
+  MANAGER_HOME: "/manager/manage-kit",
   //admin
   ADMIN_LOGIN: "/login/admin",
   ADMIN_HOME: "/admin/dashboard",
@@ -33,21 +33,24 @@ export const paths = {
   AVATAR:
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8PyKYrBKAWWy6YCbQzWQcwIRqH8wYMPluIZiMpV1w0NYSbocTZz0ICWFkLcXhaMyvCwQ&usqp=CAU",
 };
-
-export const kitStatus = (status: number) => {
+const statusOfKit = {
+   IN_WAREHOUSE:"in_warehouse",
+   NEW:"new",
+}
+export const kitStatus = (status: string) => {
   switch (status) {
-    case 1:
-      return "Active"
-    case 2:
-      return "Inactive"
+    case statusOfKit.IN_WAREHOUSE:
+      return "In WareHouse"
+    case statusOfKit.NEW:
+      return "New"
   }
 }
 
-export const kitStatusColor = (status: number) => {
+export const kitStatusColor = (status: string) => {
   switch (status) {
-    case 1:
+    case statusOfKit.IN_WAREHOUSE:
       return "red"
-    case 2:
+    case statusOfKit.NEW:
       return "purple"
   }
 }
