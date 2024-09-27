@@ -15,55 +15,55 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const Dashboard: React.FC = () => {
   const [items, setItems] = useState<MenuItem[]>([]);
-    const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   type MenuItem = Required<MenuProps>['items'][number];
 
-    function getItem(
-        label: React.ReactNode,
-        key: React.Key,
-        icon?: React.ReactNode,
-        children?: MenuItem[],
-    ): MenuItem {
-        return {
-            key,
-            icon,
-            children,
-            label,
-        } as MenuItem;
+  function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+  ): MenuItem {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    } as MenuItem;
+  }
+
+  useEffect(() => {
+    loadItems();
+  }, []);
+
+  const loadItems = async () => {
+    const currentPath = window.location.pathname;
+    if (currentPath.startsWith('/manager')) {
+      setItems([
+        getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
+        getItem('Manage KIT', '/manager/manage-kit', <UserOutlined />),
+        getItem('Manage LAB', '/manager/manage-lab', <DesktopOutlined />),
+        getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
+      ]);
+    } else if (currentPath.startsWith('/admin')) {
+      setItems([
+        getItem('Dashboard', '/admin/dashboard', <DesktopOutlined />),
+        getItem('Manage Categories', '/admin/manage-categories', <UserOutlined />),
+        getItem('Manage Users', '/admin/manage-users', <UserOutlined />),
+        getItem('Manage Blogs', '/admin/manage-blogs', <DesktopOutlined />),
+      ]);
     }
+  };
 
-    useEffect(() => {
-        loadItems();
-    }, []);
-
-    const loadItems = async () => {
-        const currentPath = window.location.pathname;
-        if (currentPath.startsWith('/manager')) {
-            setItems([
-                getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
-                getItem('Manage KIT', '/manager/manage-kit', <UserOutlined />),
-                getItem('Manage LAB', '/manager/manage-lab', <DesktopOutlined />),
-                getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
-            ]);
-        }else if (currentPath.startsWith('/admin')) {
-            setItems([
-                // getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
-                getItem('Manage Users', '/admin/manage-users', <UserOutlined />),
-                getItem('Manage Blogs', '/admin/manage-blogs', <DesktopOutlined />),
-                getItem('Manage Categories', '/admin/manage-categories', <UserOutlined />),
-            ]);
-        }
-    };
-
-    const handleClick = (e: { key: React.Key }) => {
-      navigate(e.key as string); // Navigate to the selected key
+  const handleClick = (e: { key: React.Key }) => {
+    navigate(e.key as string); // Navigate to the selected key
   };
   return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
@@ -75,7 +75,7 @@ const Dashboard: React.FC = () => {
         }}
       >
         <div className="demo-logo-vertical" />
-        <Menu onClick={handleClick} theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
+        <Menu style={{ minHeight: '100vh' }} onClick={handleClick} theme="light" mode="inline" defaultSelectedKeys={['1']} items={items} />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
@@ -88,11 +88,11 @@ const Dashboard: React.FC = () => {
               borderRadius: borderRadiusLG,
             }}
           >
-            <Outlet/>
+            <Outlet />
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          ©{new Date().getFullYear()} Created by Thanh Tung
         </Footer>
       </Layout>
     </Layout>
