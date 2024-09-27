@@ -2,14 +2,16 @@ import { useState, useEffect, useCallback } from "react";
 import { Button, Input, Space, Table, Modal, Form, Pagination, Popconfirm, Select, message, } from "antd";
 import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Category } from "../../../models";
-// import { axiosInstance, getCategories } from "../../../services";
+import { axiosInstance, getCategories } from "../../../services";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { ColumnType } from "antd/es/table";
 // import { API_CREATE_CATEGORY, API_DELETE_CATEGORY, API_UPDATE_CATEGORY } from "../../../consts";
 import { useDebounce } from "../../../hooks";
 // import { CustomBreadcrumb, LoadingComponent, NameFormItem } from "../../../components";
 import { formatDate } from "../../../utils";
-import axiosInstance from "../../../services/axiosInstance";
+import { NameFormItem } from "../../../components";
+import LoadingComponent from "../../../components/loading";
+import CustomBreadcrumb from "../../../components/breadcrumb";
 const AdminManageCategories: React.FC = () => {
   const [dataCategories, setDataCategories] = useState<Category[]>([]);
   const [searchText, setSearchText] = useState<string>("");
@@ -27,34 +29,34 @@ const AdminManageCategories: React.FC = () => {
     total: 0,
   });
 
-  // const fetchCategories = useCallback(async () => {
-  //   setLoading(true);
-  //   try {
-  //     const responseCategories = await getCategories(debouncedSearchTerm, false, pagination.current, pagination.pageSize);
-  //     setDataCategories(responseCategories.data.pageData || responseCategories.data);
-  //     setPagination((prev) => ({
-  //       ...prev,
-  //       total: responseCategories.data.pageInfo?.totalItems || responseCategories.data.length,
-  //       current: responseCategories.data.pageInfo?.pageNum || 1,
-  //       pageSize: responseCategories.data.pageInfo?.pageSize || prev.pageSize,
-  //     }));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [pagination.current, pagination.pageSize, searchText, debouncedSearchTerm]);
+  const fetchCategories = useCallback(async () => {
+    setLoading(true);
+    try {
+      const responseCategories = await getCategories(debouncedSearchTerm, false, pagination.current, pagination.pageSize);
+      setDataCategories(responseCategories.data.pageData || responseCategories.data);
+      setPagination((prev) => ({
+        ...prev,
+        total: responseCategories.data.pageInfo?.totalItems || responseCategories.data.length,
+        current: responseCategories.data.pageInfo?.pageNum || 1,
+        pageSize: responseCategories.data.pageInfo?.pageSize || prev.pageSize,
+      }));
+    } finally {
+      setLoading(false);
+    }
+  }, [pagination.current, pagination.pageSize, searchText, debouncedSearchTerm]);
 
-  // useEffect(() => {
-  //   fetchCategories();
-  // }, [fetchCategories, searchText]);
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories, searchText]);
 
-  // const fetchParentCategories = useCallback(async () => {
-  //   const responseParentCategories = await getCategories("", false);
-  //   setParentCategories(responseParentCategories.data.pageData || responseParentCategories.data);
-  // }, []);
+  const fetchParentCategories = useCallback(async () => {
+    const responseParentCategories = await getCategories("", false);
+    setParentCategories(responseParentCategories.data.pageData || responseParentCategories.data);
+  }, []);
 
-  // useEffect(() => {
-  //   fetchParentCategories();
-  // }, [fetchParentCategories]);
+  useEffect(() => {
+    fetchParentCategories();
+  }, [fetchParentCategories]);
 
   const handleOpenModal = useCallback(() => {
     form.resetFields();
@@ -71,9 +73,9 @@ const AdminManageCategories: React.FC = () => {
       message.error(`Cannot delete category ${name} as it is a parent category of another category.`);
       return;
     }
-    // await axiosInstance.delete(`${API_DELETE_CATEGORY}/${_id}`);
-    // message.success(`Category ${name} deleted successfully.`);
-    // await fetchCategories();
+    await axiosInstance.delete(`${''}/${_id}`);
+    message.success(`Category ${name} deleted successfully.`);
+    await fetchCategories();
   };
 
   const updateCategory = useCallback(
@@ -96,7 +98,7 @@ const AdminManageCategories: React.FC = () => {
       };
 
       try {
-        // const response = await axiosInstance.put(`${API_UPDATE_CATEGORY}/${values._id}`, updatedCategory);
+        const response = await axiosInstance.put(`${''}/${values._id}`, updatedCategory);
 
         if (response.data) {
           setDataCategories((prevData) =>
@@ -195,7 +197,7 @@ const AdminManageCategories: React.FC = () => {
       };
 
       try {
-        const response = await axiosInstance.post(API_CREATE_CATEGORY, categoryData);
+        const response = await axiosInstance.post('', categoryData);
         if (response.data) {
           const newCategory = response.data;
           setDataCategories((prevData) => [...prevData, newCategory]);

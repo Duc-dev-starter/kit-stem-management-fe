@@ -49,6 +49,13 @@ const Dashboard: React.FC = () => {
                 getItem('Manage LAB', '/manager/manage-lab', <DesktopOutlined />),
                 getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
             ]);
+        }else if (currentPath.startsWith('/admin')) {
+            setItems([
+                // getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
+                getItem('Manage Users', '/admin/manage-users', <UserOutlined />),
+                getItem('Manage Blogs', '/admin/manage-blogs', <DesktopOutlined />),
+                getItem('Manage Categories', '/admin/manage-categories', <UserOutlined />),
+            ]);
         }
     };
 
