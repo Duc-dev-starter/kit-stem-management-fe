@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"; 
+import { useState, useEffect, useCallback } from "react";
 import {
   Button,
   Image,
@@ -36,6 +36,7 @@ import {
 import { axiosInstance } from "../../../services/axiosInstance.ts";
 import { formatDate, getBase64, uploadFile } from "../../../utils/index.ts";
 import LoadingComponent from "../../../components/loading/index.tsx";
+import CustomBreadcrumb from "../../../components/breadcrumb/index.tsx";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -240,6 +241,7 @@ const AdminManageUsers: React.FC = () => {
 
   return (
     <div>
+      <CustomBreadcrumb />
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <div className="mt-3 md:mt-0">
           <Button type="primary" className="py-2" onClick={handleAddClick}>
@@ -302,7 +304,7 @@ const AdminManageUsers: React.FC = () => {
       >
         <Form
           form={form}
-          onFinish={modalMode === "Edit" ? handleEditUser : () => {}}
+          onFinish={modalMode === "Edit" ? handleEditUser : () => { }}
           initialValues={formData}
         >
           <NameFormItem />
