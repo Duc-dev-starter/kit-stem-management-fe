@@ -14,10 +14,11 @@ import {
 import { Button, Image, Table } from "antd";
 import { Blog, Category } from "../../../models";
 import { axiosInstance, getCategories, getUserFromLocalStorage, deleteBlog, getBlogs } from "../../../services";
-import { API_CREATE_BLOG, API_UPDATE_BLOG, API_GET_BLOG } from "../../../consts";
-import { ContentFormItem, CustomBreadcrumb, DescriptionFormItem, LoadingComponent, UploadButton, TitleFormItem } from "../../../components";
+import { ContentFormItem, DescriptionFormItem, UploadButton, TitleFormItem } from "../../../components";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { formatDate, getBase64, uploadFile } from "../../../utils";
+import LoadingComponent from "../../../components/loading";
+import CustomBreadcrumb from "../../../components/breadcrumb";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -85,7 +86,7 @@ const AdminManageBlogs: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.get(`${API_GET_BLOG}/${id}`);
+      const response = await axiosInstance.get(`${''}/${id}`);
       const blogData = response.data;
       setCurrentBlog(blogData);
       form.setFieldsValue({
@@ -130,10 +131,10 @@ const AdminManageBlogs: React.FC = () => {
     setLoading(true);
     try {
       if (isUpdateMode && currentBlog) {
-        await axiosInstance.put(`${API_UPDATE_BLOG}/${currentBlog._id}`, payload);
+        await axiosInstance.put(`${''}/${currentBlog._id}`, payload);
         message.success("Blog updated successfully");
       } else {
-        await axiosInstance.post(API_CREATE_BLOG, payload);
+        await axiosInstance.post('', payload);
         message.success("Blog added successfully");
       }
     } finally {
