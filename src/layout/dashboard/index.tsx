@@ -80,8 +80,9 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh' }} >
       <Sider
+        theme='light'
         breakpoint="lg"
         collapsedWidth="0"
         onBreakpoint={(broken) => {
@@ -99,7 +100,7 @@ const Dashboard: React.FC = () => {
           <div>
             <p>Welcome back</p>
           </div>
-          <Dropdown  menu={{ items }}>
+          <Dropdown menu={{ items }}>
             <a onClick={(e) => e.preventDefault()}>
               <Avatar size={32} icon={<UserOutlined />} />
             </a>
