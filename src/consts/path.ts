@@ -22,7 +22,15 @@ export const PATH = {
   USER_DETAIL: "/user/:id",
   INTERNAL_SERVER_ERROR: "/internal-server-error",
   //Manager
+  MANAGER: '/manager/*',
+  MANAGER_DASHBOARD: 'dashboard',
   MANAGER_HOME: "/manager/manage-kit",
+  MANAGER_KIT_DELIVERY_DETAIL: "manage-kit-delivery-detail",
+  MANAGER_KIT_DELIVERY: "manage-kit-delivery",
+  MANAGER_LAB: "manage-lab",
+  MANAGER_KIT: "manage-kit",
+  MANAGER_KIT_ID: "manage-kit/:id",
+  MANAGER_USER: "manage-user",
   //admin
   ADMIN: '/admin/*',
   ADMIN_LOGIN: "/admin/login",

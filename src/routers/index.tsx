@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom"
 import {
     AboutPage, AdminManageBlogs, KitDetail, AdminManageCategories, AdminManageUsers, HomePage, Login, ManageKit,
     ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, ManageUser, Register, AdminLoginPage,
-    NotFound,
     InternalServerError,
     Terms
 } from "../pages"
@@ -20,15 +19,15 @@ const AppRouter = () => {
             <Route path={PATH.TERMS} element={<Terms />} />
             <Route path={PATH.INTERNAL_SERVER_ERROR} element={<InternalServerError />} />
 
-            <Route path="/manager/*" element={<Dashboard />}>
+            <Route path={PATH.MANAGER} element={<Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
-                <Route path="dashboard" element={<ManagerDashboard />} />
-                <Route path="manage-user" element={<ManageUser />} />
-                <Route path="manage-kit" element={<ManageKit />} />
-                <Route path="manage-kit/:id" element={<KitDetail />} />
-                <Route path="manage-lab" element={<ManageLab />} />
-                <Route path="manage-kit-delivery" element={<ManageKitDelivery />} />
-                <Route path="manage-kit-delivery-detail" element={<ManageKitDeliveryDetail />} />
+                <Route path={PATH.MANAGER_DASHBOARD} element={<ManagerDashboard />} />
+                <Route path={PATH.MANAGER_USER} element={<ManageUser />} />
+                <Route path={PATH.MANAGER_KIT} element={<ManageKit />} />
+                <Route path={PATH.MANAGER_KIT_ID} element={<KitDetail />} />
+                <Route path={PATH.MANAGER_LAB} element={<ManageLab />} />
+                <Route path={PATH.MANAGER_KIT_DELIVERY} element={<ManageKitDelivery />} />
+                <Route path={PATH.MANAGER_KIT_DELIVERY_DETAIL} element={<ManageKitDeliveryDetail />} />
             </Route>
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
             <Route path={PATH.ADMIN} element={<Dashboard />}>
