@@ -1,10 +1,14 @@
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import { Col, Image, Row, Typography } from "antd";
 import "./navbar.css"; // Import CSS for hover effects
+import { Link, useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
 const Navbar = () => {
+
+  const navigate = useNavigate();
+
   return (
     <Row
       className="navbar"
@@ -96,7 +100,9 @@ const Navbar = () => {
             </Text>
           </Col>
           <Col>
+
             <UserOutlined
+              onClick={() => { navigate('login') }}
               className="navbar-icon cursor-pointer logo-user"
               style={{
                 fontSize: "24px",
@@ -104,6 +110,7 @@ const Navbar = () => {
                 textDecoration: "none",
               }}
             />
+
           </Col>
           <Col>
             <ShoppingCartOutlined
