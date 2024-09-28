@@ -11,7 +11,7 @@ const ScrollToTopButton = () => {
 	return (
 		<CaretUpOutlined
 			onClick={scrollToTop}
-			className='fixed right-10 bottom-10 bg-black-100 text-white rounded-full p-6'
+			className='fixed right-10 bottom-10 bg-black-100 text-white rounded-full p-6 z-40 bg-neutral-800'
 		/>
 	);
 };
