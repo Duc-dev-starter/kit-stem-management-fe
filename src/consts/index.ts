@@ -238,11 +238,11 @@ export const terms = [
   { id: 4, name: "4. Content and behavior rules", link: "#section4" },
   {
     id: 5,
-    name: "5. FLearn's rights to the content you post",
+    name: "5. CrunchLabs's rights to the content you post",
     link: "#section5",
   },
-  { id: 6, name: "6. Use FLearn at your own risk", link: "#section6" },
-  { id: 7, name: "7. FLearn Permissions", link: "#section7" },
+  { id: 6, name: "6. Use CrunchLabs at your own risk", link: "#section6" },
+  { id: 7, name: "7. CrunchLabs Permissions", link: "#section7" },
   { id: 8, name: "8. Subscription package terms", link: "#section8" },
   { id: 9, name: "9. Other legal terms", link: "#section9" },
   { id: 10, name: "10. Dispute resolution", link: "#section10" },
@@ -253,7 +253,7 @@ export const terms = [
 /* STUDENT FAQ */
 export const faq_student = [
   { id: 1, name: "Refund Status: Common Questions", link: "#section1" },
-  { id: 2, name: "Payment Methods on FLearn", link: "#section2" },
+  { id: 2, name: "Payment Methods on CrunchLabs", link: "#section2" },
   { id: 3, name: "Lifetime Access", link: "#section3" },
   { id: 4, name: "How to Find Your Missing Course", link: "#section4" },
   {
@@ -265,7 +265,7 @@ export const faq_student = [
   { id: 7, name: "Downloading Course Resources", link: "#section7" },
   {
     id: 8,
-    name: "Learning With FLearn: Frequently Asked Questions",
+    name: "Learning With CrunchLabs: Frequently Asked Questions",
     link: "#section8",
   },
   { id: 9, name: "Troubleshooting Payment Failures", link: "#section9" },
@@ -273,7 +273,7 @@ export const faq_student = [
 
 /* INSTRUCTOR FAQ */
 export const faq_instructor = [
-  { id: 1, name: "FLearn Course Quality Checklist", link: "#section1" },
+  { id: 1, name: "CrunchLabs Course Quality Checklist", link: "#section1" },
   { id: 2, name: "How to Become a Premium Instructor", link: "#section2" },
   {
     id: 3,
@@ -283,12 +283,12 @@ export const faq_instructor = [
   { id: 4, name: "Instructor Revenue Share", link: "#section4" },
   {
     id: 5,
-    name: "Instructor Promotional Agreements and FLearn Deals",
+    name: "Instructor Promotional Agreements and CrunchLabs Deals",
     link: "#section5",
   },
   {
     id: 6,
-    name: "Teaching on FLearn: Frequently Asked Questions",
+    name: "Teaching on CrunchLabs: Frequently Asked Questions",
     link: "#section6",
   },
 ];
@@ -312,7 +312,7 @@ export const topic_student = [
   {
     id: 3,
     name: "Learning Experience",
-    description: "Everything about the FLearn learning",
+    description: "Everything about the CrunchLabs learning",
     img: "https://support.udemy.com/hc/theming_assets/01HZP8FDKGE7PT2EXYKDQZ8BD6",
     link: "#section1",
   },
@@ -391,7 +391,7 @@ export const footerLinks = [
   {
     title: "Community",
     links: [
-      { name: "Teach on FLearn", url: "/teaching" },
+      { name: "Teach on CrunchLabs", url: "/teaching" },
       { name: "Blog", url: "/blogs" },
       { name: "Help and Supports", url: "/contact" },
     ],

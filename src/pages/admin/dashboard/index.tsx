@@ -125,7 +125,7 @@ const AdminDashboard: React.FC = () => {
 			) : (
 				<>
 					<div className="flex justify-between drop-shadow-xl gap-4">
-						<Badge.Ribbon text="FLearn" color="blue">
+						<Badge.Ribbon text="CrunchLabs" color="blue">
 							<Card title="Total courses in the system" bordered={false} style={{ width: 300 }}>
 								<div className="flex justify-center gap-2">
 									<h1>{numCourses}</h1>
@@ -134,7 +134,7 @@ const AdminDashboard: React.FC = () => {
 							</Card>
 						</Badge.Ribbon>
 
-						<Badge.Ribbon text="FLearn" color="orange">
+						<Badge.Ribbon text="CrunchLabs" color="orange">
 							<Card title="Total Student in the system" bordered={false} style={{ width: 300 }}>
 								<div className="flex justify-center gap-2">
 									<h1>{numStudents}</h1>
@@ -143,7 +143,7 @@ const AdminDashboard: React.FC = () => {
 							</Card>
 						</Badge.Ribbon>
 
-						<Badge.Ribbon text="FLearn" color="green">
+						<Badge.Ribbon text="CrunchLabs" color="green">
 							<Card title="Total Instructor in the system" bordered={false} style={{ width: 300 }}>
 								<div className="flex justify-center gap-2">
 									<h1>{numInstructors}</h1>
@@ -152,7 +152,7 @@ const AdminDashboard: React.FC = () => {
 							</Card>
 						</Badge.Ribbon>
 
-						<Badge.Ribbon text="FLearn" color="red">
+						<Badge.Ribbon text="CrunchLabs" color="red">
 							<Card title="Total Blogs in the system" bordered={false} style={{ width: 300 }}>
 								<div className="flex justify-center gap-2">
 									<h1>{numBlogs}</h1>

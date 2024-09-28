@@ -167,7 +167,7 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-[#fffcce] to-[#1e5b53] relative">
       <BackButton path={PATH.HOME} />
-      <div className="w-full md:w-1/2 flex flex-row bg-white rounded-lg shadow-lg overflow-hidden min-h-[650px] mb-[30px]">
+      <div className="w-full md:w-1/2 flex flex-row bg-white rounded-lg shadow-lg overflow-hidden min-h-[500px] mb-[30px]">
         <div className="w-1/2 flex items-center justify-center">
           <img
             src={Login4}
@@ -181,7 +181,7 @@ const LoginPage: React.FC = () => {
               Welcome
             </h1>
             <span className="text-sm md:text-base text-center">
-              Log in to become a part of FLearn
+              Log in to become a part of CrunchLabs
             </span>
           </div>
           <Form

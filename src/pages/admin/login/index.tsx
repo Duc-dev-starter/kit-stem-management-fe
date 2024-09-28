@@ -39,7 +39,7 @@ const AdminLoginPage: React.FC = () => {
             </h1>
           </div>
           <span className="flex justify-center mb-4">
-            Log in to Kit STEM
+            Log in to CRUNCHLABS
           </span>
           <Form
             name="basic"
