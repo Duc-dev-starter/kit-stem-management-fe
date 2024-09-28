@@ -1,7 +1,8 @@
 export { HttpStatus } from './http.enum'
 import { Rule } from "antd/lib/form";
-export {API} from './api';
-export {PATH} from './path'
+import { PATH } from './path';
+export { API } from './api';
+export { PATH } from './path'
 
 const statusOfKit = {
   IN_WAREHOUSE: "in_warehouse",
@@ -399,7 +400,9 @@ export const footerLinks = [
     title: "Legal",
     links: [
       { name: "Terms", url: "/terms" },
-      { name: "Private policy", url: "/terms/policy" },
+      // { name: "Private policy", url: "/terms/policy" },
+      { name: "Private policy", url: `${PATH.POLICY}` },
+      { name: "Guide lindes", url: `${PATH.GUIDELINES}` },
       { name: "Sitemap", url: "/sitemap" },
     ],
   },

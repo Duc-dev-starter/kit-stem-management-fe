@@ -17,6 +17,8 @@ import {
   FacebookOutlined,
 } from "@ant-design/icons";
 
+import { footerLinks } from "../../consts";
+
 import "./footer.css";
 const { Footer } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -108,8 +110,7 @@ const FooterComponent = () => {
           </Col>
 
           <Col flex={3}>
-            <Row justify="center" align="top">
-              {/* First Row of Links */}
+            {/* <Row justify="center" align="top">
               <Col xs={24} sm={12} md={6}>
                 <Title style={{ color: "white" }} level={4}>
                   Contact Us
@@ -149,10 +150,10 @@ const FooterComponent = () => {
                   Camp CrunchLabs
                 </Paragraph>
               </Col>
-            </Row>
+            </Row> */}
 
             {/* Second Row of Links */}
-            <Row justify="center" align="top" style={{ marginTop: "20px" }}>
+            {/* <Row justify="center" align="top" style={{ marginTop: "20px" }}>
               <Col xs={24} sm={12} md={6}>
                 <Title style={{ color: "white" }} level={4}>
                   Our Company
@@ -196,7 +197,25 @@ const FooterComponent = () => {
                 <Paragraph style={{ color: "white" }}>Accessibility</Paragraph>
                 <Paragraph style={{ color: "white" }}>Other Policies</Paragraph>
               </Col>
+            </Row> */}
+
+            <Row justify="center" align="top">
+              {footerLinks.map((section, index) => (
+                <Col key={index} xs={24} sm={12} md={6}>
+                  <Title style={{ color: "white" }} level={4}>
+                    {section.title}
+                  </Title>
+                  {section.links.map((link, linkIndex) => (
+                    <Paragraph key={linkIndex} style={{ color: "white" }}>
+                      <a href={link.url} style={{ color: "white" }}>
+                        {link.name}
+                      </a>
+                    </Paragraph>
+                  ))}
+                </Col>
+              ))}
             </Row>
+
           </Col>
         </Row>
 
