@@ -31,11 +31,11 @@ const AppRouter = () => {
                 <Route path="manage-kit-delivery-detail" element={<ManageKitDeliveryDetail />} />
             </Route>
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
-            <Route path="/admin/*" element={<Dashboard />}>
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="manage-users" element={<AdminManageUsers />} />
-                <Route path="manage-blogs" element={<AdminManageBlogs />} />
-                <Route path="manage-categories" element={<AdminManageCategories />} />
+            <Route path={PATH.ADMIN} element={<Dashboard />}>
+                <Route path={PATH.ADMIN_HOME} element={<AdminDashboard />} />
+                <Route path={PATH.ADMIN_MANAGE_USER} element={<AdminManageUsers />} />
+                <Route path={PATH.ADMIN_MANAGE_BLOG} element={<AdminManageBlogs />} />
+                <Route path={PATH.ADMIN_MANAGE_CATEGORY} element={<AdminManageCategories />} />
             </Route>
         </Routes>
     )
