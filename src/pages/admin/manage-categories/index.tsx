@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button, Input, Space, Table, Modal, Form, Pagination, Popconfirm, Select, message, } from "antd";
 import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Category } from "../../../models";
-import { axiosInstance, getCategories } from "../../../services";
+import { getCategories } from "../../../services";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { ColumnType } from "antd/es/table";
 // import { API_CREATE_CATEGORY, API_DELETE_CATEGORY, API_UPDATE_CATEGORY } from "../../../consts";
@@ -73,9 +73,9 @@ const AdminManageCategories: React.FC = () => {
       message.error(`Cannot delete category ${name} as it is a parent category of another category.`);
       return;
     }
-    await axiosInstance.delete(`${''}/${_id}`);
-    message.success(`Category ${name} deleted successfully.`);
-    await fetchCategories();
+    // await axiosInstance.delete(`${''}/${_id}`);
+    // message.success(`Category ${name} deleted successfully.`);
+    // await fetchCategories();
   };
 
   const updateCategory = useCallback(
@@ -97,24 +97,24 @@ const AdminManageCategories: React.FC = () => {
         updated_at: new Date().toISOString(),
       };
 
-      try {
-        const response = await axiosInstance.put(`${''}/${values._id}`, updatedCategory);
+      // try {
+      //   const response = await axiosInstance.put(`${''}/${values._id}`, updatedCategory);
 
-        if (response.data) {
-          setDataCategories((prevData) =>
-            prevData.map((category) =>
-              category._id === values._id
-                ? { ...category, ...response.data }
-                : category
-            )
-          );
-          setIsModalVisible(false);
-          form.resetFields();
-          message.success(`Category ${values.name} updated successfully.`);
-        }
-      } finally {
-        setLoading(false);
-      }
+      //   if (response.data) {
+      //     setDataCategories((prevData) =>
+      //       prevData.map((category) =>
+      //         category._id === values._id
+      //           ? { ...category, ...response.data }
+      //           : category
+      //       )
+      //     );
+      //     setIsModalVisible(false);
+      //     form.resetFields();
+      //     message.success(`Category ${values.name} updated successfully.`);
+      //   }
+      // } finally {
+      //   setLoading(false);
+      // }
     },
     [dataCategories, form]
   );
@@ -196,19 +196,19 @@ const AdminManageCategories: React.FC = () => {
         parent_category_id: parentCategoryId,
       };
 
-      try {
-        const response = await axiosInstance.post('', categoryData);
-        if (response.data) {
-          const newCategory = response.data;
-          setDataCategories((prevData) => [...prevData, newCategory]);
-          form.resetFields();
-          fetchCategories();
-          message.success(`Category ${values.name} created successfully.`);
-          setIsModalVisible(false);
-        }
-      } finally {
-        setLoading(false);
-      }
+      // try {
+      //   const response = await axiosInstance.post('', categoryData);
+      //   if (response.data) {
+      //     const newCategory = response.data;
+      //     setDataCategories((prevData) => [...prevData, newCategory]);
+      //     form.resetFields();
+      //     fetchCategories();
+      //     message.success(`Category ${values.name} created successfully.`);
+      //     setIsModalVisible(false);
+      //   }
+      // } finally {
+      //   setLoading(false);
+      // }
     },
     [dataCategories, form, fetchCategories]
   );
@@ -292,7 +292,7 @@ const AdminManageCategories: React.FC = () => {
       ),
     },
   ];
-  const handleSearchText= (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
   return (

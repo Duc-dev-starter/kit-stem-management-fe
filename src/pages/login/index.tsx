@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Form, Input, Modal, Select, Upload, Image } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Login4 from "../../assets/Login4.jpg";
-import { paths, roles } from "../../consts";
+import { PATH, roles } from "../../consts";
 import {
   login,
   handleNavigateRole,
@@ -40,20 +40,17 @@ const LoginPage: React.FC = () => {
   const modalFormRef = useRef<FormInstance>(null);
 
   const onFinish = async (values: LoginFieldType) => {
-    console.log("pressed")
     const { email, password } = values;
-    console.log("values", values)
     setLoading(true);
     try {
       const authResult = await login(email, password);
-      console.log("authResult:", authResult)
       if (authResult && "token" in authResult) {
         const { token } = authResult;
         localStorage.setItem("token", token);
-        await handleNavigateRole(token, navigate);
+        await handleNavigateRole(navigate);
       }
       setLoading(false)
-    }catch(error){
+    } catch (error) {
       console.log("login error: ", error)
     }
   };
@@ -169,7 +166,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-[#fffcce] to-[#1e5b53] relative">
-      <BackButton path={paths.HOME} />
+      <BackButton path={PATH.HOME} />
       <div className="w-full md:w-1/2 flex flex-row bg-white rounded-lg shadow-lg overflow-hidden min-h-[650px] mb-[30px]">
         <div className="w-1/2 flex items-center justify-center">
           <img
@@ -200,7 +197,7 @@ const LoginPage: React.FC = () => {
             <div className="flex justify-center">
               <Link
                 className="hover:text-blue-600 mt-2"
-                to={paths.FORGOT_PASSWORD}
+                to={PATH.FORGOT_PASSWORD}
               >
                 Forgot Password
               </Link>
@@ -215,7 +212,7 @@ const LoginPage: React.FC = () => {
             Don't have an account yet?{" "}
             <strong>
               <Link
-                to={paths.REGISTER}
+                to={PATH.REGISTER}
                 className="hover:cursor-pointer hover:text-blue-600"
               >
                 Sign up here!

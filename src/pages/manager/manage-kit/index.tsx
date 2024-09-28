@@ -2,8 +2,8 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Image, Modal, Select, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { kitStatus, kitStatusColor } from "../../../consts";
-import { getAllKitsFromManager } from "../../../services/kit.services";
-import { Kit } from "../../../models/Kit.model";
+import { getAllKitsFromManager } from "../../../services/kit";
+import { Kit } from "../../../models/Kit";
 import { Link, useNavigate } from "react-router-dom";
 
 const ManageKit = () => {

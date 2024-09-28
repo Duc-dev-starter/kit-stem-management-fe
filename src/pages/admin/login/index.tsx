@@ -1,33 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form } from "antd";
+import { Form, message } from "antd";
 import Login from "../../../assets/Login4.jpg";
-// import { getCurrentLoginUser, login } from "../../../services";
 import {
   ButtonFormItem,
   EmailFormItem,
   PasswordFormItem,
 } from "../../../components";
+import { FormProps } from "antd/lib";
+import { handleNavigateRole, login } from "../../../services";
+import { LoginFieldType } from "../../../models";
 const AdminLoginPage: React.FC = () => {
-  // const navigate = useNavigate();
-  // const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // const onFinish: FormProps<LoginFieldType>["onFinish"] = async (values) => {
-  //   const { email, password } = values;
-  //   setLoading(true);
-  //   try {
-  //     const authResult = await login(email, password);
-  //     if (authResult && "token" in authResult) {
-  //       const { token } = authResult;
-  //       localStorage.setItem("token", token);
-  //       await getCurrentLoginUser(token);
-  //       navigate(paths.ADMIN_HOME);
-  //       message.success("Login successfully");
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const onFinish: FormProps<LoginFieldType>["onFinish"] = async (values) => {
+    const { email, password } = values;
+    setLoading(true);
+    try {
+      const authResult = await login(email, password);
+      if (authResult && "token" in authResult) {
+        const { token } = authResult;
+        localStorage.setItem("token", token);
+        handleNavigateRole(navigate);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-[#ccffaa] to-[#bfffc7]">
@@ -45,13 +45,12 @@ const AdminLoginPage: React.FC = () => {
             name="basic"
             className="space-y-4 w-full"
             initialValues={{ remember: true }}
-            // onFinish={onFinish}
+            onFinish={onFinish}
             autoComplete="off"
           >
             <EmailFormItem />
             <PasswordFormItem />
-            {/* <ButtonFormItem loading={loading} buttonText="Login" htmlType="submit" /> */}
-            <ButtonFormItem loading buttonText="Login" htmlType="submit" />
+            <ButtonFormItem loading={loading} buttonText="Login" htmlType="submit" />
           </Form>
         </div>
         <div

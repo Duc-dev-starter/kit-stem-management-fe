@@ -1,8 +1,8 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { Lab } from "../../../models/Kit.model";
-import { getAllLabsFromManager } from "../../../services/lab.services";
+import { Lab } from "../../../models/Kit";
+import { getAllLabsFromManager } from "../../../services/lab";
 
 const ManageLab = () => {
     const [labs, setlabs] = useState<Lab[]>([]);
@@ -38,10 +38,10 @@ const ManageLab = () => {
         },
         {
             title: 'Action',
-            render:()=>(
+            render: () => (
                 <>
-                <EditOutlined className="m-2 text-blue-500" />
-                <DeleteOutlined className="m-2 text-red-500" />
+                    <EditOutlined className="m-2 text-blue-500" />
+                    <DeleteOutlined className="m-2 text-red-500" />
                 </>
             )
         },

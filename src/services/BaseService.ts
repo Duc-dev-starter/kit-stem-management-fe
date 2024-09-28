@@ -1,9 +1,8 @@
 import { AxiosResponse } from "axios";
-import type { ApiRequestModel } from "@/models";
-import { store } from "@/store";
-import { hideLoading, showLoading } from "@/store/loadingSlice";
+import { store } from "../store";
+import { hideLoading, showLoading } from "../store/loadingSlice";
 import { axiosInstance } from "./axiosInstance";
-
+import { ApiRequestModel } from "../interfaces"
 
 
 export const BaseService = {

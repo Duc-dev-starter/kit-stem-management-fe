@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { paths, roles } from "../consts";
+import { PATH, roles } from "../consts";
 import { getUserFromLocalStorage } from "../services";
 
 const useRoleRedirect = () => {
@@ -25,23 +25,23 @@ const useRoleRedirect = () => {
     const path = location.pathname;
 
     switch (user.role) {
-      case roles.MEMBER:
-        if (path.includes("/manager") || path.includes("/admin") || path.includes(paths.LOGIN) || path.includes(paths.REGISTER) || path.includes(paths.FORGOT_PASSWORD)) {
-          navigate(paths.HOME);
+      case roles.CUSTOMER:
+        if (path.includes("/manager") || path.includes("/admin") || path.includes(PATH.LOGIN) || path.includes(PATH.REGISTER) || path.includes(PATH.FORGOT_PASSWORD)) {
+          navigate(PATH.HOME);
         }
         break;
       case roles.ADMIN:
-        if (!path.includes("/admin") || path.includes(paths.LOGIN) || path.includes(paths.REGISTER) || path.includes(paths.FORGOT_PASSWORD)) {
-          navigate(paths.ADMIN_HOME);
+        if (!path.includes("/admin") || path.includes(PATH.LOGIN) || path.includes(PATH.REGISTER) || path.includes(PATH.FORGOT_PASSWORD)) {
+          navigate(PATH.ADMIN_HOME);
         }
         break;
       case roles.MANAGER:
-        if (!path.includes("/manager")|| path.includes(paths.LOGIN) || path.includes(paths.REGISTER) || path.includes(paths.FORGOT_PASSWORD)) {
-          navigate(paths.MANAGER_HOME);
+        if (!path.includes("/manager")|| path.includes(PATH.LOGIN) || path.includes(PATH.REGISTER) || path.includes(PATH.FORGOT_PASSWORD)) {
+          navigate(PATH.MANAGER_HOME);
         }
         break;
       default:
-        navigate(paths.HOME);
+        navigate(PATH.HOME);
         break;
     }
   };

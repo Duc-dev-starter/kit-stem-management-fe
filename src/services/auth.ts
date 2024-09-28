@@ -1,16 +1,12 @@
-import axiosInstance from "./axiosInstance.ts";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import {paths, roles} from "../consts";
+import {API, PATH, roles} from "../consts";
 import {User} from "../models/User.ts";
 import { message } from "antd";
+import { BaseService } from '../services';
+import {JwtPayload} from '../interfaces/index.ts'
 
-type JwtPayload = {
-  id: string;
-  role: string,
-  exp: number,
-  iat: number,
-}
+
 
 export function getUserFromLocalStorage(){
   const userString = localStorage.getItem("user");
@@ -19,18 +15,13 @@ export function getUserFromLocalStorage(){
 }
 
 export async function login(email: string, password: string){
-
-    const response = await axiosInstance.post("/api/auth/login", { email, password });
-    console.log("res: ", response)
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
+    const response = await BaseService.post({url: API.LOGIN, payload: {email, password}});
     if (response.success) {
       const token = response.data.token;
-      console.log("token: ", token)
       const decodedToken: JwtPayload = jwtDecode(token);
-      if (decodedToken.role === roles.ADMIN || decodedToken.role === roles.CUSTOMER || decodedToken.role === roles.MANAGER || decodedToken.role === roles.MEMBER) {
-        if (window.location.pathname.includes('/admin')) {
-          if (decodedToken.role !== roles.ADMIN) {
+      if (decodedToken.role === roles.ADMIN || decodedToken.role === roles.CUSTOMER || decodedToken.role === roles.MANAGER || decodedToken.role === roles.STAFF) {
+        if (window.location.pathname.includes('/admin') ) {
+          if(decodedToken.role !== roles.ADMIN){
             message.error("You don't have permission to access this page");
             return null;
           }
@@ -39,7 +30,7 @@ export async function login(email: string, password: string){
           if (decodedToken.role === roles.ADMIN) {
             message.error(`You login wrong path. Navigate in 2s`);
            setTimeout(() => {
-             window.location.href = paths.ADMIN_LOGIN;
+             window.location.href = PATH.ADMIN_LOGIN;
            }, 2000)
             return null;
           }
@@ -101,40 +92,41 @@ export async function login(email: string, password: string){
 // };
 
 
-export const handleNavigateRole = async (token: string, navigate: ReturnType<typeof useNavigate>) => {
-    // const response = await axiosInstance.get("/api/auth/login");
-    const user: JwtPayload = jwtDecode(token);
-    localStorage.setItem('userData', JSON.stringify(user));
+export const handleNavigateRole = async (navigate: ReturnType<typeof useNavigate>) => {
+  const response = await BaseService.get({url: API.GET_CURRENT_LOGIN_USER});
+  const user = response.data;
+  console.log(response);
+  localStorage.setItem("user", JSON.stringify(user));
     switch (user.role) {
-      case roles.MEMBER:
-        navigate(paths.HOME);
+      case roles.CUSTOMER:
+        navigate(PATH.HOME);
         break;
       case roles.MANAGER:
-        navigate(paths.MANAGER_HOME);
+        navigate(PATH.MANAGER_HOME);
         break;
       case roles.ADMIN:
-        navigate(paths.ADMIN_HOME);
+        navigate(PATH.ADMIN_HOME);
         break;
       default:
-        navigate(paths.HOME);
+        navigate(PATH.HOME);
         break;
     }
     message.success("Login successfully");
 };
 
-// export const getCurrentLoginUser = async (token: string) => {
-//   const response = await axiosInstance.get(API_CURRENT_LOGIN_USER);
-//   localStorage.setItem("token", token);
-//   localStorage.setItem("user", JSON.stringify(response.data));
-// };
+export const getCurrentLoginUser = async (token: string) => {
+  const response = await BaseService.get({url: API.GET_CURRENT_LOGIN_USER});
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(response.data));
+};
 
 export const logout = ( navigate: ReturnType<typeof useNavigate>) => {
   const user: User = getUserFromLocalStorage();
   if (user.role === roles.ADMIN) {
-    navigate(paths.ADMIN_LOGIN);
+    navigate(PATH.ADMIN_LOGIN);
   }
   else {
-    navigate(paths.HOME);
+    navigate(PATH.HOME);
   }
   message.info("You logout from the system");
   const courseInWishList = localStorage.getItem("courseInWishList");

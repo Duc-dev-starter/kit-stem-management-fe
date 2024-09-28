@@ -1,6 +1,6 @@
-import {  API_GET_LABS } from "../api"
+import { API } from "../consts";
 import axiosInstance from "./axiosInstance"
-export interface LabValues {
+export interface KitValues {
     keyword?: string | undefined,
     category_id?: string | undefined,
     status?: string | undefined,
@@ -8,9 +8,10 @@ export interface LabValues {
     pageSize?: number | 100
 }
 
-export const getAllLabsFromManager = async (values?: LabValues) => {
+export const getAllKitsFromManager = async (values?: KitValues) => {
     try {
-        const res = await axiosInstance.post(`${API_GET_LABS}`,
+        console.log(API.GET_KITS)
+        const res = await axiosInstance.post(`${API.GET_KITS}`,
             {
                 "searchCondition": {
                     "keyword": values?.keyword,
@@ -24,6 +25,7 @@ export const getAllLabsFromManager = async (values?: LabValues) => {
                 }
             }
         )
+        console.log(res);
         return res;
     } catch (error) {
         console.log("getAllKitsFromManager-error:", error)

@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { Button, Image, Table } from "antd";
 import { Blog, Category } from "../../../models";
-import { axiosInstance, getCategories, getUserFromLocalStorage, deleteBlog, getBlogs } from "../../../services";
+import { getCategories, getUserFromLocalStorage, deleteBlog, getBlogs } from "../../../services";
 import { ContentFormItem, DescriptionFormItem, UploadButton, TitleFormItem } from "../../../components";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { formatDate, getBase64, uploadFile } from "../../../utils";
@@ -51,7 +51,7 @@ const AdminManageBlogs: React.FC = () => {
 
   useEffect(() => {
     fetchBlogs();
-  }, [pagination.current, pagination.pageSize]);
+  }, []);
 
   const fetchCategories = async () => {
     const responseCategories = await getCategories();
@@ -63,6 +63,7 @@ const AdminManageBlogs: React.FC = () => {
     setLoading(true);
     try {
       const responseBlog = await getBlogs("", false, pagination.current, pagination.pageSize);
+      console.log(responseBlog);
       setDataBlogs(responseBlog.data.pageData);
       setPagination({
         ...pagination,
@@ -81,74 +82,74 @@ const AdminManageBlogs: React.FC = () => {
   };
 
   const handleUpdateClick = async (id: string) => {
-    setIsUpdateMode(true);
-    setIsModalVisible(true);
-    setLoading(true);
+    // setIsUpdateMode(true);
+    // setIsModalVisible(true);
+    // setLoading(true);
 
-    try {
-      const response = await axiosInstance.get(`${''}/${id}`);
-      const blogData = response.data;
-      setCurrentBlog(blogData);
-      form.setFieldsValue({
-        name: blogData.name,
-        category_id: blogData.category_id,
-        image_url: blogData.image_url,
-        description: blogData.description,
-        content: blogData.content,
-      });
-      setContent(blogData.content);
+    // try {
+    //   const response = await axiosInstance.get(`${''}/${id}`);
+    //   const blogData = response.data;
+    //   setCurrentBlog(blogData);
+    //   form.setFieldsValue({
+    //     name: blogData.name,
+    //     category_id: blogData.category_id,
+    //     image_url: blogData.image_url,
+    //     description: blogData.description,
+    //     content: blogData.content,
+    //   });
+    //   setContent(blogData.content);
 
-      // Đặt fileList nếu có ảnh
-      if (blogData.image_url) {
-        setFileList([
-          {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: blogData.image_url,
-          },
-        ]);
-      } else {
-        setFileList([]);
-      }
-    } finally {
-      setLoading(false);
-    }
+    //   // Đặt fileList nếu có ảnh
+    //   if (blogData.image_url) {
+    //     setFileList([
+    //       {
+    //         uid: '-1',
+    //         name: 'image.png',
+    //         status: 'done',
+    //         url: blogData.image_url,
+    //       },
+    //     ]);
+    //   } else {
+    //     setFileList([]);
+    //   }
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleSubmit = async (values: Blog) => {
-    let avatarUrl: string = "";
-    if (fileList.length > 0) {
-      const file = fileList[0];
-      if (file.originFileObj) {
-        avatarUrl = await uploadFile(file.originFileObj as File);
-      } else if (file.url) {
-        avatarUrl = file.url;
-      }
-    }
-    const user = getUserFromLocalStorage();
-    const payload = { ...values, content, user_id: user._id, image_url: avatarUrl };
-    setLoading(true);
-    try {
-      if (isUpdateMode && currentBlog) {
-        await axiosInstance.put(`${''}/${currentBlog._id}`, payload);
-        message.success("Blog updated successfully");
-      } else {
-        await axiosInstance.post('', payload);
-        message.success("Blog added successfully");
-      }
-    } finally {
-      setLoading(false);
-    }
+    // let avatarUrl: string = "";
+    // if (fileList.length > 0) {
+    //   const file = fileList[0];
+    //   if (file.originFileObj) {
+    //     avatarUrl = await uploadFile(file.originFileObj as File);
+    //   } else if (file.url) {
+    //     avatarUrl = file.url;
+    //   }
+    // }
+    // const user = getUserFromLocalStorage();
+    // const payload = { ...values, content, user_id: user._id, image_url: avatarUrl };
+    // setLoading(true);
+    // try {
+    //   if (isUpdateMode && currentBlog) {
+    //     await axiosInstance.put(`${''}/${currentBlog._id}`, payload);
+    //     message.success("Blog updated successfully");
+    //   } else {
+    //     await axiosInstance.post('', payload);
+    //     message.success("Blog added successfully");
+    //   }
+    // } finally {
+    //   setLoading(false);
+    // }
 
-    // Xử lý sau khi submit thành công
-    setIsModalVisible(false);
-    form.resetFields();
-    setIsUpdateMode(false);
-    setFileList([]);
-    setCurrentBlog(null);
-    setContent("");
-    await fetchBlogs();
+    // // Xử lý sau khi submit thành công
+    // setIsModalVisible(false);
+    // form.resetFields();
+    // setIsUpdateMode(false);
+    // setFileList([]);
+    // setCurrentBlog(null);
+    // setContent("");
+    // await fetchBlogs();
 
   };
 

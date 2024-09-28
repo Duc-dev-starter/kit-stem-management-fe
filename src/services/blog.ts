@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 // import { API_DELETE_BLOG, API_CLIENT_GET_BLOGS } from "../consts";
 import axiosInstance from "./axiosInstance";
 import { message } from "antd";
+import { BaseService } from "./BaseService";
+import { API } from "../consts";
 
 
 export const getBlogs = async (
@@ -11,7 +13,7 @@ export const getBlogs = async (
   pageSize: number = 10
   ) => {
   try {
-    const response = await axiosInstance.post('', {
+    const response = await BaseService.post({url: API.GET_BLOGS, payload: {
       "searchCondition": {
         "category_id": category_id || "",
         "is_deleted": is_deleted !== undefined ? is_deleted : false,
@@ -20,7 +22,8 @@ export const getBlogs = async (
         "pageNum": pageNum || 1,
         "pageSize": pageSize || 100
       }
-    });
+    }})
+    console.log(response)
     return response;
   } catch (error) {
         return {
