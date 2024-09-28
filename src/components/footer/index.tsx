@@ -26,7 +26,7 @@ const { Title, Paragraph, Text } = Typography;
 const FooterComponent = () => {
   return (
     <div>
-      <Footer style={{ backgroundColor: "#00416c", padding: "40px 50px 20px 50px" }}>
+      <Footer style={{ backgroundColor: "#00416c", padding: "60px 0" }}>
         <Row>
           <Col flex={2}>
             <Row style={{ display: "flex", justifyContent: "center" }}>
@@ -53,7 +53,7 @@ const FooterComponent = () => {
                   marginTop: "16px",
                   width: "65%",
                   display: "flex",
-                  justifyContent: "space-between",
+                  gap: '10px'
                 }}
                 onFinish={(values) => {
                   console.log("Success:", values);
