@@ -15,6 +15,7 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const Dashboard: React.FC = () => {
   const [itemsNav, setItems] = useState<MenuItem[]>([]);
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -80,15 +81,15 @@ const Dashboard: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }} >
       <Sider
+        collapsible
+        collapsed={collapsed} // Bind the collapsed state
         theme='light'
         breakpoint="lg"
         collapsedWidth="0"
         onBreakpoint={(broken) => {
           console.log(broken);
         }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
+        onCollapse={setCollapsed}
       >
         <div className="demo-logo-vertical" />
         <Menu style={{ minHeight: '100vh' }} onClick={handleClick} theme="light" mode="inline" defaultSelectedKeys={['1']} items={itemsNav} />
