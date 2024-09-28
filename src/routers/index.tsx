@@ -5,6 +5,7 @@ import {
 } from "../pages"
 import Dashboard from "../components/dashboard"
 import AdminDashboard from "../pages/admin/dashboard"
+import Terms from "../pages/terms"
 
 const AppRouter = () => {
     return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/terms" element={<Terms />} />
 
             <Route path="/manager/*" element={<Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}

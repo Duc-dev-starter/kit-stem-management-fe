@@ -34,8 +34,8 @@ export const paths = {
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8PyKYrBKAWWy6YCbQzWQcwIRqH8wYMPluIZiMpV1w0NYSbocTZz0ICWFkLcXhaMyvCwQ&usqp=CAU",
 };
 const statusOfKit = {
-   IN_WAREHOUSE:"in_warehouse",
-   NEW:"new",
+  IN_WAREHOUSE: "in_warehouse",
+  NEW: "new",
 }
 export const kitStatus = (status: string) => {
   switch (status) {
