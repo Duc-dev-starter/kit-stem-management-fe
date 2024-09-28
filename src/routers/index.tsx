@@ -1,9 +1,6 @@
 import { Route, Routes } from "react-router-dom"
-import { AboutPage, AdminManageBlogs, AdminManageCategories, AdminManageUsers, HomePage, KitDetail, Login, ManageKit, ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, ManageUser, Register } from "../pages"
+import { Terms, AdminLoginPage, AboutPage, AdminManageBlogs, AdminDashboard, AdminManageCategories, AdminManageUsers, HomePage, KitDetail, Login, ManageKit, ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, ManageUser, Register, Policy, Guidelines, Support } from "../pages"
 import Dashboard from "../components/dashboard"
-import AdminDashboard from "../pages/admin/dashboard"
-import AdminLoginPage from "../pages/admin/login"
-import Terms from "../pages/terms"
 
 const AppRouter = () => {
     return (
@@ -13,6 +10,9 @@ const AppRouter = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/terms/policy" element={<Policy />} />
+            <Route path="/terms/guidelines" element={<Guidelines />} />
+            <Route path="/support" element={<Support />} />
 
             <Route path="/manager/*" element={<Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
