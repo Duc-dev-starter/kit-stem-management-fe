@@ -24,8 +24,8 @@ export async function login(email: string, password: string){
     console.log("res: ", response)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    if (response.data.success) {
-      const token = response.data.data.token;
+    if (response.success) {
+      const token = response.data.token;
       console.log("token: ", token)
       const decodedToken: JwtPayload = jwtDecode(token);
       if (decodedToken.role === roles.ADMIN || decodedToken.role === roles.CUSTOMER || decodedToken.role === roles.MANAGER || decodedToken.role === roles.MEMBER) {

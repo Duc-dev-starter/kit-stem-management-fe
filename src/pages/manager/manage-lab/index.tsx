@@ -1,21 +1,24 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Table } from "antd";
+import { Button, Table, Tag } from "antd";
+import { useEffect, useState } from "react";
+import { Lab } from "../../../models/Kit.model";
+import { getAllLabsFromManager } from "../../../services/lab.services";
 
 const ManageLab = () => {
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ];
+    const [labs, setlabs] = useState<Lab[]>([]);
+
+    useEffect(() => {
+        getAllKits();
+    }, [])
+
+    const getAllKits = async () => {
+        const res = await getAllLabsFromManager();
+        console.log("res: ", res)
+        if (res && res.data.pageData) {
+            setlabs(res.data.pageData);
+            console.log("res.data.pageData: ", res.data.pageData)
+        }
+    }
 
     const columns = [
         {
@@ -24,14 +27,14 @@ const ManageLab = () => {
             key: 'name',
         },
         {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: string) => (
+                <Tag className="cursor-pointer" >
+                    {status}
+                </Tag>
+            )
         },
         {
             title: 'Action',
@@ -50,7 +53,7 @@ const ManageLab = () => {
                 className="text-center font-bold my-5"
             >Manage LAB</h1>
             <Button type="primary" className="my-5 float-right">Add new</Button>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={labs} columns={columns} />
         </>
     )
 }

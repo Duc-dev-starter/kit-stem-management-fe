@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { DesktopOutlined, UserOutlined } from '@ant-design/icons';
-import { Layout, Menu, MenuProps, theme } from 'antd';
+import { DesktopOutlined, DownOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown, Layout, Menu, MenuProps, Space, theme } from 'antd';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -14,7 +14,7 @@ const { Header, Content, Footer, Sider } = Layout;
 // );
 
 const Dashboard: React.FC = () => {
-  const [items, setItems] = useState<MenuItem[]>([]);
+  const [itemsNav, setItems] = useState<MenuItem[]>([]);
   const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -62,6 +62,23 @@ const Dashboard: React.FC = () => {
   const handleClick = (e: { key: React.Key }) => {
     navigate(e.key as string); // Navigate to the selected key
   };
+
+  const handleLogout = () => {
+    localStorage.clear();
+  }
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+          <div onClick={handleLogout} className='text-red-500'>
+            Log out
+          </div>
+        </a>
+      ),
+    },
+  ];
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -75,10 +92,20 @@ const Dashboard: React.FC = () => {
         }}
       >
         <div className="demo-logo-vertical" />
-        <Menu style={{ minHeight: '100vh' }} onClick={handleClick} theme="light" mode="inline" defaultSelectedKeys={['1']} items={items} />
+        <Menu style={{ minHeight: '100vh' }} onClick={handleClick} theme="light" mode="inline" defaultSelectedKeys={['1']} items={itemsNav} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header className='bg-white flex justify-between'>
+          <div>
+            <p>Welcome back</p>
+          </div>
+          <Dropdown  menu={{ items }}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Avatar size={32} icon={<UserOutlined />} />
+            </a>
+          </Dropdown>
+
+        </Header>
         <Content style={{ margin: '24px 16px 0' }}>
           <div
             style={{
