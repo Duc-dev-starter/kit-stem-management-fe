@@ -2,17 +2,17 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { Lab } from "../../../models/Kit";
-import { getAllLabsFromManager } from "../../../services/lab";
+import { getLabs } from "../../../services";
 
 const ManageLab = () => {
     const [labs, setlabs] = useState<Lab[]>([]);
 
     useEffect(() => {
-        getAllKits();
+        fetchLabs();
     }, [])
 
-    const getAllKits = async () => {
-        const res = await getAllLabsFromManager();
+    const fetchLabs = async () => {
+        const res = await getLabs();
         console.log("res: ", res)
         if (res && res.data.pageData) {
             setlabs(res.data.pageData);

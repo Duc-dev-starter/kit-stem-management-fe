@@ -2,9 +2,9 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Image, Modal, Select, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { kitStatus, kitStatusColor } from "../../../consts";
-import { getAllKitsFromManager } from "../../../services/kit";
 import { Kit } from "../../../models/Kit";
 import { Link, useNavigate } from "react-router-dom";
+import { getKits } from "../../../services";
 
 const ManageKit = () => {
     const [open, setOpen] = useState(false);
@@ -19,11 +19,11 @@ const ManageKit = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        getAllKits();
+        fetchKits();
     }, [])
 
-    const getAllKits = async () => {
-        const res = await getAllKitsFromManager();
+    const fetchKits = async () => {
+        const res = await getKits();
         console.log("res: ", res)
         if (res && res.data.pageData) {
             setKits(res.data.pageData);

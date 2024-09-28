@@ -1,32 +1,40 @@
 import { API } from "../consts"
-import axiosInstance from "./axiosInstance"
-export interface LabValues {
-    keyword?: string | undefined,
-    category_id?: string | undefined,
-    status?: string | undefined,
-    pageNum?: number | 1,
-    pageSize?: number | 100
-}
+import { BaseService } from "./BaseService"
 
-export const getAllLabsFromManager = async (values?: LabValues) => {
+
+export const getLabs = async (
+    keyword: string = "",
+    category_id: string = "",
+    status: boolean = true,
+    is_deleted: boolean = false,
+    pageNum: number = 1,
+    pageSize: number = 10
+) => {
     try {
-        const res = await axiosInstance.post(`${API.GET_LABS}`,
-            {
-                "searchCondition": {
-                    "keyword": values?.keyword,
-                    "category_id": values?.category_id,
-                    "status": values?.status,
-                    "is_deleted": false
-                },
-                "pageInfo": {
-                    "pageNum": 1,
-                    "pageSize": 100
-                }
+        const response = await BaseService.post({url: API.GET_LABS, payload: {
+            "searchCondition": {
+                "keyword": keyword || "",
+                "category_id": category_id || "",
+                "status": status || "",
+                "is_deleted": is_deleted || false
+            },
+            "pageInfo": {
+                "pageNum": pageNum || 1,
+                "pageSize": pageSize || 100
             }
-        )
-        return res;
+    }})
+    return response;
     } catch (error) {
-        console.log("getAllKitsFromManager-error:", error)
-        return [];
+        console.log(error);
+        return {
+          data: {
+            pageInfo: {
+              totalItems: 0,
+              pageNum,
+              pageSize
+            },
+            pageData: []
+          }
+        };
     }
 }

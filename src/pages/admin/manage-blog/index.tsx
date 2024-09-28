@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { Button, Image, Table } from "antd";
 import { Blog, Category } from "../../../models";
-import { getCategories, getUserFromLocalStorage, deleteBlog, getBlogs } from "../../../services";
+import { getCategories, deleteBlog, getBlogs } from "../../../services";
 import { ContentFormItem, DescriptionFormItem, UploadButton, TitleFormItem } from "../../../components";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { formatDate, getBase64, uploadFile } from "../../../utils";

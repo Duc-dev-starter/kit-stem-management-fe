@@ -21,7 +21,6 @@ import type { GetProp, RadioChangeEvent, TableColumnsType, TablePaginationConfig
 import { User, UserRole } from "../../../models/User.ts";
 
 import { roleRules, roles } from "../../../consts/index.ts";
-import ResponseData from "../../../models/ResponseData.ts";
 import { useDebounce } from "../../../hooks/index.ts";
 import {
   // CustomBreadcrumb,
@@ -37,6 +36,7 @@ import { axiosInstance } from "../../../services/axiosInstance.ts";
 import { formatDate, getBase64, uploadFile } from "../../../utils/index.ts";
 import LoadingComponent from "../../../components/loading/index.tsx";
 import CustomBreadcrumb from "../../../components/breadcrumb/index.tsx";
+import { getUsers } from '../../../services';
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -58,9 +58,46 @@ const AdminManageUsers: React.FC = () => {
   const [modalMode, setModalMode] = useState<"Add" | "Edit">("Add");
   const [selectedRole, setSelectedRole] = useState<string>("All");
   const [selectedStatus, setSelectedStatus] = useState<string>("true");
-  const [selectedVerify, setSelectedVerify] = useState<string>("true");
 
   const debouncedSearch = useDebounce(searchText, 500);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, debouncedSearch]);
+
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      let statusValue: boolean | undefined = false;
+      if (selectedStatus === "true") {
+        statusValue = true;
+      }
+      const responseUsers = await getUsers(
+        debouncedSearch,
+        selectedRole === "All" ? undefined : selectedRole.toLowerCase(),
+        statusValue,
+        false,
+        pagination.current,
+        pagination.pageSize
+      );
+      const sortedUsers = responseUsers.data.pageData.sort((a: User, b: User) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
+
+
+      setDataUsers(sortedUsers);
+      setPagination({
+        ...pagination,
+        total: responseUsers.data.pageInfo.totalItems,
+        current: responseUsers.data.pageInfo.pageNum,
+        pageSize: responseUsers.data.pageInfo.pageSize,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, searchText, debouncedSearch]);
 
   const handlePaginationChange = (page: number, pageSize?: number) => {
     setPagination((prev) => ({
@@ -179,20 +216,6 @@ const AdminManageUsers: React.FC = () => {
       render: (status: boolean, record: User) => <Switch defaultChecked={status} />,
     },
     {
-      title: "Verify",
-      dataIndex: "is_verified",
-      key: "is_verified",
-      render: (is_verified: boolean) => (
-        <span>
-          {is_verified ? (
-            <img src="https://cdn-icons-png.flaticon.com/512/7595/7595571.png" alt="" />
-          ) : (
-            <img src="https://cdn-icons-png.flaticon.com/128/4847/4847128.png" alt="" />
-          )}
-        </span>
-      ),
-    },
-    {
       title: "Action",
       key: "action",
       width: "15%",
@@ -277,10 +300,6 @@ const AdminManageUsers: React.FC = () => {
           <Select.Option value="false">Inactive</Select.Option>
         </Select>
 
-        <Select value={selectedVerify} className="w-full md:w-32 mt-2 md:mt-0 md:ml-2">
-          <Select.Option value="true">Verified</Select.Option>
-          <Select.Option value="false">Unverified</Select.Option>
-        </Select>
       </Space>
 
       <Table

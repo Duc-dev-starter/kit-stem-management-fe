@@ -3,7 +3,8 @@ import {
     AboutPage, AdminManageBlogs, KitDetail, AdminManageCategories, AdminManageUsers, HomePage, Login, ManageKit,
     ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, ManageUser, Register, AdminLoginPage,
     InternalServerError,
-    Terms
+    Terms,
+    NotFound
 } from "../pages"
 import AdminDashboard from "../pages/admin/dashboard"
 import { PATH } from "../consts"
@@ -28,6 +29,7 @@ const AppRouter = () => {
                 <Route path={PATH.MANAGER_LAB} element={<ManageLab />} />
                 <Route path={PATH.MANAGER_KIT_DELIVERY} element={<ManageKitDelivery />} />
                 <Route path={PATH.MANAGER_KIT_DELIVERY_DETAIL} element={<ManageKitDeliveryDetail />} />
+                <Route path="*" element={<NotFound />} />
             </Route>
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
             <Route path={PATH.ADMIN} element={<Dashboard />}>
@@ -35,7 +37,9 @@ const AppRouter = () => {
                 <Route path={PATH.ADMIN_MANAGE_USER} element={<AdminManageUsers />} />
                 <Route path={PATH.ADMIN_MANAGE_BLOG} element={<AdminManageBlogs />} />
                 <Route path={PATH.ADMIN_MANAGE_CATEGORY} element={<AdminManageCategories />} />
+                <Route path="*" element={<NotFound />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
         </Routes>
     )
 }

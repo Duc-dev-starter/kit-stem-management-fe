@@ -1,18 +1,12 @@
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import {API, PATH, roles} from "../consts";
-import {User} from "../models/User.ts";
+import {User} from "../models";
 import { message } from "antd";
 import { BaseService } from '../services';
-import {JwtPayload} from '../interfaces/index.ts'
+import {JwtPayload} from '../interfaces'
+import { getUserFromLocalStorage } from "../utils";
 
-
-
-export function getUserFromLocalStorage(){
-  const userString = localStorage.getItem("user");
-  const user: User = userString ? JSON.parse(userString) : "";
-  return user
-}
 
 export async function login(email: string, password: string){
     const response = await BaseService.post({url: API.LOGIN, payload: {email, password}});

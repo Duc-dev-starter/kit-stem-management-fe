@@ -52,8 +52,8 @@ const Dashboard: React.FC = () => {
     } else if (currentPath.startsWith('/admin')) {
       setItems([
         getItem('Dashboard', '/admin/dashboard', <DesktopOutlined />),
-        getItem('Manage Categories', '/admin/manage-categories', <UserOutlined />),
         getItem('Manage Users', '/admin/manage-users', <UserOutlined />),
+        getItem('Manage Categories', '/admin/manage-categories', <UserOutlined />),
         getItem('Manage Blogs', '/admin/manage-blogs', <DesktopOutlined />),
       ]);
     }
@@ -70,11 +70,9 @@ const Dashboard: React.FC = () => {
     {
       key: '1',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-          <div onClick={handleLogout} className='text-red-500'>
-            Log out
-          </div>
-        </a>
+        <div onClick={handleLogout} className='text-red-500'>
+          Log out
+        </div>
       ),
     },
   ];
