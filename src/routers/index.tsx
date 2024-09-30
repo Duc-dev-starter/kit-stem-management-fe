@@ -22,7 +22,7 @@ const AppRouter = () => {
 
             <Route path={PATH.MANAGER} element={<Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
-                <Route path={PATH.MANAGER_DASHBOARD} element={<ManagerDashboard />} />
+                <Route path={PATH.MANAGER_HOME} element={<ManagerDashboard />} />
                 <Route path={PATH.MANAGER_USER} element={<ManageUser />} />
                 <Route path={PATH.MANAGER_KIT} element={<ManageKit />} />
                 <Route path={PATH.MANAGER_KIT_ID} element={<KitDetail />} />

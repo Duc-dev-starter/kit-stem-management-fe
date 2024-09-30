@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import {
   Form,
   message,
   Modal,
   Pagination,
-  Popconfirm,
   Select,
   TableColumnsType,
   TablePaginationConfig,
@@ -14,11 +13,12 @@ import {
 import { Button, Image, Table } from "antd";
 import { Blog, Category } from "../../../models";
 import { getCategories, deleteBlog, getBlogs } from "../../../services";
-import { ContentFormItem, DescriptionFormItem, UploadButton, TitleFormItem } from "../../../components";
+import { ContentFormItem, DescriptionFormItem, UploadButton, TitleFormItem, LoadingOverlay, CustomDeletePopconfirm } from "../../../components";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { formatDate, getBase64, uploadFile } from "../../../utils";
-import LoadingComponent from "../../../components/loading";
 import CustomBreadcrumb from "../../../components/breadcrumb";
+import { RootState } from "../../../store";
+import { useSelector } from 'react-redux';
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -27,7 +27,6 @@ const AdminManageBlogs: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const [loading, setLoading] = useState<boolean>(true);
   const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 10, total: 0 });
   const [categories, setCategories] = useState<Category[]>([]);
   const [currentBlog, setCurrentBlog] = useState<Blog | null>(null);
@@ -35,6 +34,7 @@ const AdminManageBlogs: React.FC = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
@@ -51,7 +51,7 @@ const AdminManageBlogs: React.FC = () => {
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [pagination.current, pagination.pageSize]);
 
   const fetchCategories = async () => {
     const responseCategories = await getCategories();
@@ -60,10 +60,8 @@ const AdminManageBlogs: React.FC = () => {
   };
 
   const fetchBlogs = async () => {
-    setLoading(true);
     try {
       const responseBlog = await getBlogs("", false, pagination.current, pagination.pageSize);
-      console.log(responseBlog);
       setDataBlogs(responseBlog.data.pageData);
       setPagination({
         ...pagination,
@@ -71,8 +69,8 @@ const AdminManageBlogs: React.FC = () => {
         current: responseBlog.data.pageInfo.pageNum,
         pageSize: responseBlog.data.pageInfo.pageSize,
       });
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -183,8 +181,8 @@ const AdminManageBlogs: React.FC = () => {
   const columns: TableColumnsType<Blog> = [
     {
       title: "Title",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "title",
+      key: "title",
     },
     {
       title: "Category",
@@ -229,33 +227,20 @@ const AdminManageBlogs: React.FC = () => {
             style={{ fontSize: "20px" }}
             onClick={() => handleUpdateClick(record._id)}
           />
-          <Popconfirm
+          <CustomDeletePopconfirm
             title="Delete the Blog"
             description="Are you sure to delete this Blog?"
-            onConfirm={() => deleteBlog(record._id, record.name, fetchBlogs)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteOutlined
-              className="ml-5 text-red-500 hover:cursor-pointer hover:opacity-60"
-              style={{ fontSize: "20px" }}
-            />
-          </Popconfirm>
+            onConfirm={() => deleteBlog(record._id, record.title, fetchBlogs)}
+          />
         </div>
       ),
     },
   ];
 
-  if (loading) {
-    return (
-      <>
-        <LoadingComponent />
-      </>
-    );
-  }
 
   return (
     <div>
+      {isLoading && <LoadingOverlay />}
       <div className="flex justify-between">
         <CustomBreadcrumb />
         <div className="py-2">

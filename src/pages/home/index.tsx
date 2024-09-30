@@ -1,14 +1,11 @@
-import Header from '../../components/header';
-import Navbar from '../../components/nav';
-import FooterComponent from '../../components/footer';
 
-const HomePage = () => {
-    
+
+
+const HomePage: React.FC = () => {
+
 
     return (
         <div>
-            <Header />
-            <Navbar />
             {/* Hero section with video */}
             <div className="relative overflow-hidden w-full h-[680px] bg-gray-900">
                 <iframe
@@ -19,8 +16,6 @@ const HomePage = () => {
                     allowFullScreen
                 ></iframe>
             </div>
-
-            <FooterComponent />
         </div>
     );
 };

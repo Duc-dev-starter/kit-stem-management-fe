@@ -3,7 +3,7 @@ import React from 'react'
 import { PATH } from '../../../consts'
 import { Link } from 'react-router-dom'
 
-const InternalServerError = () => {
+const InternalServerError: React.FC = () => {
     return (
         <Result
             status="500"

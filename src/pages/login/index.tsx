@@ -45,9 +45,7 @@ const LoginPage: React.FC = () => {
     try {
       const authResult = await login(email, password);
       if (authResult && "token" in authResult) {
-        const { token } = authResult;
-        localStorage.setItem("token", token);
-        await handleNavigateRole(navigate);
+        await handleNavigateRole(authResult.token, navigate);
       }
       setLoading(false)
     } catch (error) {

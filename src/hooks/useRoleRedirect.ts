@@ -32,12 +32,12 @@ const useRoleRedirect = () => {
         break;
       case roles.ADMIN:
         if (!path.includes("/admin") || path.includes(PATH.LOGIN) || path.includes(PATH.REGISTER) || path.includes(PATH.FORGOT_PASSWORD)) {
-          navigate(PATH.ADMIN_HOME);
+          navigate(PATH.ADMIN_DASHBOARD);
         }
         break;
       case roles.MANAGER:
         if (!path.includes("/manager")|| path.includes(PATH.LOGIN) || path.includes(PATH.REGISTER) || path.includes(PATH.FORGOT_PASSWORD)) {
-          navigate(PATH.MANAGER_HOME);
+          navigate(PATH.MANAGER_DASHBOARD);
         }
         break;
       default:

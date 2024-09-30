@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, message } from "antd";
+import { Form } from "antd";
 import Login from "../../../assets/Login4.jpg";
 import {
   ButtonFormItem,
@@ -20,9 +20,7 @@ const AdminLoginPage: React.FC = () => {
     try {
       const authResult = await login(email, password);
       if (authResult && "token" in authResult) {
-        const { token } = authResult;
-        localStorage.setItem("token", token);
-        handleNavigateRole(navigate);
+        handleNavigateRole(authResult.token, navigate);
       }
     } finally {
       setLoading(false);

@@ -1,26 +1,24 @@
 import { useState, useEffect, useCallback } from "react";
-import { Button, Input, Space, Table, Modal, Form, Pagination, Popconfirm, Select, message, } from "antd";
-import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Table, Modal, Form, Pagination, Select } from "antd";
+import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Category } from "../../../models";
-import { getCategories } from "../../../services";
+import { deleteCategory, getCategories } from "../../../services";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { ColumnType } from "antd/es/table";
-// import { API_CREATE_CATEGORY, API_DELETE_CATEGORY, API_UPDATE_CATEGORY } from "../../../consts";
 import { useDebounce } from "../../../hooks";
-// import { CustomBreadcrumb, LoadingComponent, NameFormItem } from "../../../components";
 import { formatDate } from "../../../utils";
-import { NameFormItem } from "../../../components";
-import LoadingComponent from "../../../components/loading";
-import CustomBreadcrumb from "../../../components/breadcrumb";
+import { LoadingOverlay, NameFormItem, CustomBreadcrumb, CustomDeletePopconfirm } from "../../../components";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import { updateCategory } from '../../../services';
 const AdminManageCategories: React.FC = () => {
   const [dataCategories, setDataCategories] = useState<Category[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [validateOnOpen, setValidateOnOpen] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
   const [parentCategories, setParentCategories] = useState<Category[]>([]);
-
+  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
 
   const debouncedSearchTerm = useDebounce(searchText, 500);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
@@ -30,7 +28,6 @@ const AdminManageCategories: React.FC = () => {
   });
 
   const fetchCategories = useCallback(async () => {
-    setLoading(true);
     try {
       const responseCategories = await getCategories(debouncedSearchTerm, false, pagination.current, pagination.pageSize);
       setDataCategories(responseCategories.data.pageData || responseCategories.data);
@@ -40,8 +37,8 @@ const AdminManageCategories: React.FC = () => {
         current: responseCategories.data.pageInfo?.pageNum || 1,
         pageSize: responseCategories.data.pageInfo?.pageSize || prev.pageSize,
       }));
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.log(error);
     }
   }, [pagination.current, pagination.pageSize, searchText, debouncedSearchTerm]);
 
@@ -64,28 +61,13 @@ const AdminManageCategories: React.FC = () => {
     setValidateOnOpen(true);
   }, [form]);
 
-  const handleDelete = async (_id: string, name: string) => {
-    const isParentCategory = dataCategories.some(
-      (category) => category.parent_category_id === _id
-    );
-
-    if (isParentCategory) {
-      message.error(`Cannot delete category ${name} as it is a parent category of another category.`);
-      return;
-    }
-    // await axiosInstance.delete(`${''}/${_id}`);
-    // message.success(`Category ${name} deleted successfully.`);
-    // await fetchCategories();
-  };
-
-  const updateCategory = useCallback(
+  const handleUpdateCategory = useCallback(
     async (values: Partial<Category> & { _id: string | null }, originalCreatedAt: string) => {
       let parentCategoryId = null;
 
       if (values.parent_category_id && values.parent_category_id !== "none") {
         parentCategoryId = values.parent_category_id;
       }
-      setLoading(true);
       const updatedCategory: Category = {
         _id: values._id!,
         name: values.name ?? "",
@@ -97,24 +79,22 @@ const AdminManageCategories: React.FC = () => {
         updated_at: new Date().toISOString(),
       };
 
-      // try {
-      //   const response = await axiosInstance.put(`${''}/${values._id}`, updatedCategory);
-
-      //   if (response.data) {
-      //     setDataCategories((prevData) =>
-      //       prevData.map((category) =>
-      //         category._id === values._id
-      //           ? { ...category, ...response.data }
-      //           : category
-      //       )
-      //     );
-      //     setIsModalVisible(false);
-      //     form.resetFields();
-      //     message.success(`Category ${values.name} updated successfully.`);
-      //   }
-      // } finally {
-      //   setLoading(false);
-      // }
+      try {
+        const response = await updateCategory(values._id, values.name || '', updatedCategory);
+        if (response.data) {
+          setDataCategories((prevData) =>
+            prevData.map((category) =>
+              category._id === values._id
+                ? { ...category, ...response.data }
+                : category
+            )
+          );
+          setIsModalVisible(false);
+          form.resetFields();
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     [dataCategories, form]
   );
@@ -130,7 +110,7 @@ const AdminManageCategories: React.FC = () => {
           <Form
             form={form}
             onFinish={(values) => {
-              updateCategory(values, category.created_at);
+              handleUpdateCategory(values, category.created_at);
             }}
             initialValues={{
               _id: category._id,
@@ -174,12 +154,11 @@ const AdminManageCategories: React.FC = () => {
         },
       });
     },
-    [form, updateCategory, fetchCategories, dataCategories]
+    [form, handleUpdateCategory, fetchCategories, dataCategories]
   );
 
   const addNewCategory = useCallback(
     async (values: Omit<Category, "_id">) => {
-      setLoading(true);
 
       let parentCategoryId = null;
       if (values.parent_category_id) {
@@ -231,11 +210,6 @@ const AdminManageCategories: React.FC = () => {
     }));
   }, [fetchCategories]);
 
-  if (loading) {
-    return (<>
-      <LoadingComponent />
-    </>)
-  }
 
   const columns: ColumnType<Category>[] = [
     {
@@ -277,17 +251,11 @@ const AdminManageCategories: React.FC = () => {
             style={{ fontSize: "16px", marginLeft: "8px", cursor: "pointer" }}
             onClick={() => handleEditCategory(record)}
           />
-          <Popconfirm
-            title="Are you sure to delete this category?"
-            onConfirm={() => handleDelete(record._id, record.name)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteOutlined
-              className="text-red-500"
-              style={{ fontSize: "16px", marginLeft: "8px", cursor: "pointer" }}
-            />
-          </Popconfirm>
+          <CustomDeletePopconfirm
+            title="Delete the Category"
+            description="Are you sure to delete this Category?"
+            onConfirm={() => deleteCategory(record._id, record.name, dataCategories, fetchCategories)}
+          />
         </div>
       ),
     },
@@ -297,6 +265,7 @@ const AdminManageCategories: React.FC = () => {
   };
   return (
     <div>
+      {isLoading && <LoadingOverlay />}
       <div className="flex justify-between items-center ">
         <CustomBreadcrumb />
 
@@ -363,7 +332,7 @@ const AdminManageCategories: React.FC = () => {
             <Input.TextArea rows={4} />
           </Form.Item>
           <Form.Item>
-            <Button loading={loading} type="primary" htmlType="submit">
+            <Button loading={isLoading} type="primary" htmlType="submit">
               Add
             </Button>
           </Form.Item>

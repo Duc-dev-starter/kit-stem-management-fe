@@ -1,6 +1,6 @@
 export class Blog {
     _id: string = "";
-    name: string = "";
+    title: string = "";
     user_id: string = "";
     category_id: string = "";
     description: string = "";
@@ -13,7 +13,7 @@ export class Blog {
     category_name: string = "";
     constructor(
         _id: string,
-        name: string,
+        title: string,
         user_id: string,
         category_id: string,
         description: string,
@@ -26,7 +26,7 @@ export class Blog {
         category_name: string,
     ) {
         this._id = _id;
-        this.name = name;
+        this.title = title;
         this.user_id = user_id;
         this.user_name = user_name;
         this.category_id = category_id;

@@ -10,33 +10,35 @@ import {
   Form,
   Pagination,
   Upload,
-  Popconfirm,
   Radio,
   Select,
   Avatar,
   message,
 } from "antd";
-import { DeleteOutlined, EditOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
+import { EditOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
 import type { GetProp, RadioChangeEvent, TableColumnsType, TablePaginationConfig, UploadFile, UploadProps } from "antd";
 import { User, UserRole } from "../../../models/User.ts";
 
-import { roleRules, roles } from "../../../consts/index.ts";
+import { getRoleColor, getRoleLabel, roleRules, roles } from "../../../consts";
 import { useDebounce } from "../../../hooks/index.ts";
 import {
+  CustomDeletePopconfirm,
+  CustomSelect,
   // CustomBreadcrumb,
   DescriptionFormItem,
   EmailFormItem,
+  LoadingOverlay,
   NameFormItem,
   PasswordFormItem,
   PhoneNumberFormItem,
   UploadButton,
   VideoFormItem,
 } from "../../../components";
-import { axiosInstance } from "../../../services/axiosInstance.ts";
-import { formatDate, getBase64, uploadFile } from "../../../utils/index.ts";
-import LoadingComponent from "../../../components/loading/index.tsx";
+import { formatDate, getBase64, uploadFile } from "../../../utils";
 import CustomBreadcrumb from "../../../components/breadcrumb/index.tsx";
-import { getUsers } from '../../../services';
+import { deleteUser, getUsers, updateUser } from '../../../services';
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -46,7 +48,6 @@ const AdminManageUsers: React.FC = () => {
 
   const [searchText, setSearchText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -58,6 +59,7 @@ const AdminManageUsers: React.FC = () => {
   const [modalMode, setModalMode] = useState<"Add" | "Edit">("Add");
   const [selectedRole, setSelectedRole] = useState<string>("All");
   const [selectedStatus, setSelectedStatus] = useState<string>("true");
+  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
 
   const debouncedSearch = useDebounce(searchText, 500);
 
@@ -66,7 +68,6 @@ const AdminManageUsers: React.FC = () => {
   }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, debouncedSearch]);
 
   const fetchUsers = useCallback(async () => {
-    setLoading(true);
     try {
       let statusValue: boolean | undefined = false;
       if (selectedStatus === "true") {
@@ -94,8 +95,8 @@ const AdminManageUsers: React.FC = () => {
         current: responseUsers.data.pageInfo.pageNum,
         pageSize: responseUsers.data.pageInfo.pageSize,
       });
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.log(error);
     }
   }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, searchText, debouncedSearch]);
 
@@ -118,8 +119,7 @@ const AdminManageUsers: React.FC = () => {
     setFileList([]);
   };
 
-  const handleEditUser = async (values: User) => {
-    setLoading(true);
+  const handleUpdateUser = async (values: User) => {
     let avatarUrl = values.avatar;
 
     if (values.avatar && typeof values.avatar !== "string" && values.avatar.file?.originFileObj) {
@@ -134,15 +134,14 @@ const AdminManageUsers: React.FC = () => {
 
     // Logic to handle the API call or further processing for updating the user
     try {
-      await axiosInstance.put(`/users/${values._id}`, updatedUser);
-      message.success("User updated successfully");
+      await updateUser(values._id, updatedUser);
       setDataUsers((prev) =>
         prev.map((user) => (user._id === values._id ? { ...user, ...updatedUser } : user))
       );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       message.error("Failed to update user");
     } finally {
-      setLoading(false);
       setIsModalVisible(false);
     }
   };
@@ -180,18 +179,13 @@ const AdminManageUsers: React.FC = () => {
       dataIndex: "role",
       key: "role",
       width: "10%",
-      render: (role: UserRole, record: User) => (
-        <Select defaultValue={role}>
-          <Select.Option className="text-red-700" value="student">
-            <span className="text-blue-800">Student</span>
-          </Select.Option>
-          <Select.Option value="instructor">
-            <span className="text-green-700">Instructor</span>
-          </Select.Option>
-          <Select.Option value="admin">
-            <span className="text-violet-500">Admin</span>
-          </Select.Option>
-        </Select>
+      render: (role: UserRole) => (
+        <CustomSelect
+          value={role}
+          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF]}
+          getColor={getRoleColor}
+          getLabel={getRoleLabel}
+        />
       ),
     },
     {
@@ -246,9 +240,11 @@ const AdminManageUsers: React.FC = () => {
               );
             }}
           />
-          <Popconfirm title="Delete the User" okText="Yes" cancelText="No">
-            <DeleteOutlined className="ml-5 text-red-500 hover:cursor-pointer hover:opacity-60" style={{ fontSize: "20px" }} />
-          </Popconfirm>
+          <CustomDeletePopconfirm
+            title="Delete the User"
+            description="Are you sure to delete this User?"
+            onConfirm={() => deleteUser(record._id, record.name, fetchUsers)}
+          />
         </div>
       ),
     },
@@ -258,12 +254,10 @@ const AdminManageUsers: React.FC = () => {
     setSearchText(e.target.value);
   };
 
-  if (loading) {
-    return <LoadingComponent />;
-  }
 
   return (
     <div>
+      {isLoading && <LoadingOverlay />}
       <CustomBreadcrumb />
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <div className="mt-3 md:mt-0">
@@ -323,7 +317,7 @@ const AdminManageUsers: React.FC = () => {
       >
         <Form
           form={form}
-          onFinish={modalMode === "Edit" ? handleEditUser : () => { }}
+          onFinish={modalMode === "Edit" ? handleUpdateUser : () => { }}
           initialValues={formData}
         >
           <NameFormItem />
@@ -348,7 +342,7 @@ const AdminManageUsers: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               {modalMode === "Edit" ? "Update User" : "Add User"}
             </Button>
           </Form.Item>

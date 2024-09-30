@@ -8,8 +8,10 @@ import {JwtPayload} from '../interfaces'
 import { getUserFromLocalStorage } from "../utils";
 
 
-export async function login(email: string, password: string){
+export const login = async(email: string, password: string) => {
     const response = await BaseService.post({url: API.LOGIN, payload: {email, password}});
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     if (response.success) {
       const token = response.data.token;
       const decodedToken: JwtPayload = jwtDecode(token);
@@ -86,10 +88,10 @@ export async function login(email: string, password: string){
 // };
 
 
-export const handleNavigateRole = async (navigate: ReturnType<typeof useNavigate>) => {
+export const handleNavigateRole = async (token: string, navigate: ReturnType<typeof useNavigate>) => {
+  localStorage.setItem('token', token);
   const response = await BaseService.get({url: API.GET_CURRENT_LOGIN_USER});
   const user = response.data;
-  console.log(response);
   localStorage.setItem("user", JSON.stringify(user));
     switch (user.role) {
       case roles.CUSTOMER:
@@ -108,13 +110,13 @@ export const handleNavigateRole = async (navigate: ReturnType<typeof useNavigate
     message.success("Login successfully");
 };
 
-export const getCurrentLoginUser = async (token: string) => {
+export const getCurrentLoginUser = async () => {
   const response = await BaseService.get({url: API.GET_CURRENT_LOGIN_USER});
-  localStorage.setItem("token", token);
   localStorage.setItem("user", JSON.stringify(response.data));
 };
 
-export const logout = ( navigate: ReturnType<typeof useNavigate>) => {
+export const logout = async ( navigate: ReturnType<typeof useNavigate>)=>  {
+  await BaseService.get({url: API.LOGOUT});
   const user: User = getUserFromLocalStorage();
   if (user.role === roles.ADMIN) {
     navigate(PATH.ADMIN_LOGIN);
@@ -123,9 +125,13 @@ export const logout = ( navigate: ReturnType<typeof useNavigate>) => {
     navigate(PATH.HOME);
   }
   message.info("You logout from the system");
-  const courseInWishList = localStorage.getItem("courseInWishList");
+  const kitInWishList = localStorage.getItem("kitInWishList");
+  const labInWishList = localStorage.getItem("labInWishList");
   localStorage.clear();
-  if (courseInWishList) {
-    localStorage.setItem("courseInWishList", courseInWishList);
+  if (kitInWishList) {
+    localStorage.setItem("kitInWishList", kitInWishList);
+  }
+  if(labInWishList){
+    localStorage.setItem("labInWishList", labInWishList);
   }
 };

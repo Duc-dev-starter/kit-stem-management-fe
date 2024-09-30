@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-// import { API_DELETE_BLOG, API_CLIENT_GET_BLOGS } from "../consts";
-import axiosInstance from "./axiosInstance";
 import { message } from "antd";
 import { BaseService } from "./BaseService";
 import { API } from "../consts";
@@ -23,7 +21,6 @@ export const getBlogs = async (
         "pageSize": pageSize || 100
       }
     }})
-    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
@@ -40,10 +37,10 @@ export const getBlogs = async (
       }
     };
 
-export const deleteBlog = async (id: string, title: string, getBlogs: () => Promise<void>) => {
-    await axiosInstance.delete(`${''}/${id}`);
+export const deleteBlog = async (id: string, title: string, fetchBlogs: () => Promise<void>) => {
+    await BaseService.delete({url: `${API.GET_UPDATE_DELETE_BLOG}/${id}`});
     message.success(`Deleted blog ${title} successfully`);
-    await getBlogs();
+    await fetchBlogs();
   };
 
 export const handleGetBlogDetail = (_id: string, navigate: ReturnType<typeof useNavigate>) => {

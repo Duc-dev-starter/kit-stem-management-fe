@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { PATH } from '../../../consts'
 
-const NotFound = () => {
+const NotFound: React.FC = () => {
     return (
         <Result
             status="404"

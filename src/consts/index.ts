@@ -1,8 +1,11 @@
-export { HttpStatus } from './http.enum'
-import { Rule } from "antd/lib/form";
-import { PATH } from './path';
 export { API } from './api';
 export { PATH } from './path'
+export {avatarUrlRules,commentRules,contentRules,descriptionRules,emailRules,nameRules,passwordRules,phoneNumberRules,ratingRules,rejectRules,roleRules,titleRules,videoRules} from './formItem.ts'
+export {roles} from './role.ts'
+import {PATH} from './path.ts'
+export {isNotUseHeaderFooter} from './notUseHeaderFooter.ts'
+export {getRoleColor} from './getColor.ts'
+export {getRoleLabel} from './getLabel.ts'
 
 const statusOfKit = {
   IN_WAREHOUSE: "in_warehouse",
@@ -28,82 +31,8 @@ export const kitStatusColor = (status: string) => {
 
 
 
-export const emailRules: Rule[] = [
-  { required: true, message: "Please input your email!" },
-  { type: "email", message: "Please enter the correct email format!" },
-  { pattern: /^\S*$/, message: "Email must not contain spaces!" },
-];
 
-export const passwordRules: Rule[] = [
-  { required: true, message: "Please input your password!" },
-  { min: 6, message: "Password must be at least 6 characters!" },
-  { pattern: /^\S*$/, message: "Password must not contain spaces!" },
-];
 
-export const nameRules: Rule[] = [
-  { required: true, message: "Please input your name!" },
-  { min: 4, message: "Name must be at least 4 characters!" },
-  { max: 20, message: "Name must be at most 20 characters!" },
-]
-
-export const roleRules: Rule[] = [
-  { required: true, message: "Please select your role!" },
-]
-
-export const videoRules: Rule[] = [
-  {
-    required: true,
-    message: "Please input your video link!",
-  },
-]
-
-export const descriptionRules: Rule[] = [
-  {
-    required: true,
-    message: "Please input your description!",
-  },
-]
-
-export const phoneNumberRules: Rule[] = [
-  {
-    required: true,
-    message: "Please input your phone number!",
-  },
-]
-
-export const avatarUrlRules: Rule[] = [
-  {
-    required: true,
-    message: "Please upload your Avatar",
-  },
-]
-
-export const commentRules: Rule[] = [
-  { required: true, message: 'Please provide a review' }
-]
-
-export const ratingRules: Rule[] = [
-  { required: true, message: 'Please provide a rating' }
-]
-
-export const contentRules: Rule[] = [
-  { required: true, message: "Please enter the content!" },
-  { min: 10, message: "Content must be at least 10 characters!" },
-]
-
-export const titleRules: Rule[] = [
-  { required: true, message: "Please input the title!" }
-]
-
-export const rejectRules: Rule[] = [
-  { required: true, message: "Please provide the reason for rejection" }
-]
-export const roles = {
-  STAFF: "staff",
-  CUSTOMER: "customer",
-  MANAGER: "manager",
-  ADMIN: "admin",
-};
 
 
 // Define the structure of the submenu

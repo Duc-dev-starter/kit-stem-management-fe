@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import { API } from '../consts';
 import { BaseService } from './BaseService';
-import { UserRole } from '../models';
+import { User, UserRole } from '../models';
 import { ValuesChangePassword } from '../interfaces';
 import { getUserFromLocalStorage } from '../utils';
 export const user = getUserFromLocalStorage();
@@ -43,21 +43,23 @@ export const getUsers = async (
           }
     }
 
-    export const getUserDetail = async (_id: string) => {
-        const response = await BaseService.get({url: `${API.GET_UPDATE_DELETE_USER}/${_id}`});
-        return response;
-      };
+export const getUserDetail = async (_id: string) => {
+  const response = await BaseService.get({url: `${API.GET_UPDATE_DELETE_USER}/${_id}`});
+    return response;
+};
       
-      export const changePassword = async (values: ValuesChangePassword) => {
-        const response = await BaseService.put({url: API.CHANGE_PASSWORD, payload:{
-            user_id: user._id,
-            old_password: values.oldPassword,
-            new_password: values.newPassword,
-          }});
-        if (response.success) {
-          message.success("Change password successfully");
-        }
-      };
+export const changePassword = async (values: ValuesChangePassword) => {
+  const response = await BaseService.put({url: API.CHANGE_PASSWORD, payload:{
+      user_id: user._id,
+      old_password: values.oldPassword,
+      new_password: values.newPassword,
+  }});
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      if (response.success) {
+        message.success("Change password successfully");
+      }
+};
       
       export const deleteUser = async (_id: string, email: string, fetchUsers: () => Promise<void>) => {
         await BaseService.delete({url: `${API.GET_UPDATE_DELETE_USER}/${_id}`});
@@ -85,4 +87,9 @@ export const getUsers = async (
           }});
         message.success(`Role changed successfully`);
       };
+
+export const updateUser = async (id: string, updateData: User) => {
+    await BaseService.put({url: `${API.GET_UPDATE_DELETE_USER}/${id}`, payload: updateData});
+    message.success("User updated successfully");
+}
       
