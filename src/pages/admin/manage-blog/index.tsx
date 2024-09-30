@@ -19,6 +19,7 @@ import { formatDate, getBase64, uploadFile } from "../../../utils";
 import CustomBreadcrumb from "../../../components/breadcrumb";
 import { RootState } from "../../../store";
 import { useSelector } from 'react-redux';
+import './index.module.css';
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -239,7 +240,7 @@ const AdminManageBlogs: React.FC = () => {
 
 
   return (
-    <div>
+    <div className="h-[100vh]">
       {isLoading && <LoadingOverlay />}
       <div className="flex justify-between">
         <CustomBreadcrumb />
@@ -249,6 +250,7 @@ const AdminManageBlogs: React.FC = () => {
           </Button>
         </div>
       </div>
+
       <Table
         columns={columns}
         dataSource={dataBlogs}
@@ -256,6 +258,7 @@ const AdminManageBlogs: React.FC = () => {
         onChange={handleTableChange}
         pagination={false}
       />
+
       <div className="flex justify-end py-8">
         <Pagination
           total={pagination.total}
