@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { BaseService } from "./BaseService";
 import { API } from "../consts";
+import { Blog } from "../models";
 
 
 export const getBlogs = async (
@@ -36,6 +37,21 @@ export const getBlogs = async (
         };
       }
     };
+
+export const createBlog = async(blogData: Blog) => {
+  await BaseService.post({url: API.CREATE_BLOG, payload: blogData});
+  message.success("Blog added successfully");
+}
+
+export const getBlog = async (id: string) => {
+  const response = await BaseService.getById({url: API.GET_UPDATE_DELETE_BLOG, id});
+  return response;
+}
+
+export const updateBlog = async(id: string, blogData: Blog) => {
+  await BaseService.post({url: `${API.GET_UPDATE_DELETE_BLOG}/${id}`, payload: blogData});
+  message.success("Blog updated successfully");
+}
 
 export const deleteBlog = async (id: string, title: string, fetchBlogs: () => Promise<void>) => {
     await BaseService.delete({url: `${API.GET_UPDATE_DELETE_BLOG}/${id}`});

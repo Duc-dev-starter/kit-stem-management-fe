@@ -22,7 +22,9 @@ export const PATH = {
   USER_DETAIL: "/user/:id",
   INTERNAL_SERVER_ERROR: "/internal-server-error",
   //Staff
-  
+  STAFF: '/staff/*',
+  STAFF_HOME: 'dashboard',
+  STAFF_DASHBOARD: '/staff/dashboard',
   //Manager
   MANAGER: '/manager/*',
   MANAGER_HOME: 'dashboard',

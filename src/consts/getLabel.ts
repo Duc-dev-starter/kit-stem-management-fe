@@ -8,6 +8,8 @@ export const getRoleLabel = (role: string) => {
         return "Staff";
       case "admin":
         return "Admin";
+      case "all":
+        return "All";
       default:
         return "";
     }

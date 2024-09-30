@@ -98,11 +98,14 @@ export const handleNavigateRole = async (token: string, navigate: ReturnType<typ
         navigate(PATH.HOME);
         break;
       case roles.MANAGER:
-        navigate(PATH.MANAGER_HOME);
+        navigate(PATH.MANAGER_DASHBOARD);
         break;
       case roles.ADMIN:
-        navigate(PATH.ADMIN_HOME);
+        navigate(PATH.ADMIN_DASHBOARD);
         break;
+      case roles.STAFF: 
+      navigate(PATH.STAFF_DASHBOARD);
+      break;
       default:
         navigate(PATH.HOME);
         break;

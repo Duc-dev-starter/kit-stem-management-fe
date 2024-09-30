@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { Button, Input, Space, Table, Modal, Form, Pagination, Select } from "antd";
+import { Button, Input, Space, Table, Modal, Form, Pagination, Select, message } from "antd";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Category } from "../../../models";
-import { deleteCategory, getCategories } from "../../../services";
+import { createCategory, deleteCategory, getCategories, updateCategory } from "../../../services";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { ColumnType } from "antd/es/table";
 import { useDebounce } from "../../../hooks";
@@ -10,7 +10,6 @@ import { formatDate } from "../../../utils";
 import { LoadingOverlay, NameFormItem, CustomBreadcrumb, CustomDeletePopconfirm } from "../../../components";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
-import { updateCategory } from '../../../services';
 const AdminManageCategories: React.FC = () => {
   const [dataCategories, setDataCategories] = useState<Category[]>([]);
   const [searchText, setSearchText] = useState<string>("");
@@ -71,7 +70,6 @@ const AdminManageCategories: React.FC = () => {
       const updatedCategory: Category = {
         _id: values._id!,
         name: values.name ?? "",
-        description: values.description ?? "",
         parent_category_id: parentCategoryId,
         user_id: values.user_id ?? "",
         is_deleted: values.is_deleted ?? false,
@@ -81,7 +79,7 @@ const AdminManageCategories: React.FC = () => {
 
       try {
         const response = await updateCategory(values._id, values.name || '', updatedCategory);
-        if (response.data) {
+        if (response.success) {
           setDataCategories((prevData) =>
             prevData.map((category) =>
               category._id === values._id
@@ -116,7 +114,6 @@ const AdminManageCategories: React.FC = () => {
               _id: category._id,
               name: category.name,
               parent_category_id: category.parent_category_id,
-              description: category.description,
             }}
             labelCol={{ span: 24 }}
           >
@@ -139,10 +136,6 @@ const AdminManageCategories: React.FC = () => {
                   ))}
               </Select>
             </Form.Item>
-
-            <Form.Item label="Description" name="description" rules={[{ required: false }]}>
-              <Input.TextArea rows={4} />
-            </Form.Item>
           </Form>
         ),
         okText: "Save",
@@ -157,8 +150,15 @@ const AdminManageCategories: React.FC = () => {
     [form, handleUpdateCategory, fetchCategories, dataCategories]
   );
 
+  const handleDeleteCategory = (id: string, name: string) => {
+    deleteCategory(id, name, dataCategories, fetchCategories);
+    setParentCategories(dataCategories)
+    fetchParentCategories();
+  };
+
+
   const addNewCategory = useCallback(
-    async (values: Omit<Category, "_id">) => {
+    async (values: Category) => {
 
       let parentCategoryId = null;
       if (values.parent_category_id) {
@@ -175,19 +175,20 @@ const AdminManageCategories: React.FC = () => {
         parent_category_id: parentCategoryId,
       };
 
-      // try {
-      //   const response = await axiosInstance.post('', categoryData);
-      //   if (response.data) {
-      //     const newCategory = response.data;
-      //     setDataCategories((prevData) => [...prevData, newCategory]);
-      //     form.resetFields();
-      //     fetchCategories();
-      //     message.success(`Category ${values.name} created successfully.`);
-      //     setIsModalVisible(false);
-      //   }
-      // } finally {
-      //   setLoading(false);
-      // }
+      try {
+        const response = await createCategory(categoryData);
+        if (response.success) {
+          const newCategory = response.data;
+          setDataCategories((prevData) => [...prevData, newCategory]);
+          form.resetFields();
+          fetchCategories();
+          fetchParentCategories();
+          message.success(`Category ${values.name} created successfully.`);
+          setIsModalVisible(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     [dataCategories, form, fetchCategories]
   );
@@ -254,8 +255,7 @@ const AdminManageCategories: React.FC = () => {
           <CustomDeletePopconfirm
             title="Delete the Category"
             description="Are you sure to delete this Category?"
-            onConfirm={() => deleteCategory(record._id, record.name, dataCategories, fetchCategories)}
-          />
+            onConfirm={() => handleDeleteCategory(record._id, record.name)} />
         </div>
       ),
     },
@@ -327,9 +327,6 @@ const AdminManageCategories: React.FC = () => {
                 </Select.Option>
               ))}
             </Select>
-          </Form.Item>
-          <Form.Item label="Description" name="description" rules={[{ required: false }]}>
-            <Input.TextArea rows={4} />
           </Form.Item>
           <Form.Item>
             <Button loading={isLoading} type="primary" htmlType="submit">

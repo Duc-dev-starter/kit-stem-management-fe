@@ -1,7 +1,6 @@
 export class Category {
   _id: string;
   name: string;
-  description: string;
   parent_category_id: string | null;
   user_id: string;
   is_deleted: boolean;
@@ -11,7 +10,6 @@ export class Category {
   constructor(
     _id: string = "",
     name: string = "",
-    description: string = "",
     parent_category_id: string | null = null,
     user_id: string = "",
     is_deleted: boolean = false,
@@ -20,7 +18,6 @@ export class Category {
   ) {
     this._id = _id;
     this.name = name;
-    this.description = description;
     this.parent_category_id = parent_category_id;
     this.user_id = user_id;
     this.is_deleted = is_deleted;

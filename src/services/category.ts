@@ -31,6 +31,10 @@ export const getCategories = async (keyword: string = "", is_deleted : boolean =
             };
           }
 };
+export const createCategory = async(categoryData: Category) => {
+  const response = await BaseService.post({url: API.CREATE_CATEGORY, payload: categoryData});
+  return response;
+}
 
 export const updateCategory = async (id: string, name: string,updateCategory: Category) => {
   await BaseService.put({url: `${API.GET_UPDATE_DELETE_CATEGORY}/${id}`, payload: updateCategory});

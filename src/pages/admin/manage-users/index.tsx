@@ -32,7 +32,6 @@ import {
   PasswordFormItem,
   PhoneNumberFormItem,
   UploadButton,
-  VideoFormItem,
 } from "../../../components";
 import { formatDate, getBase64, uploadFile } from "../../../utils";
 import CustomBreadcrumb from "../../../components/breadcrumb/index.tsx";
@@ -60,7 +59,13 @@ const AdminManageUsers: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<string>("All");
   const [selectedStatus, setSelectedStatus] = useState<string>("true");
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
-
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
   const debouncedSearch = useDebounce(searchText, 500);
 
   useEffect(() => {
@@ -276,18 +281,13 @@ const AdminManageUsers: React.FC = () => {
           enterButton={<SearchOutlined className="text-white" />}
         />
 
-        <Select value={selectedRole} className="w-full md:w-32 mt-2 md:mt-0 md:ml-2">
-          <Select.Option value="All">All Roles</Select.Option>
-          <Select.Option value="Admin">
-            <span className="text-violet-500">Admin</span>
-          </Select.Option>
-          <Select.Option value="Manager">
-            <span className="text-blue-800">Manager</span>
-          </Select.Option>
-          <Select.Option value="Member">
-            <span className="text-green-700">Member</span>
-          </Select.Option>
-        </Select>
+        <CustomSelect
+          className="w-full md:w-32 mt-2 md:mt-0 md:ml-2"
+          value={selectedRole}
+          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF, 'all']}
+          getColor={getRoleColor}
+          getLabel={getRoleLabel}
+        />
 
         <Select value={selectedStatus} className="w-full md:w-32 mt-2 md:mt-0 md:ml-2">
           <Select.Option value="true">Active</Select.Option>
@@ -299,15 +299,21 @@ const AdminManageUsers: React.FC = () => {
       <Table
         columns={columns}
         dataSource={dataUsers}
-        pagination={{
-          current: pagination.current,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          onChange: handlePaginationChange,
-        }}
+        pagination={false}
         onChange={handleTableChange}
         rowKey="_id"
       />
+
+      <div className="flex justify-end py-8">
+        <Pagination
+          total={pagination.total}
+          showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+          current={pagination.current}
+          pageSize={pagination.pageSize}
+          onChange={handlePaginationChange}
+          showSizeChanger
+        />
+      </div>
 
       <Modal
         title={modalMode === "Edit" ? "Edit User" : "Add New User"}

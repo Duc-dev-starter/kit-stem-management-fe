@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { EditOutlined } from "@ant-design/icons";
 import {
   Form,
-  message,
   Modal,
   Pagination,
   Select,
@@ -12,11 +11,10 @@ import {
 } from "antd";
 import { Button, Image, Table } from "antd";
 import { Blog, Category } from "../../../models";
-import { getCategories, deleteBlog, getBlogs } from "../../../services";
-import { ContentFormItem, DescriptionFormItem, UploadButton, TitleFormItem, LoadingOverlay, CustomDeletePopconfirm } from "../../../components";
+import { getCategories, deleteBlog, getBlogs, updateBlog, createBlog, getBlog } from "../../../services";
+import { ContentFormItem, DescriptionFormItem, UploadButton, TitleFormItem, LoadingOverlay, CustomDeletePopconfirm, CustomBreadcrumb } from "../../../components";
 import type { GetProp, UploadFile, UploadProps } from "antd";
-import { formatDate, getBase64, uploadFile } from "../../../utils";
-import CustomBreadcrumb from "../../../components/breadcrumb";
+import { formatDate, getBase64, getUserFromLocalStorage, uploadFile } from "../../../utils";
 import { RootState } from "../../../store";
 import { useSelector } from 'react-redux';
 import './index.module.css';
@@ -36,6 +34,7 @@ const AdminManageBlogs: React.FC = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
+
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
@@ -81,75 +80,68 @@ const AdminManageBlogs: React.FC = () => {
   };
 
   const handleUpdateClick = async (id: string) => {
-    // setIsUpdateMode(true);
-    // setIsModalVisible(true);
-    // setLoading(true);
+    setIsUpdateMode(true);
+    setIsModalVisible(true);
+    try {
+      const response = await getBlog(id);
+      const blogData = response.data;
+      setCurrentBlog(blogData);
+      form.setFieldsValue({
+        title: blogData.title,
+        category_id: blogData.category_id,
+        image_url: blogData.image_url,
+        description: blogData.description,
+        content: blogData.content,
+      });
+      setContent(blogData.content);
 
-    // try {
-    //   const response = await axiosInstance.get(`${''}/${id}`);
-    //   const blogData = response.data;
-    //   setCurrentBlog(blogData);
-    //   form.setFieldsValue({
-    //     name: blogData.name,
-    //     category_id: blogData.category_id,
-    //     image_url: blogData.image_url,
-    //     description: blogData.description,
-    //     content: blogData.content,
-    //   });
-    //   setContent(blogData.content);
-
-    //   // Đặt fileList nếu có ảnh
-    //   if (blogData.image_url) {
-    //     setFileList([
-    //       {
-    //         uid: '-1',
-    //         name: 'image.png',
-    //         status: 'done',
-    //         url: blogData.image_url,
-    //       },
-    //     ]);
-    //   } else {
-    //     setFileList([]);
-    //   }
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
+      // Đặt fileList nếu có ảnh
+      if (blogData.image_url) {
+        setFileList([
+          {
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
+            url: blogData.image_url,
+          },
+        ]);
+      } else {
+        setFileList([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleSubmit = async (values: Blog) => {
-    // let avatarUrl: string = "";
-    // if (fileList.length > 0) {
-    //   const file = fileList[0];
-    //   if (file.originFileObj) {
-    //     avatarUrl = await uploadFile(file.originFileObj as File);
-    //   } else if (file.url) {
-    //     avatarUrl = file.url;
-    //   }
-    // }
-    // const user = getUserFromLocalStorage();
-    // const payload = { ...values, content, user_id: user._id, image_url: avatarUrl };
-    // setLoading(true);
-    // try {
-    //   if (isUpdateMode && currentBlog) {
-    //     await axiosInstance.put(`${''}/${currentBlog._id}`, payload);
-    //     message.success("Blog updated successfully");
-    //   } else {
-    //     await axiosInstance.post('', payload);
-    //     message.success("Blog added successfully");
-    //   }
-    // } finally {
-    //   setLoading(false);
-    // }
-
-    // // Xử lý sau khi submit thành công
-    // setIsModalVisible(false);
-    // form.resetFields();
-    // setIsUpdateMode(false);
-    // setFileList([]);
-    // setCurrentBlog(null);
-    // setContent("");
-    // await fetchBlogs();
-
+    let avatarUrl: string = "";
+    if (fileList.length > 0) {
+      const file = fileList[0];
+      if (file.originFileObj) {
+        avatarUrl = await uploadFile(file.originFileObj as File);
+      } else if (file.url) {
+        avatarUrl = file.url;
+      }
+    }
+    const user = getUserFromLocalStorage();
+    const payload = { ...values, content, user_id: user._id, image_url: avatarUrl };
+    try {
+      if (isUpdateMode && currentBlog) {
+        await updateBlog(currentBlog._id, payload);
+      } else {
+        await createBlog(payload);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    // Xử lý sau khi submit thành công
+    setIsModalVisible(false);
+    form.resetFields();
+    setIsUpdateMode(false);
+    setFileList([]);
+    setCurrentBlog(null);
+    setContent("");
+    await fetchBlogs();
   };
 
 

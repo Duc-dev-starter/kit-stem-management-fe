@@ -1,11 +1,12 @@
 import { Select } from 'antd';
-import React from 'react'
+import React from 'react';
 
 type CustomSelectProps = {
     value: string;
     options: string[];
     getColor: (option: string) => string;
     getLabel: (option: string) => string;
+    className?: string;
 };
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -13,14 +14,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     options,
     getColor,
     getLabel,
-}: {
-    value: string;
-    options: string[];
-    getColor: (option: string) => string;
-    getLabel: (option: string) => string;
+    className
 }) => {
     return (
-        <Select defaultValue={value}>
+        <Select defaultValue={value} className={className || ''}>
             {options.map((option) => (
                 <Select.Option key={option} value={option}>
                     <span className={getColor(option)}>{getLabel(option)}</span>
@@ -30,4 +27,4 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     );
 };
 
-export default CustomSelect
+export default CustomSelect;

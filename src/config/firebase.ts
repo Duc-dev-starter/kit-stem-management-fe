@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCZThpep6oxVIAjO0PNJxFoupkPOENt1Ps",
-  authDomain: "online-course-management-e9629.firebaseapp.com",
-  projectId: "online-course-management-e9629",
-  storageBucket: "online-course-management-e9629.appspot.com",
-  messagingSenderId: "54663812997",
-  appId: "1:54663812997:web:8f62c18d76ab256d2416ec",
-  measurementId: "G-PHTVH7Z96B",
+  apiKey: "AIzaSyCVfIRingd9YAfSxt5j9xAEbdrnzgLuGJs",
+  authDomain: "kit-stem.firebaseapp.com",
+  projectId: "kit-stem",
+  storageBucket: "kit-stem.appspot.com",
+  messagingSenderId: "17970827588",
+  appId: "1:17970827588:web:9cc83306aeba07033f8711",
+  measurementId: "G-790S16QJZ4"
 };
 
 const app = initializeApp(firebaseConfig);

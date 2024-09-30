@@ -20,6 +20,10 @@ const AppRouter = () => {
             <Route path={PATH.TERMS} element={<Terms />} />
             <Route path={PATH.INTERNAL_SERVER_ERROR} element={<InternalServerError />} />
 
+            <Route path={PATH.STAFF} element={<Dashboard />}>
+                <Route path="*" element={<NotFound />} />
+            </Route>
+
             <Route path={PATH.MANAGER} element={<Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
                 <Route path={PATH.MANAGER_HOME} element={<ManagerDashboard />} />
