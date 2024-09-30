@@ -81,18 +81,16 @@ const Dashboard: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }} >
       <Sider
-        collapsible
-        collapsed={collapsed} // Bind the collapsed state
-        theme='light'
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={setCollapsed}
+        // width={200} style={{ background: colorBgContainer }}
+        // theme='light'
+        // breakpoint="lg"
+        // collapsedWidth="0"
+        collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
       >
         <div className="demo-logo-vertical" />
-        <Menu style={{ minHeight: '100vh' }} onClick={handleClick} theme="light" mode="inline" defaultSelectedKeys={['1']} items={itemsNav} />
+        <Menu onClick={handleClick} theme="light" mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}
+          items={itemsNav} style={{ height: '100%', borderRight: 0 }}
+        />
       </Sider>
       <Layout>
         <Header className='bg-white flex justify-between'>
