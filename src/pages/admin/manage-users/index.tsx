@@ -258,16 +258,16 @@ const AdminManageUsers: React.FC = () => {
   return (
     <div>
       {isLoading && <LoadingOverlay />}
-      <CustomBreadcrumb />
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-        <div className="mt-3 md:mt-0">
+      <div className="flex flex-row md:flex-row justify-between items-center mb-4">
+        <div className="flex flex-row justify-between w-full mt-3 md:mt-0">
+          <CustomBreadcrumb />
           <Button type="primary" className="py-2" onClick={handleAddClick}>
             <UserAddOutlined /> Add New User
           </Button>
         </div>
       </div>
 
-      <Space className="mb-2 flex flex-wrap">
+      <Space className="mb-2 flex flex-nowrap">
         <Input.Search
           placeholder="Search By Name and Email"
           value={searchText}
