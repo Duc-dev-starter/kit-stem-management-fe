@@ -82,14 +82,14 @@ const Dashboard: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }} >
       <Sider
         // width={200} style={{ background: colorBgContainer }}
-        // theme='light'
+        theme='light'
         // breakpoint="lg"
         // collapsedWidth="0"
         collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
       >
         <div className="demo-logo-vertical" />
         <Menu onClick={handleClick} theme="light" mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}
-          items={itemsNav} style={{ height: '100%', borderRight: 0 }}
+          items={itemsNav} style={{ marginTop: '60px', height: '100%', borderRight: 0 }}
         />
       </Sider>
       <Layout>
