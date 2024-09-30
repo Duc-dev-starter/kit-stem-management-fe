@@ -79,48 +79,55 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        // width={200} style={{ background: colorBgContainer }}
-        // theme='light'
-        // breakpoint="lg"
-        // collapsedWidth="0"
-        collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
-      >
-        <div className="demo-logo-vertical" />
-        <Menu onClick={handleClick} theme='light' mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}
-          items={itemsNav} style={{ paddingTop: '60px', height: '120%', borderRight: 0 }}
-        />
-      </Sider>
-      <Layout>
-        <Header className='bg-white flex justify-between'>
-          <div>
-            <p>Welcome back</p>
-          </div>
-          <Dropdown menu={{ items }}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Avatar size={32} icon={<UserOutlined />} />
-            </a>
-          </Dropdown>
-
-        </Header>
-        <Content style={{ margin: '24px 16px 0' }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <Outlet />
-          </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          ©{new Date().getFullYear()} Created by Thanh Tung
-        </Footer>
+    <>
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+          width={200}
+        >
+          <div className="demo-logo-vertical" />
+          <Menu
+            className="py-4 bg-white-50 h-full"
+            onClick={handleClick}
+            theme='light'
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            items={itemsNav}
+            style={{ flex: 1, minWidth: 0 }}
+          />
+        </Sider>
+        <Layout className="bg-stone-100">
+          <Header className='flex justify-between items-center drop-shadow-xl bg-white'>
+            <div>
+              <p>Welcome back</p>
+            </div>
+            <Dropdown menu={{ items }}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Avatar size={32} icon={<UserOutlined />} />
+              </a>
+            </Dropdown>
+          </Header>
+          <Content style={{ margin: '30px 10px', flexGrow: 1 }}>
+            <div
+              style={{
+                padding: "5px 20px",
+                minHeight: 360,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}
+            >
+              <Outlet />
+            </div>
+          </Content>
+          <Footer style={{ textAlign: 'center' }}>
+            ©{new Date().getFullYear()} Created by CrunchLabs
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 };
 
