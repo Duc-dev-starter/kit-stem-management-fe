@@ -26,7 +26,7 @@ const { Title, Paragraph, Text } = Typography;
 const FooterComponent = () => {
   return (
     <div>
-      <Footer style={{ backgroundColor: "#00416c", padding: "60px 0" }}>
+      <Footer style={{ backgroundColor: "#00416c", padding: "40px 0 40px 0" }}>
         <Row>
           <Col flex={2}>
             <Row style={{ display: "flex", justifyContent: "center" }}>
@@ -53,6 +53,7 @@ const FooterComponent = () => {
                   marginTop: "16px",
                   width: "65%",
                   display: "flex",
+                  justifyContent: "center",
                   gap: '10px'
                 }}
                 onFinish={(values) => {
@@ -102,7 +103,7 @@ const FooterComponent = () => {
 
             <Row justify="center" align="middle">
               <Col span={12} className="flex justify-center items-center gap-4">
-                <Text style={{ color: "white", paddingTop: "100px", fontWeight: "bold" }}>
+                <Text style={{ color: "white", paddingTop: "20px", fontWeight: "bold" }}>
                   &copy; 2024 CrunchLabs LLC - All Rights Reserved
                 </Text>
               </Col>
