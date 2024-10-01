@@ -141,35 +141,6 @@ const Dashboard: React.FC = () => {
       ];
 
   return (
-<<<<<<< HEAD
-    <>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Sider
-          theme='dark'
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
-          width={200}
-        >
-          <div className="demo-logo-vertical" />
-          <Menu
-            className="py-4 bg-white-50 h-full"
-            onClick={handleClick}
-            theme='light'
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            items={itemsNav}
-            style={{ flex: 1, minWidth: 0 }}
-          />
-        </Sider>
-        <Layout className="bg-stone-100">
-          <Header className='flex justify-between items-center drop-shadow-xl bg-white'>
-            <div>
-              <p>Welcome back</p>
-            </div>
-            <Dropdown menu={{ items }}>
-=======
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
         collapsible
@@ -196,7 +167,6 @@ const Dashboard: React.FC = () => {
           </div>
           {dataUser.role !== roles.ADMIN ? (
             <Dropdown menu={{ items: dropdownItems }} trigger={["click"]}>
->>>>>>> fe0c1e6b0084e898c4fd4dd91c325a73fc7df847
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
                   <Avatar
