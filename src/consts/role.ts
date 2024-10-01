@@ -6,3 +6,5 @@ export const roles = {
   };
 
 export const rolesArr = [roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF];
+
+export const privateRole = [roles.ADMIN, roles.MANAGER, roles.STAFF];

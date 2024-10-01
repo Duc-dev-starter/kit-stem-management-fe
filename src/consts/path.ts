@@ -21,6 +21,7 @@ export const PATH = {
   VERIFY_TOKEN: "/verify-email/:token",
   USER_DETAIL: "/user/:id",
   INTERNAL_SERVER_ERROR: "/internal-server-error",
+  CHANGE_PASSWORD: "/change-password",
   //Staff
   STAFF: '/staff/*',
   STAFF_LOGIN : '/manager/login',
