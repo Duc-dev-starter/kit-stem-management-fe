@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import {API, PATH, roles} from "../consts";
+import {API, PATH, roles, rolesArr} from "../consts";
 import {User} from "../models";
 import { message } from "antd";
 import { BaseService } from '../services';
@@ -8,37 +8,66 @@ import {JwtPayload} from '../interfaces'
 import { getUserFromLocalStorage } from "../utils";
 
 
-export const login = async(email: string, password: string) => {
-    const response = await BaseService.post({url: API.LOGIN, payload: {email, password}});
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    if (response.success) {
-      const token = response.data.token;
-      const decodedToken: JwtPayload = jwtDecode(token);
-      if (decodedToken.role === roles.ADMIN || decodedToken.role === roles.CUSTOMER || decodedToken.role === roles.MANAGER || decodedToken.role === roles.STAFF) {
-        if (window.location.pathname.includes('/admin') ) {
-          if(decodedToken.role !== roles.ADMIN){
-            message.error("You don't have permission to access this page");
-            return null;
-          }
-        }
-        else{
-          if (decodedToken.role === roles.ADMIN) {
-            message.error(`You login wrong path. Navigate in 2s`);
-           setTimeout(() => {
-             window.location.href = PATH.ADMIN_LOGIN;
-           }, 2000)
-            return null;
-          }
-        }
-        return { token };
-      } else {
-        message.error("Invalid user role");
-      }
-    }else{
-      return;
-    }
-}
+export const login = async (email: string, password: string) => {
+  const response = await BaseService.post({
+    url: API.LOGIN,
+    payload: { email, password },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  if (!response.success) {
+    return;
+  }
+
+  const token = response.data.token;
+  const decodedToken: JwtPayload = jwtDecode(token);
+
+  if (!rolesArr.includes(decodedToken.role)) {
+    message.error("Invalid user role");
+    return null;
+  }
+
+  const currentPath = window.location.pathname;
+  const userRole = decodedToken.role;
+
+  if (currentPath.includes("/admin") && userRole !== roles.ADMIN) {
+    message.error("You don't have permission to access this page");
+    return null;
+  }
+  else if (currentPath.includes("/manager") && userRole !== roles.MANAGER) {
+    message.error("You don't have permission to access this page");
+    return null;
+  }
+  
+  else if (currentPath.includes("/staff") && userRole !== roles.STAFF) {
+    message.error("You don't have permission to access this page");
+    return null;
+  }
+
+  // const handleWrongPathLogin = (correctPath: string) => {
+  //   message.error(`You login wrong path. Navigate in 2s`);
+  //   setTimeout(() => {
+  //     window.location.href = correctPath;
+  //   }, 2000);
+  //   return null;
+  // };
+
+  // if (currentPath.includes("/admin")) {
+  //   // Đã xử lý ở trên: nếu không phải admin vào trang admin
+  // } else if ([roles.ADMIN, roles.MANAGER, roles.STAFF].includes(userRole)) {
+  //   if (userRole === roles.ADMIN) {
+  //     return handleWrongPathLogin(PATH.ADMIN_LOGIN);
+  //   } else if (userRole === roles.MANAGER) {
+  //     return handleWrongPathLogin(PATH.MANAGER_LOGIN);
+  //   } else {
+  //     return handleWrongPathLogin(PATH.STAFF_LOGIN);
+  //   }
+  // }
+
+  return { token };
+};
+
 
 // export const loginWithGoogle = async (googleId: string, navigate: ReturnType<typeof useNavigate>, setIsModalVisible: (visible: boolean) => void) => {
 //   try {
