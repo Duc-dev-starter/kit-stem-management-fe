@@ -7,10 +7,12 @@ import {
     AdminDashboard,
     NotFound
 } from "../pages"
-import { PATH } from "../consts"
+import { PATH, roles } from "../consts"
 import { Dashboard } from "../layout"
+import { useRoleRedirect } from "../hooks"
 
 const AppRouter = () => {
+    const { canAccess } = useRoleRedirect();
     return (
         <Routes>
             <Route path={PATH.LOGIN} element={<Login />} />
@@ -21,12 +23,12 @@ const AppRouter = () => {
             <Route path={PATH.INTERNAL_SERVER_ERROR} element={<InternalServerError />} />
 
             <Route path={PATH.STAFF_LOGIN} element={<AdminLoginPage />} />
-            <Route path={PATH.STAFF} element={<Dashboard />}>
+            <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) && <Dashboard />}>
                 <Route path="*" element={<NotFound />} />
             </Route>
 
             <Route path={PATH.MANAGER_LOGIN} element={<AdminLoginPage />} />
-            <Route path={PATH.MANAGER} element={<Dashboard />}>
+            <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) && <Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
                 <Route path={PATH.MANAGER_HOME} element={<ManagerDashboard />} />
                 <Route path={PATH.MANAGER_USER} element={<ManageUser />} />
@@ -38,7 +40,7 @@ const AppRouter = () => {
                 <Route path="*" element={<NotFound />} />
             </Route>
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
-            <Route path={PATH.ADMIN} element={<Dashboard />}>
+            <Route path={PATH.ADMIN} element={canAccess([roles.ADMIN]) && <Dashboard />}>
                 <Route path={PATH.ADMIN_HOME} element={<AdminDashboard />} />
                 <Route path={PATH.ADMIN_MANAGE_USER} element={<AdminManageUsers />} />
                 <Route path={PATH.ADMIN_MANAGE_BLOG} element={<AdminManageBlogs />} />
