@@ -1,7 +1,7 @@
 import { Button, Form } from "antd";
 
 interface ButtonFormItemProps {
-  loading: boolean;
+  loading?: boolean;
   buttonText: string;
   htmlType: "button" | "submit" | "reset";
   className?: string;

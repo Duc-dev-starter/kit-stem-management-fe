@@ -23,10 +23,12 @@ export const PATH = {
   INTERNAL_SERVER_ERROR: "/internal-server-error",
   //Staff
   STAFF: '/staff/*',
+  STAFF_LOGIN : '/manager/login',
   STAFF_HOME: 'dashboard',
   STAFF_DASHBOARD: '/staff/dashboard',
   //Manager
   MANAGER: '/manager/*',
+  MANAGER_LOGIN : '/manager/login',
   MANAGER_HOME: 'dashboard',
   MANAGER_MANAGE_KIT: "/manager/manage-kit",
   MANAGER_KIT_DELIVERY_DETAIL: "manage-kit-delivery-detail",
