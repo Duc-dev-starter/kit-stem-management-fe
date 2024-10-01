@@ -4,7 +4,7 @@ import { BaseService } from "./BaseService";
 export const getKits = async (
     keyword: string = "",
     category_id: string = "",
-    status: boolean = true,
+    status: string = "",
     is_deleted: boolean = false,
     pageNum: number = 1,
     pageSize: number = 10
@@ -15,13 +15,14 @@ export const getKits = async (
                     "keyword": keyword || "",
                     "category_id": category_id || "",
                     "status": status || "",
-                    "is_deleted": is_deleted || false
+                    "is_deleted": is_deleted !== undefined ? is_deleted : false,
                 },
                 "pageInfo": {
                     "pageNum": pageNum || 1,
-                    "pageSize": pageSize || 100
+                    "pageSize": pageSize || 10
                 }
         }})
+        console.log(response);
         return response;
     } catch (error) {
         console.log(error);

@@ -3,7 +3,6 @@ export { PATH } from './path'
 export {avatarUrlRules,commentRules,contentRules,descriptionRules,emailRules,nameRules,passwordRules,phoneNumberRules,ratingRules,rejectRules,roleRules,titleRules,videoRules} from './formItem.ts'
 export {roles} from './role.ts'
 import {PATH} from './path.ts'
-export {isNotUseHeaderFooter} from './notUseHeaderFooter.ts'
 export {getRoleColor} from './getColor.ts'
 export {getRoleLabel} from './getLabel.ts'
 

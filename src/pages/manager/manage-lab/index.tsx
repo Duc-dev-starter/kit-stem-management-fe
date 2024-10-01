@@ -1,24 +1,39 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Table, Tag } from "antd";
+import { Button, Pagination, Table, TablePaginationConfig, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { Lab } from "../../../models/Kit";
 import { getLabs } from "../../../services";
 
 const ManageLab = () => {
-    const [labs, setlabs] = useState<Lab[]>([]);
+    const [dataLabs, setDataLabs] = useState<Lab[]>([]);
+    const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 10, total: 0 });
 
     useEffect(() => {
         fetchLabs();
     }, [])
 
     const fetchLabs = async () => {
-        const res = await getLabs();
-        console.log("res: ", res)
-        if (res && res.data.pageData) {
-            setlabs(res.data.pageData);
-            console.log("res.data.pageData: ", res.data.pageData)
-        }
+        const responseLabs = await getLabs();
+        setDataLabs(responseLabs.data.pageData);
+        setPagination({
+            ...pagination,
+            total: responseLabs.data.pageInfo.totalItems,
+            current: responseLabs.data.pageInfo.pageNum,
+            pageSize: responseLabs.data.pageInfo.pageSize,
+        });
     }
+
+    const handlePaginationChange = (page: number, pageSize?: number) => {
+        setPagination((prev) => ({
+            ...prev,
+            current: page,
+            pageSize: pageSize || 10,
+        }));
+    };
+
+    const handleTableChange = (pagination: TablePaginationConfig) => {
+        setPagination(pagination);
+    };
 
     const columns = [
         {
@@ -53,7 +68,23 @@ const ManageLab = () => {
                 className="text-center font-bold my-5"
             >Manage LAB</h1>
             <Button type="primary" className="my-5 float-right">Add new</Button>
-            <Table dataSource={labs} columns={columns} />
+            <Table
+                columns={columns}
+                dataSource={dataLabs}
+                pagination={false}
+                onChange={handleTableChange}
+                rowKey="_id"
+            />
+            <div className="flex justify-end py-8">
+                <Pagination
+                    total={pagination.total}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                    current={pagination.current}
+                    pageSize={pagination.pageSize}
+                    onChange={handlePaginationChange}
+                    showSizeChanger
+                />
+            </div>
         </>
     )
 }
