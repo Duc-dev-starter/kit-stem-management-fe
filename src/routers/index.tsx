@@ -4,9 +4,9 @@ import {
     ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, ManageUser, Register, AdminLoginPage,
     InternalServerError,
     Terms,
+    AdminDashboard,
     NotFound
 } from "../pages"
-import AdminDashboard from "../pages/admin/dashboard"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
 
