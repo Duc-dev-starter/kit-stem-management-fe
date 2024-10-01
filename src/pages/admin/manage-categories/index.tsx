@@ -16,6 +16,7 @@ const AdminManageCategories: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [validateOnOpen, setValidateOnOpen] = useState(false);
   const [form] = Form.useForm();
+  const [modalMode, setModalMode] = useState<"Add" | "Edit">("Add");
   const [parentCategories, setParentCategories] = useState<Category[]>([]);
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
 
@@ -97,58 +98,58 @@ const AdminManageCategories: React.FC = () => {
     [dataCategories, form]
   );
 
-  const handleEditCategory = useCallback(
-    async (category: Category) => {
-      form.resetFields();
-      await fetchCategories();
+  // const handleEditCategory = useCallback(
+  //   async (category: Category) => {
+  //     form.resetFields();
+  //     await fetchCategories();
 
-      Modal.confirm({
-        title: `Edit Category - ${category.name}`,
-        content: (
-          <Form
-            form={form}
-            onFinish={(values) => {
-              handleUpdateCategory(values, category.created_at);
-            }}
-            initialValues={{
-              _id: category._id,
-              name: category.name,
-              parent_category_id: category.parent_category_id,
-            }}
-            labelCol={{ span: 24 }}
-          >
-            <Form.Item name="_id" style={{ display: "none" }}>
-              <Input />
-            </Form.Item>
+  //     Modal.confirm({
+  //       title: `Edit Category - ${category.name}`,
+  //       content: (
+  //         <Form
+  //           form={form}
+  //           onFinish={(values) => {
+  //             handleUpdateCategory(values, category.created_at);
+  //           }}
+  //           initialValues={{
+  //             _id: category._id,
+  //             name: category.name,
+  //             parent_category_id: category.parent_category_id,
+  //           }}
+  //           labelCol={{ span: 24 }}
+  //         >
+  //           <Form.Item name="_id" style={{ display: "none" }}>
+  //             <Input />
+  //           </Form.Item>
 
-            <NameFormItem />
-            <Form.Item label="Parent Category" name="parent_category_id" rules={[{ required: false }]}>
-              <Select placeholder="Select parent category">
-                <Select.Option key="none" value="none">
-                  None
-                </Select.Option>
-                {parentCategories
-                  .filter((parentCategory) => parentCategory._id !== form.getFieldValue("_id"))
-                  .map((parentCategory) => (
-                    <Select.Option key={parentCategory._id} value={parentCategory._id}>
-                      {parentCategory.name}
-                    </Select.Option>
-                  ))}
-              </Select>
-            </Form.Item>
-          </Form>
-        ),
-        okText: "Save",
-        onOk: () => {
-          form.submit();
-        },
-        onCancel: () => {
-          form.resetFields();
-        },
-      });
-    },
-    [form, handleUpdateCategory, fetchCategories, dataCategories]
-  );
+  //           <NameFormItem />
+  //           <Form.Item label="Parent Category" name="parent_category_id" rules={[{ required: false }]}>
+  //             <Select placeholder="Select parent category">
+  //               <Select.Option key="none" value="none">
+  //                 None
+  //               </Select.Option>
+  //               {parentCategories
+  //                 .filter((parentCategory) => parentCategory._id !== form.getFieldValue("_id"))
+  //                 .map((parentCategory) => (
+  //                   <Select.Option key={parentCategory._id} value={parentCategory._id}>
+  //                     {parentCategory.name}
+  //                   </Select.Option>
+  //                 ))}
+  //             </Select>
+  //           </Form.Item>
+  //         </Form>
+  //       ),
+  //       okText: "Save",
+  //       onOk: () => {
+  //         form.submit();
+  //       },
+  //       onCancel: () => {
+  //         form.resetFields();
+  //       },
+  //     });
+  //   },
+  //   [form, handleUpdateCategory, fetchCategories, dataCategories]
+  // );
 
   const handleDeleteCategory = (id: string, name: string) => {
     deleteCategory(id, name, dataCategories, fetchCategories);
@@ -176,15 +177,41 @@ const AdminManageCategories: React.FC = () => {
       };
 
       try {
-        const response = await createCategory(categoryData);
-        if (response.success) {
-          const newCategory = response.data;
-          setDataCategories((prevData) => [...prevData, newCategory]);
-          form.resetFields();
-          fetchCategories();
-          fetchParentCategories();
-          message.success(`Category ${values.name} created successfully.`);
-          setIsModalVisible(false);
+        if (modalMode === 'Add') {
+          const response = await createCategory(categoryData);
+          if (response.success) {
+            const newCategory = response.data;
+            setDataCategories((prevData) => [...prevData, newCategory]);
+            form.resetFields();
+            fetchCategories();
+            fetchParentCategories();
+            message.success(`Category ${values.name} created successfully.`);
+            setIsModalVisible(false);
+          }
+        } else if (modalMode === 'Edit') {
+          const updatedCategory: Category = {
+            _id: values._id!,
+            name: values.name ?? "",
+            parent_category_id: parentCategoryId,
+            user_id: values.user_id ?? "",
+            is_deleted: values.is_deleted ?? false,
+            created_at: values.created_at,
+            updated_at: new Date().toISOString(),
+          };
+
+
+          const response = await updateCategory(values._id, values.name || '', updatedCategory);
+          if (response.success) {
+            setDataCategories((prevData) =>
+              prevData.map((category) =>
+                category._id === values._id
+                  ? { ...category, ...response.data }
+                  : category
+              )
+            );
+            setIsModalVisible(false);
+            form.resetFields();
+          }
         }
       } catch (error) {
         console.log(error);
@@ -250,7 +277,20 @@ const AdminManageCategories: React.FC = () => {
           <EditOutlined
             className="text-blue-500"
             style={{ fontSize: "16px", marginLeft: "8px", cursor: "pointer" }}
-            onClick={() => handleEditCategory(record)}
+            onClick={() => {
+              setIsModalVisible(true);
+              setModalMode("Edit");
+
+              const parentCategory = parentCategories.find(
+                (category) => category._id === record.parent_category_id
+              );
+
+              form.setFieldsValue({
+                ...record,
+                parent_category_id: parentCategory ? parentCategory.name : "none", // Set name instead of ID
+              });
+              // form.setFieldsValue(record);
+            }}
           />
           <CustomDeletePopconfirm
             title="Delete the Category"
@@ -269,7 +309,7 @@ const AdminManageCategories: React.FC = () => {
       <div className="flex justify-between items-center ">
         <CustomBreadcrumb />
 
-        <Button type="primary" onClick={handleOpenModal}>
+        <Button type="primary" onClick={() => { handleOpenModal(); setModalMode("Add") }}>
           Add New Category
         </Button>
       </div>
@@ -303,7 +343,7 @@ const AdminManageCategories: React.FC = () => {
         />
       </div>
       <Modal
-        title="Add New Category"
+        title={modalMode === "Add" ? "Add New Category" : "Edit Category"}
         open={isModalVisible}
         onCancel={() => {
           form.resetFields();
@@ -319,13 +359,15 @@ const AdminManageCategories: React.FC = () => {
           validateTrigger={validateOnOpen ? "onSubmit" : "onChange"}
         >
           <NameFormItem />
+
           <Form.Item label="Parent Category" name="parent_category_id" rules={[{ required: false }]}>
             <Select placeholder="Select parent category">
-              {parentCategories.map((category) => (
-                <Select.Option key={category._id} value={category.name}>
-                  {category.name}
-                </Select.Option>
-              ))}
+              {parentCategories
+                .map((category) => (
+                  <Select.Option key={category._id} value={category.name}>
+                    {category.name}
+                  </Select.Option>
+                ))}
             </Select>
           </Form.Item>
           <Form.Item>
