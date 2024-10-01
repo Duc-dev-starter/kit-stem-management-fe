@@ -47,6 +47,12 @@ export const getUserDetail = async (_id: string) => {
   const response = await BaseService.get({url: `${API.GET_UPDATE_DELETE_USER}/${_id}`});
     return response;
 };
+
+export const createUser = async (userData: User) => {
+  const response = await BaseService.post({url: API.CREATE_USER, payload: userData});
+  message.success("Created new user successfully");
+  return response;
+}
       
 export const changePassword = async (values: ValuesChangePassword) => {
   const response = await BaseService.put({url: API.CHANGE_PASSWORD, payload:{

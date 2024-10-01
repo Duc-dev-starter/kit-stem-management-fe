@@ -13,29 +13,25 @@ import {
   Radio,
   Select,
   Avatar,
-  message,
 } from "antd";
 import { EditOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
-import type { GetProp, RadioChangeEvent, TableColumnsType, TablePaginationConfig, UploadFile, UploadProps } from "antd";
+import type { GetProp, TableColumnsType, TablePaginationConfig, UploadFile, UploadProps } from "antd";
 import { User, UserRole } from "../../../models/User.ts";
 
 import { getRoleColor, getRoleLabel, roleRules, roles } from "../../../consts";
-import { useDebounce } from "../../../hooks/index.ts";
+import { useDebounce } from "../../../hooks";
 import {
   CustomDeletePopconfirm,
   CustomSelect,
-  // CustomBreadcrumb,
-  DescriptionFormItem,
   EmailFormItem,
   LoadingOverlay,
   NameFormItem,
   PasswordFormItem,
-  PhoneNumberFormItem,
   UploadButton,
+  CustomBreadcrumb
 } from "../../../components";
 import { formatDate, getBase64, uploadFile } from "../../../utils";
-import CustomBreadcrumb from "../../../components/breadcrumb/index.tsx";
-import { deleteUser, getUsers, updateUser } from '../../../services';
+import { changeStatusUser, changeUserRole, createUser, deleteUser, getUsers, updateUser } from '../../../services';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 
@@ -43,8 +39,6 @@ type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const AdminManageUsers: React.FC = () => {
   const [dataUsers, setDataUsers] = useState<User[]>([]);
-  const [role, setRole] = useState<string>(roles.CUSTOMER);
-
   const [searchText, setSearchText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -117,6 +111,30 @@ const AdminManageUsers: React.FC = () => {
     setPagination(pagination);
   };
 
+  const handleAddNewUser = useCallback(
+    async (values: User) => {
+      try {
+        let avatarUrl = values.avatar;
+
+        if (values.avatar && typeof values.avatar !== "string" && values.avatar?.file?.originFileObj) {
+          avatarUrl = await uploadFile(values.avatar.file.originFileObj);
+        }
+
+        const userData = { ...values, avatar: avatarUrl };
+        const response = await createUser(userData);
+        const newUser = response.data.data;
+        setDataUsers((prevData) => [newUser, ...prevData]);
+        setIsModalVisible(false);
+        form.resetFields();
+        fetchUsers();
+        setFileList([]);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [fetchUsers, form]
+  );
+
   const handleAddClick = () => {
     setModalMode("Add");
     setIsModalVisible(true);
@@ -124,7 +142,33 @@ const AdminManageUsers: React.FC = () => {
     setFileList([]);
   };
 
-  const handleUpdateUser = async (values: User) => {
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+    setFileList([]);
+  };
+
+  const handleRoleChange = async (value: UserRole, userId: string) => {
+    await changeUserRole(userId, value);
+    setDataUsers((prevData: User[]) => prevData.map((user) => (user._id === userId ? { ...user, role: value } : user)));
+  };
+  ;
+
+  const handleUserStatus = (userId: string, status: boolean) => {
+    const updateData = dataUsers.map((user) => (user._id === userId ? { ...user, status: status } : user));
+    setDataUsers(updateData);
+  };
+
+  const handleRolefilter = (value: string) => {
+    setSelectedRole(value);
+
+  };
+  const handleStatus = (value: string) => {
+    setSelectedStatus(value);
+  };
+
+  const handleEditUser = async (values: User) => {
+    console.log(values)
     let avatarUrl = values.avatar;
 
     if (values.avatar && typeof values.avatar !== "string" && values.avatar.file?.originFileObj) {
@@ -137,19 +181,44 @@ const AdminManageUsers: React.FC = () => {
       email: values.email,
     };
 
-    // Logic to handle the API call or further processing for updating the user
-    try {
-      await updateUser(values._id, updatedUser);
-      setDataUsers((prev) =>
-        prev.map((user) => (user._id === values._id ? { ...user, ...updatedUser } : user))
+    const response = await updateUser(formData._id, updateUser);
+    if (response.success) {
+      if (formData.role !== values.role) {
+        await changeUserRole(formData._id, values.role)
+      }
+
+      setDataUsers((prevData) =>
+        prevData.map((user) =>
+          user._id === formData._id
+            ? {
+              ...user,
+              ...updatedUser,
+              role: values.role,
+            }
+            : user
+        )
       );
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      message.error("Failed to update user");
-    } finally {
+
       setIsModalVisible(false);
+      form.resetFields();
+      fetchUsers();
     }
   };
+
+  const onFinish = (values: User) => {
+    if (modalMode === "Edit") {
+      if (formData._id) {
+        handleEditUser({
+          ...formData,
+          ...values,
+        });
+      }
+    } else {
+      handleAddNewUser(values);
+    }
+  };
+
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => setFileList(newFileList);
 
   const columns: TableColumnsType<User> = [
     {
@@ -184,12 +253,14 @@ const AdminManageUsers: React.FC = () => {
       dataIndex: "role",
       key: "role",
       width: "10%",
-      render: (role: UserRole) => (
+      render: (role: UserRole, record: User) => (
         <CustomSelect
           value={role}
           options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF]}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
+          onChange={(value) => handleRoleChange(value, record._id)}
+          className="w-full"
         />
       ),
     },
@@ -212,7 +283,10 @@ const AdminManageUsers: React.FC = () => {
       key: "status",
       dataIndex: "status",
       width: "10%",
-      render: (status: boolean, record: User) => <Switch defaultChecked={status} />,
+      render: (status: boolean, record: User) =>
+        <Switch defaultChecked={status}
+          onChange={(checked) => changeStatusUser(checked, record._id, handleUserStatus)}
+        />,
     },
     {
       title: "Action",
@@ -287,9 +361,10 @@ const AdminManageUsers: React.FC = () => {
           options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF, 'all']}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
+          onChange={handleRolefilter}
         />
 
-        <Select value={selectedStatus} className="w-full mt-2 mb-2 md:w-32 md:mt-0 md:ml-2">
+        <Select value={selectedStatus} onChange={handleStatus} className="w-full mt-2 md:w-32 md:mt-0 md:ml-2">
           <Select.Option value="true">Active</Select.Option>
           <Select.Option value="false">Inactive</Select.Option>
         </Select>
@@ -301,7 +376,7 @@ const AdminManageUsers: React.FC = () => {
         dataSource={dataUsers}
         pagination={false}
         onChange={handleTableChange}
-        rowKey="_id"
+        rowKey={(record: User) => record?._id || "unknown"}
       />
 
       <div className="flex justify-end py-8">
@@ -318,42 +393,63 @@ const AdminManageUsers: React.FC = () => {
       <Modal
         title={modalMode === "Edit" ? "Edit User" : "Add New User"}
         open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={handleModalCancel}
         footer={null}
       >
         <Form
           form={form}
-          onFinish={modalMode === "Edit" ? handleUpdateUser : () => { }}
+          onFinish={onFinish}
+          layout="vertical"
           initialValues={formData}
         >
           <NameFormItem />
-          <EmailFormItem />
-          <PasswordFormItem />
-          <PhoneNumberFormItem />
+          {modalMode === "Add" && <EmailFormItem />}
+          {modalMode === "Add" && (
+            <div className="mt-3">
+              <PasswordFormItem />
+            </div>
+          )}
+          {modalMode === "Add" && (
 
-          <Form.Item label="Avatar">
+            <Form.Item name="role" rules={roleRules} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} className="mb-3">
+              <Radio.Group>
+                <Radio value={roles.CUSTOMER}>Customer</Radio>
+                <Radio value={roles.STAFF}>Staff</Radio>
+                <Radio value={roles.MANAGER}>Manager</Radio>
+              </Radio.Group>
+            </Form.Item>
+          )}
+
+          <Form.Item label="Avatar" name="avatar">
             <Upload
-              name="avatar"
               listType="picture-card"
               fileList={fileList}
-              onPreview={() => setPreviewOpen(true)}
-              beforeUpload={(file: FileType) => {
-                setFileList([file]);
-                return false;
-              }}
-              onChange={({ fileList }) => setFileList(fileList)}
+              onPreview={handlePreview}
+              onChange={handleChange}
             >
               {fileList.length >= 1 ? null : <UploadButton />}
             </Upload>
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={isLoading}>
+            <Button type="primary" htmlType="submit">
               {modalMode === "Edit" ? "Update User" : "Add User"}
             </Button>
           </Form.Item>
         </Form>
       </Modal>
+      {previewImage && (
+        <Image
+          wrapperStyle={{ display: "none" }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+            afterOpenChange: (visible) => !visible && setPreviewImage(""),
+            mask: null
+          }}
+          src={previewImage}
+        />
+      )}
     </div>
   );
 };

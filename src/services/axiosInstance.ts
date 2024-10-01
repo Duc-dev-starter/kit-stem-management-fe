@@ -39,7 +39,7 @@ axiosInstance.interceptors.request.use(
       if (error.response) {
         const { data } = error.response;
         console.log(error.response);
-        if (data.message === null && data.errors && data.errors.length > 0) {
+        if (data.errors && data.errors.length > 0) {
           data.errors.forEach((error: { field: string, message: string }) => {
             message.error(`${error.field}: ${error.message}`);
           });
