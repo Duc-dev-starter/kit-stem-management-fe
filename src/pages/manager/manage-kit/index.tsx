@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Image, Modal, Select, Table, Tag } from "antd";
+import { Button, Image, Modal, Pagination, Select, Table, TablePaginationConfig, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { kitStatus, kitStatusColor } from "../../../consts";
 import { Kit } from "../../../models/Kit";
@@ -14,7 +14,8 @@ const ManageKit = () => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [modalText, setModalText] = useState('Content of the modal');
     const [kitDetail, setKitDetail] = useState<Kit>();
-    const [kits, setKits] = useState<Kit[]>([])
+    const [dataKits, setDataKits] = useState<Kit[]>([])
+    const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 10, total: 0 });
 
     const navigate = useNavigate();
 
@@ -23,12 +24,14 @@ const ManageKit = () => {
     }, [])
 
     const fetchKits = async () => {
-        const res = await getKits();
-        console.log("res: ", res)
-        if (res && res.data.pageData) {
-            setKits(res.data.pageData);
-            console.log("res.data.pageData: ", res.data.pageData)
-        }
+        const responseKits = await getKits();
+        setDataKits(responseKits.data.pageData);
+        setPagination({
+            ...pagination,
+            total: responseKits.data.pageInfo.totalItems,
+            current: responseKits.data.pageInfo.pageNum,
+            pageSize: responseKits.data.pageInfo.pageSize,
+        });
     }
 
 
@@ -47,6 +50,18 @@ const ManageKit = () => {
 
     const showModalChangeStautsKit = () => {
         setOpenChangeStautsKit(true);
+    };
+
+    const handlePaginationChange = (page: number, pageSize?: number) => {
+        setPagination((prev) => ({
+            ...prev,
+            current: page,
+            pageSize: pageSize || 10,
+        }));
+    };
+
+    const handleTableChange = (pagination: TablePaginationConfig) => {
+        setPagination(pagination);
     };
 
     const handleOk = () => {
@@ -189,7 +204,23 @@ const ManageKit = () => {
                 className="text-center font-bold my-5"
             >Manage KIT</h1>
             <Button onClick={showModal} type="primary" className="my-5 float-right">Add new</Button>
-            <Table dataSource={kits} columns={columns} />
+            <Table
+                columns={columns}
+                dataSource={dataKits}
+                pagination={false}
+                onChange={handleTableChange}
+                rowKey="_id"
+            />
+            <div className="flex justify-end py-8">
+                <Pagination
+                    total={pagination.total}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                    current={pagination.current}
+                    pageSize={pagination.pageSize}
+                    onChange={handlePaginationChange}
+                    showSizeChanger
+                />
+            </div>
         </>
     )
 }

@@ -317,7 +317,7 @@ const AdminManageUsers: React.FC = () => {
 
       <Modal
         title={modalMode === "Edit" ? "Edit User" : "Add New User"}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >

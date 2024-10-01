@@ -5,7 +5,7 @@ import { BaseService } from "./BaseService"
 export const getLabs = async (
     keyword: string = "",
     category_id: string = "",
-    status: boolean = true,
+    status: string = "",
     is_deleted: boolean = false,
     pageNum: number = 1,
     pageSize: number = 10
