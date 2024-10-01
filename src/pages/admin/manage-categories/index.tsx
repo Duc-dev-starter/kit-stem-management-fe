@@ -309,12 +309,13 @@ const AdminManageCategories: React.FC = () => {
       <div className="flex justify-between items-center ">
         <CustomBreadcrumb />
 
-        <Button type="primary" onClick={() => { handleOpenModal(); setModalMode("Add") }}>
+        <Button className="top-14" type="primary" onClick={() => { handleOpenModal(); setModalMode("Add") }}>
           Add New Category
         </Button>
       </div>
       <Space>
         <Input.Search
+          className="my-4"
           placeholder="Search By Name"
           value={searchText}
           onChange={handleSearchText}
@@ -372,7 +373,7 @@ const AdminManageCategories: React.FC = () => {
           </Form.Item>
           <Form.Item>
             <Button loading={isLoading} type="primary" htmlType="submit">
-              Add
+              {modalMode === "Add" ? 'Add' : 'Edit'}
             </Button>
           </Form.Item>
         </Form>

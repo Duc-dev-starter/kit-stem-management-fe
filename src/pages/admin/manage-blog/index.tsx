@@ -236,7 +236,7 @@ const AdminManageBlogs: React.FC = () => {
       {isLoading && <LoadingOverlay />}
       <div className="flex justify-between">
         <CustomBreadcrumb />
-        <div className="py-2">
+        <div className="py-6">
           <Button type="primary" onClick={handleResetContent}>
             Add New Blog
           </Button>

@@ -340,7 +340,7 @@ const AdminManageUsers: React.FC = () => {
       <div className="flex flex-row md:flex-row justify-between items-center mb-4">
         <div className="flex flex-row justify-between w-full mt-3 md:mt-0">
           <CustomBreadcrumb />
-          <Button type="primary" className="py-2" onClick={handleAddClick}>
+          <Button type="primary" className="py-2 top-14" onClick={handleAddClick}>
             <UserAddOutlined /> Add New User
           </Button>
         </div>
@@ -364,7 +364,7 @@ const AdminManageUsers: React.FC = () => {
           onChange={handleRolefilter}
         />
 
-        <Select value={selectedStatus} onChange={handleStatus} className="w-full mt-2 md:w-32 md:mt-0 md:ml-2">
+        <Select value={selectedStatus} onChange={handleStatus} className="w-full mt-2 mb-2 md:w-32 md:mt-0 md:ml-2">
           <Select.Option value="true">Active</Select.Option>
           <Select.Option value="false">Inactive</Select.Option>
         </Select>
