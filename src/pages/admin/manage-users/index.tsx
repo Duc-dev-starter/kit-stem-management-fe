@@ -66,6 +66,10 @@ const AdminManageUsers: React.FC = () => {
     fetchUsers();
   }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, debouncedSearch]);
 
+  useEffect(() => {
+    setFormData({});
+  }, [formData])
+
   const fetchUsers = useCallback(async () => {
     try {
       let statusValue: boolean | undefined = false;
@@ -144,8 +148,9 @@ const AdminManageUsers: React.FC = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
-    form.resetFields();
     setFileList([]);
+    setFormData({});
+    form.resetFields();
   };
 
   const handleRoleChange = async (value: UserRole, userId: string) => {
@@ -393,14 +398,14 @@ const AdminManageUsers: React.FC = () => {
       <Modal
         title={modalMode === "Edit" ? "Edit User" : "Add New User"}
         open={isModalVisible}
-        onCancel={handleModalCancel}
+        onCancel={() => handleModalCancel()}
         footer={null}
       >
         <Form
           form={form}
           onFinish={onFinish}
           layout="vertical"
-          initialValues={formData}
+          initialValues={modalMode === "Edit" ? formData : {}}
         >
           <NameFormItem />
           {modalMode === "Add" && <EmailFormItem />}
