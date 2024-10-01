@@ -232,7 +232,7 @@ const AdminManageBlogs: React.FC = () => {
 
 
   return (
-    <div className="h-[100vh]">
+    <div>
       {isLoading && <LoadingOverlay />}
       <div className="flex justify-between">
         <CustomBreadcrumb />
@@ -249,6 +249,7 @@ const AdminManageBlogs: React.FC = () => {
         rowKey="_id"
         onChange={handleTableChange}
         pagination={false}
+        className="overflow-auto"
       />
 
       <div className="flex justify-end py-8">

@@ -82,6 +82,7 @@ const Dashboard: React.FC = () => {
     <>
       <Layout style={{ minHeight: '100vh' }}>
         <Sider
+          theme='dark'
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}

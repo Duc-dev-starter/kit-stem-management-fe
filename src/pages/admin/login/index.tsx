@@ -16,11 +16,15 @@ const AdminLoginPage: React.FC = () => {
 
   const onFinish: FormProps<LoginFieldType>["onFinish"] = async (values) => {
     const { email, password } = values;
+    console.log(values);
+
     setLoading(true);
     try {
       const authResult = await login(email, password);
       if (authResult && "token" in authResult) {
         handleNavigateRole(authResult.token, navigate);
+        console.log(authResult);
+
       }
     } finally {
       setLoading(false);

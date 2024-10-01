@@ -272,7 +272,7 @@ const AdminManageUsers: React.FC = () => {
         </div>
       </div>
 
-      <Space className="mb-2 flex flex-nowrap">
+      <Space className="mb-3 flex flex-wrap">
         <Input.Search
           placeholder="Search By Name and Email"
           value={searchText}
@@ -282,14 +282,14 @@ const AdminManageUsers: React.FC = () => {
         />
 
         <CustomSelect
-          className="w-full md:w-32 mt-2 md:mt-0 md:ml-2"
+          className="w-full mt-2 md:w-32 md:mt-0 md:ml-2"
           value={selectedRole}
           options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF, 'all']}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
         />
 
-        <Select value={selectedStatus} className="w-full md:w-32 mt-2 md:mt-0 md:ml-2">
+        <Select value={selectedStatus} className="w-full mt-2 md:w-32 md:mt-0 md:ml-2">
           <Select.Option value="true">Active</Select.Option>
           <Select.Option value="false">Inactive</Select.Option>
         </Select>
