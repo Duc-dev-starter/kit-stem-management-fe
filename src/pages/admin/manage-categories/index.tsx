@@ -74,96 +74,6 @@ const AdminManageCategories: React.FC = () => {
     }
   }, [form, parentCategories]);
 
-
-  const handleUpdateCategory = useCallback(
-    async (values: Partial<Category> & { _id: string | null }, originalCreatedAt: string) => {
-      let parentCategoryId = null;
-
-      if (values.parent_category_id && values.parent_category_id !== "none") {
-        parentCategoryId = values.parent_category_id;
-      }
-      const updatedCategory: Category = {
-        _id: values._id!,
-        name: values.name ?? "",
-        parent_category_id: parentCategoryId,
-        user_id: values.user_id ?? "",
-        is_deleted: values.is_deleted ?? false,
-        created_at: originalCreatedAt,
-        updated_at: new Date().toISOString(),
-      };
-
-      try {
-        const response = await updateCategory(values._id, values.name || '', updatedCategory);
-        if (response.success) {
-          setDataCategories((prevData) =>
-            prevData.map((category) =>
-              category._id === values._id
-                ? { ...category, ...response.data }
-                : category
-            )
-          );
-          setIsModalVisible(false);
-          form.resetFields();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dataCategories, form]
-  );
-
-  //   async (category: Category) => {
-  //     form.resetFields();
-  //     await fetchCategories();
-
-  //     Modal.confirm({
-  //       title: `Edit Category - ${category.name}`,
-  //       content: (
-  //         <Form
-  //           form={form}
-  //           onFinish={(values) => {
-  //             handleUpdateCategory(values, category.created_at);
-  //           }}
-  //           initialValues={{
-  //             _id: category._id,
-  //             name: category.name,
-  //             parent_category_id: category.parent_category_id,
-  //           }}
-  //           labelCol={{ span: 24 }}
-  //         >
-  //           <Form.Item name="_id" style={{ display: "none" }}>
-  //             <Input />
-  //           </Form.Item>
-
-  //           <NameFormItem />
-  //           <Form.Item label="Parent Category" name="parent_category_id" rules={[{ required: false }]}>
-  //             <Select placeholder="Select parent category">
-  //               <Select.Option key="none" value="none">
-  //                 None
-  //               </Select.Option>
-  //               {parentCategories
-  //                 .filter((parentCategory) => parentCategory._id !== form.getFieldValue("_id"))
-  //                 .map((parentCategory) => (
-  //                   <Select.Option key={parentCategory._id} value={parentCategory._id}>
-  //                     {parentCategory.name}
-  //                   </Select.Option>
-  //                 ))}
-  //             </Select>
-  //           </Form.Item>
-  //         </Form>
-  //       ),
-  //       okText: "Save",
-  //       onOk: () => {
-  //         form.submit();
-  //       },
-  //       onCancel: () => {
-  //         form.resetFields();
-  //       },
-  //     });
-  //   },
-  //   [form, handleUpdateCategory, fetchCategories, dataCategories]
-  // );
-
   const handleDeleteCategory = (id: string, name: string) => {
     deleteCategory(id, name, dataCategories, fetchCategories);
     setParentCategories(dataCategories)
@@ -171,7 +81,7 @@ const AdminManageCategories: React.FC = () => {
   };
 
 
-  const addNewCategory = useCallback(
+  const onFinish = useCallback(
     async (values: Category) => {
       console.log(values)
       let parentCategoryId = null;
@@ -182,6 +92,8 @@ const AdminManageCategories: React.FC = () => {
       try {
         if (modalMode === 'Add') {
           const response = await createCategory({ ...values, parent_category_id: parentCategoryId });
+          console.log(values._id);
+
           if (response.success) {
             setDataCategories((prevData) => [...prevData, response.data]);
             form.resetFields();
@@ -355,7 +267,7 @@ const AdminManageCategories: React.FC = () => {
       >
         <Form
           form={form}
-          onFinish={addNewCategory}
+          onFinish={onFinish}
           labelCol={{ span: 24 }}
           validateTrigger={validateOnOpen ? "onSubmit" : "onChange"}
         >
