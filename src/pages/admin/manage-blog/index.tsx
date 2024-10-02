@@ -168,6 +168,7 @@ const AdminManageBlogs: React.FC = () => {
     setIsModalVisible(false);
     setIsUpdateMode(false);
     setCurrentBlog(null);
+    setFileList([]);
     form.resetFields();
   };
 
