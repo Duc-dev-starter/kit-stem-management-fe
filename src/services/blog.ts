@@ -49,7 +49,7 @@ export const getBlog = async (id: string) => {
 }
 
 export const updateBlog = async(id: string, blogData: Blog) => {
-  await BaseService.post({url: `${API.GET_UPDATE_DELETE_BLOG}/${id}`, payload: blogData});
+  await BaseService.put({url: `${API.GET_UPDATE_DELETE_BLOG}/${id}`, payload: blogData});
   message.success("Blog updated successfully");
 }
 

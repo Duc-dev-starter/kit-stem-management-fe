@@ -1,7 +1,8 @@
 import axios from "axios";
 import config from "../secret";
 import { message } from "antd";
-import { PATH, roles } from "../consts";
+import { PATH } from "../consts";
+import {HttpStatus,roles} from '../enum'
 import { getUserFromLocalStorage } from "../utils";
 
 export const axiosInstance = axios.create({
@@ -31,7 +32,7 @@ axiosInstance.interceptors.request.use(
   axiosInstance.interceptors.response.use(
     (response) => {
       console.log(response);
-      if (response.status === 200 || response.status === 201) {
+      if (response.status === HttpStatus.Success || response.status === HttpStatus.Created) {
         return response.data;
       }
       return response;
@@ -90,7 +91,7 @@ axiosInstance.interceptors.request.use(
   
             case 500:
               message.error(data.message);
-              window.location.href = PATH.INTERNAL_SERVER_ERROR;
+              // window.location.href = PATH.INTERNAL_SERVER_ERROR;
               break;
   
             default:

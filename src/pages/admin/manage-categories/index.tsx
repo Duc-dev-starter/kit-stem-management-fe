@@ -16,6 +16,7 @@ const AdminManageCategories: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [validateOnOpen, setValidateOnOpen] = useState(false);
   const [form] = Form.useForm();
+  const [formData, setFormData] = useState<Partial<Category>>({});
   const [modalMode, setModalMode] = useState<"Add" | "Edit">("Add");
   const [parentCategories, setParentCategories] = useState<Category[]>([]);
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
@@ -55,11 +56,24 @@ const AdminManageCategories: React.FC = () => {
     fetchParentCategories();
   }, [fetchParentCategories]);
 
-  const handleOpenModal = useCallback(() => {
+  const openModal = useCallback((mode: "Add" | "Edit", category?: Category) => {
+    setModalMode(mode);
     form.resetFields();
     setIsModalVisible(true);
     setValidateOnOpen(true);
-  }, [form]);
+
+    if (mode === "Edit" && category) {
+      const parentCategory = parentCategories.find(
+        (cat) => cat._id === category.parent_category_id
+      );
+
+      form.setFieldsValue({
+        ...category,
+        parent_category_id: parentCategory ? parentCategory._id : "none", // Sử dụng ID thay vì tên
+      });
+    }
+  }, [form, parentCategories]);
+
 
   const handleUpdateCategory = useCallback(
     async (values: Partial<Category> & { _id: string | null }, originalCreatedAt: string) => {
@@ -98,7 +112,6 @@ const AdminManageCategories: React.FC = () => {
     [dataCategories, form]
   );
 
-  // const handleEditCategory = useCallback(
   //   async (category: Category) => {
   //     form.resetFields();
   //     await fetchCategories();
@@ -160,65 +173,52 @@ const AdminManageCategories: React.FC = () => {
 
   const addNewCategory = useCallback(
     async (values: Category) => {
-
+      console.log(values)
       let parentCategoryId = null;
-      if (values.parent_category_id) {
-        const parentCategory = dataCategories.find(
-          (category) => category.name === values.parent_category_id
-        );
-        if (parentCategory) {
-          parentCategoryId = parentCategory._id;
-        }
+      if (values.parent_category_id && values.parent_category_id !== "none") {
+        parentCategoryId = values.parent_category_id;
       }
-
-      const categoryData = {
-        ...values,
-        parent_category_id: parentCategoryId,
-      };
 
       try {
         if (modalMode === 'Add') {
-          const response = await createCategory(categoryData);
+          const response = await createCategory({ ...values, parent_category_id: parentCategoryId });
           if (response.success) {
-            const newCategory = response.data;
-            setDataCategories((prevData) => [...prevData, newCategory]);
+            setDataCategories((prevData) => [...prevData, response.data]);
             form.resetFields();
-            fetchCategories();
-            fetchParentCategories();
+
             message.success(`Category ${values.name} created successfully.`);
             setIsModalVisible(false);
           }
         } else if (modalMode === 'Edit') {
           const updatedCategory: Category = {
-            _id: values._id!,
-            name: values.name ?? "",
+            ...values,
             parent_category_id: parentCategoryId,
-            user_id: values.user_id ?? "",
-            is_deleted: values.is_deleted ?? false,
-            created_at: values.created_at,
             updated_at: new Date().toISOString(),
           };
 
-
-          const response = await updateCategory(values._id, values.name || '', updatedCategory);
+          const response = await updateCategory(formData._id, values.name || '', updatedCategory);
           if (response.success) {
             setDataCategories((prevData) =>
               prevData.map((category) =>
-                category._id === values._id
-                  ? { ...category, ...response.data }
-                  : category
+                category._id === values._id ? { ...category, ...response.data } : category
               )
             );
             setIsModalVisible(false);
             form.resetFields();
+            setFormData({});
+            fetchCategories();
+            fetchParentCategories();
+            message.success(`Category ${values.name} updated successfully.`);
           }
         }
       } catch (error) {
         console.log(error);
+        message.error("Something went wrong!");
       }
     },
-    [dataCategories, form, fetchCategories]
+    [modalMode, dataCategories, form, fetchCategories, fetchParentCategories]
   );
+
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setPagination(pagination);
@@ -278,8 +278,8 @@ const AdminManageCategories: React.FC = () => {
             className="text-blue-500"
             style={{ fontSize: "16px", marginLeft: "8px", cursor: "pointer" }}
             onClick={() => {
-              setIsModalVisible(true);
-              setModalMode("Edit");
+              openModal("Edit", record)
+              setFormData(record);
 
               const parentCategory = parentCategories.find(
                 (category) => category._id === record.parent_category_id
@@ -309,7 +309,7 @@ const AdminManageCategories: React.FC = () => {
       <div className="flex justify-between items-center ">
         <CustomBreadcrumb />
 
-        <Button className="top-14" type="primary" onClick={() => { handleOpenModal(); setModalMode("Add") }}>
+        <Button className="top-14" type="primary" onClick={() => openModal("Add")}>
           Add New Category
         </Button>
       </div>
@@ -327,7 +327,7 @@ const AdminManageCategories: React.FC = () => {
       <Table
         columns={columns}
         dataSource={dataCategories}
-        rowKey="_id"
+        rowKey={(record: Category) => record?._id || "unknown"}
         pagination={false}
         onChange={handleTableChange}
         className="overflow-auto"

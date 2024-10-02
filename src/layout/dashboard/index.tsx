@@ -4,7 +4,7 @@ import { Avatar, Col, Dropdown, Layout, Menu, MenuProps, Space, theme } from 'an
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { logout } from '../../services';
 import { getUserFromLocalStorage } from '../../utils';
-import { roles } from '../../consts';
+import { roles } from '../../enum';
 import { Row } from 'antd'; // Correct import for Row component
 
 const { Header, Content, Footer, Sider } = Layout;

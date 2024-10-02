@@ -39,8 +39,8 @@ export const createCategory = async (categoryData: Category) => {
 }
 
 export const updateCategory = async (id: string, name: string, updateCategory: Category) => {
-  await BaseService.put({ url: `${API.GET_UPDATE_DELETE_CATEGORY}/${id}`, payload: updateCategory });
-  message.success(`Category ${name} updated successfully.`);
+ const response =  await BaseService.put({ url: `${API.GET_UPDATE_DELETE_CATEGORY}/${id}`, payload: updateCategory });
+ return response;
 }
 
 export const deleteCategory = async (id: string, name: string, dataCategories: Category[], fetchCategories: () => Promise<void>) => {

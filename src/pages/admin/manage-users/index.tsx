@@ -18,7 +18,7 @@ import { EditOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons
 import type { GetProp, TableColumnsType, TablePaginationConfig, UploadFile, UploadProps } from "antd";
 import { User, UserRole } from "../../../models/User.ts";
 
-import { getRoleColor, getRoleLabel, roleRules, roles } from "../../../consts";
+import { getRoleColor, getRoleLabel, roleRules } from "../../../consts";
 import { useDebounce } from "../../../hooks";
 import {
   CustomDeletePopconfirm,
@@ -34,6 +34,7 @@ import { formatDate, getBase64, uploadFile } from "../../../utils";
 import { changeStatusUser, changeUserRole, createUser, deleteUser, getUsers, updateUser } from '../../../services';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import { roles } from "../../../enum";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -170,7 +171,6 @@ const AdminManageUsers: React.FC = () => {
   };
 
   const handleEditUser = async (values: User) => {
-    console.log(values)
     let avatarUrl = values.avatar;
 
     if (values.avatar && typeof values.avatar !== "string" && values.avatar.file?.originFileObj) {
@@ -183,29 +183,24 @@ const AdminManageUsers: React.FC = () => {
       email: values.email,
     };
 
-    const response = await updateUser(formData._id, updatedUser);
-    if (response.success) {
-      if (formData.role !== values.role) {
-        await changeUserRole(formData._id, values.role)
-      }
+    await updateUser(formData._id, updatedUser);
 
-      setDataUsers((prevData) =>
-        prevData.map((user) =>
-          user._id === formData._id
-            ? {
-              ...user,
-              ...updatedUser,
-              role: values.role,
-            }
-            : user
-        )
-      );
+    setDataUsers((prevData) =>
+      prevData.map((user) =>
+        user._id === formData._id
+          ? {
+            ...user,
+            ...updatedUser,
+            role: values.role,
+          }
+          : user
+      )
+    );
 
-      setIsModalVisible(false);
-      form.resetFields();
-      setFormData({});
-      fetchUsers();
-    }
+    setIsModalVisible(false);
+    form.resetFields();
+    setFormData({});
+    fetchUsers();
   };
 
   const onFinish = (values: User) => {
@@ -219,6 +214,7 @@ const AdminManageUsers: React.FC = () => {
     } else {
       handleAddNewUser(values);
     }
+    setIsModalVisible(false);
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => setFileList(newFileList);

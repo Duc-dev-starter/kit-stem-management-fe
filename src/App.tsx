@@ -4,7 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import config from './secret';
 import { FooterComponent, Header, Navbar } from './components';
 import { useLocation } from 'react-router-dom';
-import { PATH, roles } from './consts';
+import { PATH } from './consts';
+import { roles } from './enum';
 function App() {
   const clientId = config.GOOGLE_CLIENT_ID;
   const location = useLocation();

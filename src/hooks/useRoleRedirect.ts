@@ -1,8 +1,9 @@
 
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { PATH, roles } from "../consts";
+import { PATH } from "../consts";
 import { getUserFromLocalStorage } from "../utils";
+import { roles } from "../enum";
 
 const useRoleRedirect = () => {
   const user = getUserFromLocalStorage();

@@ -1,11 +1,12 @@
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import {API, PATH, roles, rolesArr} from "../consts";
+import {API, PATH} from "../consts";
 import {User} from "../models";
 import { message } from "antd";
 import { BaseService } from '../services';
 import {JwtPayload} from '../interfaces'
 import { getUserFromLocalStorage } from "../utils";
+import { roles, rolesArr } from "../enum";
 
 
 export const login = async (email: string, password: string) => {
@@ -150,11 +151,18 @@ export const getCurrentLoginUser = async () => {
 export const logout = async ( navigate: ReturnType<typeof useNavigate>)=>  {
   await BaseService.get({url: API.LOGOUT});
   const user: User = getUserFromLocalStorage();
-  if (user.role === roles.ADMIN) {
-    navigate(PATH.ADMIN_LOGIN);
-  }
-  else {
-    navigate(PATH.HOME);
+  switch(user.role) {
+    case roles.MANAGER:
+      navigate(PATH.MANAGER_LOGIN)
+      break;
+      case roles.STAFF:
+      navigate(PATH.STAFF_LOGIN)
+      break;
+      case roles.ADMIN:
+      navigate(PATH.ADMIN)
+      break;
+      default:
+      navigate(PATH.HOME);
   }
   message.info("You logout from the system");
   const kitInWishList = localStorage.getItem("kitInWishList");

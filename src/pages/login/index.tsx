@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Form, Input, Modal, Select, Upload, Image } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Login4 from "../../assets/Login4.jpg";
-import { PATH, roles } from "../../consts";
+import { PATH } from "../../consts";
 import {
   login,
   handleNavigateRole,
@@ -19,6 +19,7 @@ import {
   PasswordFormItem,
 } from "../../components";
 import { LoginFieldType } from "../../models/Auth";
+import { roles } from "../../enum";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 

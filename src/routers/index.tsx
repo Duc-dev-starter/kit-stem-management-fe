@@ -7,9 +7,10 @@ import {
     AdminDashboard,
     NotFound
 } from "../pages"
-import { PATH, roles } from "../consts"
+import { PATH } from "../consts"
 import { Dashboard } from "../layout"
 import { useRoleRedirect } from "../hooks"
+import { roles } from "../enum"
 
 const AppRouter = () => {
     const { canAccess } = useRoleRedirect();

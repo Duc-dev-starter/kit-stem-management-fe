@@ -1,7 +1,6 @@
 export { API } from './api';
 export { PATH } from './path'
 export {avatarUrlRules,commentRules,contentRules,descriptionRules,emailRules,nameRules,passwordRules,phoneNumberRules,ratingRules,rejectRules,roleRules,titleRules,videoRules} from './formItem.ts'
-export {roles, rolesArr, privateRole} from './role.ts'
 import {PATH} from './path.ts'
 export {getRoleColor} from './getColor.ts'
 export {getRoleLabel} from './getLabel.ts'
