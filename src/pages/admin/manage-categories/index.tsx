@@ -276,6 +276,9 @@ const AdminManageCategories: React.FC = () => {
           <Form.Item label="Parent Category" name="parent_category_id" rules={[{ required: false }]}>
             <Select placeholder="Select parent category">
               {parentCategories
+                .filter(parentCategory =>
+                  !dataCategories.some(cate => cate.parent_category_id === parentCategory._id)
+                )
                 .map((category) => (
                   <Select.Option key={category._id} value={category.name}>
                     {category.name}
