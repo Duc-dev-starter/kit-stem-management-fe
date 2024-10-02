@@ -66,10 +66,6 @@ const AdminManageUsers: React.FC = () => {
     fetchUsers();
   }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, debouncedSearch]);
 
-  useEffect(() => {
-    setFormData({});
-  }, [formData])
-
   const fetchUsers = useCallback(async () => {
     try {
       let statusValue: boolean | undefined = false;
@@ -144,6 +140,7 @@ const AdminManageUsers: React.FC = () => {
     setIsModalVisible(true);
     form.resetFields();
     setFileList([]);
+    setFormData({});
   };
 
   const handleModalCancel = () => {
@@ -186,7 +183,7 @@ const AdminManageUsers: React.FC = () => {
       email: values.email,
     };
 
-    const response = await updateUser(formData._id, updateUser);
+    const response = await updateUser(formData._id, updatedUser);
     if (response.success) {
       if (formData.role !== values.role) {
         await changeUserRole(formData._id, values.role)
@@ -206,6 +203,7 @@ const AdminManageUsers: React.FC = () => {
 
       setIsModalVisible(false);
       form.resetFields();
+      setFormData({});
       fetchUsers();
     }
   };
@@ -400,12 +398,12 @@ const AdminManageUsers: React.FC = () => {
         open={isModalVisible}
         onCancel={() => handleModalCancel()}
         footer={null}
+        destroyOnClose={true}
       >
         <Form
           form={form}
           onFinish={onFinish}
           layout="vertical"
-          initialValues={modalMode === "Edit" ? formData : {}}
         >
           <NameFormItem />
           {modalMode === "Add" && <EmailFormItem />}
@@ -431,6 +429,7 @@ const AdminManageUsers: React.FC = () => {
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
+              beforeUpload={() => false}
             >
               {fileList.length >= 1 ? null : <UploadButton />}
             </Upload>

@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     if (userRole && user) {
       setDataUser({
-        role: userRole ?? '',
+        role: userRole,
         fullName: user.name,
         email: user.email,
       });

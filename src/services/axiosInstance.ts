@@ -1,7 +1,8 @@
 import axios from "axios";
 import config from "../secret";
 import { message } from "antd";
-import { PATH } from "../consts";
+import { PATH, roles } from "../consts";
+import { getUserFromLocalStorage } from "../utils";
 
 export const axiosInstance = axios.create({
     baseURL: config.BASE_URL,
@@ -47,33 +48,44 @@ axiosInstance.interceptors.request.use(
   
         else {
           switch (error.response.status) {
-            case 403: {
+            case 401 :
+              case 403: {
               if (!isTokenExpired) {
                 isTokenExpired = true
                 message.error(data.message);
-                // const user = getUserFromLocalStorage();
-                // setTimeout(() => {
-                //   if(user){
-                //     if (user.role === roles.ADMIN) {
-                //       window.location.href = paths.ADMIN_LOGIN;
-                //     }
-                //       else{
-                //         window.location.href = paths.LOGIN;
-                //       }
-                //   }else{
-                //     return;
-                //   }
-                  
-                //   localStorage.clear();
-                //   isTokenExpired = false;
-                // }, 1300);
+                const user = getUserFromLocalStorage();
+                setTimeout(() => {
+                  if(user){
+                  const userRole = user.role;
+                  switch(userRole){
+                    case roles.ADMIN: 
+                    // window.location.href = PATH.ADMIN_LOGIN;
+                    console.log(window.location.href = PATH.ADMIN_LOGIN)
+                    break;
+                    case roles.MANAGER: 
+                    window.location.href = PATH.MANAGER_LOGIN;
+                    break;
+                    case roles.STAFF: 
+                    window.location.href = PATH.STAFF;
+                    break;
+                    default:
+                      window.location.href = PATH.LOGIN;
+                      break;
+                  }
+                   }else{
+                     return;
+                   }
+                  console.log('test')
+                  localStorage.clear();
+                  isTokenExpired = false;
+                 }, 1300);
               }
               break;
             }
   
             case 404:
               message.error(data.message);
-              window.location.href = PATH.NOTFOUND;
+              // window.location.href = PATH.NOTFOUND;
               break;
   
             case 500:

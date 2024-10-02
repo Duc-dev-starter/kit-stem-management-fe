@@ -31,7 +31,6 @@ const AdminLoginPage: React.FC = () => {
 
   const onFinish: FormProps<LoginFieldType>["onFinish"] = async (values) => {
     const { email, password } = values;
-    console.log(values);
 
     try {
       const authResult = await login(email, password);

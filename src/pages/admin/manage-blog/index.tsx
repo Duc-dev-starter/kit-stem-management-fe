@@ -290,11 +290,11 @@ const AdminManageBlogs: React.FC = () => {
             rules={[{ required: true, message: "Please input the image URL!" }]}
           >
             <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
+              beforeUpload={() => false}
             >
               {fileList.length >= 1 ? null : <UploadButton />}
             </Upload>
