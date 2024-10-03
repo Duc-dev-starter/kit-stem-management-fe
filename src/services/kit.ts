@@ -1,4 +1,5 @@
 import { API } from "../consts";
+import { Kit } from "../models";
 import { BaseService } from "./BaseService";
 
 export const getKits = async (
@@ -7,7 +8,7 @@ export const getKits = async (
     status: string = "",
     is_deleted: boolean = false,
     pageNum: number = 1,
-    pageSize: number = 10
+    pageSize: number = 100
 ) => {
     try {
         const response = await BaseService.post({url: API.GET_KITS, payload: {
@@ -37,4 +38,9 @@ export const getKits = async (
           }
         };
     }
+}
+
+export const createKIT = async (kitData: Kit) => {
+  const response = await BaseService.post({ url: API.CREATE_KIT, payload: kitData });
+  return response;
 }

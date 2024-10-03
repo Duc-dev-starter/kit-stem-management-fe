@@ -1,37 +1,53 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Image, Modal, Pagination, Select, Table, TablePaginationConfig, Tag } from "antd";
+import { Button, Form, FormProps, Image, Input, message, Modal, notification, Pagination, Select, Table, TablePaginationConfig, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { kitStatus, kitStatusColor } from "../../../consts";
+import { kitStatus, kitStatusColor, statusOfKit } from "../../../consts";
 import { Kit } from "../../../models/Kit";
-import { Link, useNavigate } from "react-router-dom";
-import { getKits } from "../../../services";
+import { Link } from "react-router-dom";
+import { getCategories, getKits } from "../../../services";
+import { Category } from "../../../models";
+import { createKIT } from "../../../services/kit";
+import Title from "antd/es/typography/Title";
 
 const ManageKit = () => {
+    const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [openConfirmDeketeKit, setOpenConfirmDeleteKit] = useState(false);
     const [openChaneStatusKit, setOpenChangeStautsKit] = useState(false);
     const [openKitDetail, setOpenKitDetail] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [modalText, setModalText] = useState('Content of the modal');
     const [kitDetail, setKitDetail] = useState<Kit>();
     const [dataKits, setDataKits] = useState<Kit[]>([])
-    const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 10, total: 0 });
-
-    const navigate = useNavigate();
-
+    const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 100, total: 0 });
+    const [categories, setCategories] = useState<Category[]>([])
+    // const navigate = useNavigate();
+    const handleChange = (value: string) => {
+        console.log(`selected ${value}`);
+    };
+    const onFinish: FormProps['onFinish'] = async (values: Kit) => {
+        const res = await createKIT(values);
+        if (res) {
+            handleOk();
+            form.resetFields();
+            console.log("res", res);
+            fetchKits();
+            message.success("Create KIT Successfully!")
+        }
+    };
     useEffect(() => {
         fetchKits();
+        getAllCategories();
     }, [])
 
     const fetchKits = async () => {
         const responseKits = await getKits();
         setDataKits(responseKits.data.pageData);
-        setPagination({
-            ...pagination,
-            total: responseKits.data.pageInfo.totalItems,
-            current: responseKits.data.pageInfo.pageNum,
-            pageSize: responseKits.data.pageInfo.pageSize,
-        });
+        // setPagination({
+        //     ...pagination,
+        //     total: responseKits.data.pageInfo.totalItems,
+        //     current: responseKits.data.pageInfo.pageNum,
+        //     pageSize: responseKits.data.pageInfo.pageSize,
+        // });
     }
 
 
@@ -65,7 +81,6 @@ const ManageKit = () => {
     };
 
     const handleOk = () => {
-        setModalText('The modal will be closed after two seconds');
         setConfirmLoading(true);
         setTimeout(() => {
             setOpen(false);
@@ -104,7 +119,7 @@ const ManageKit = () => {
             dataIndex: 'user_name',
             key: 'user_name',
             render: (user_name: string) => (
-                <div onClick={showModalKitDetail} className="text-blue-500 cursor-pointer">
+                <div onClick={() => showModalKitDetail} className="text-blue-500 cursor-pointer">
                     {user_name}
                 </div>
             )
@@ -145,6 +160,18 @@ const ManageKit = () => {
             )
         },
     ];
+    const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    const getAllCategories = async () => {
+        const res = await getCategories("", 1, 100);
+        if (res) {
+            console.log("res cate: ", res);
+            setCategories(res.data.pageData);
+        }
+    }
+
 
     return (
         <>
@@ -155,7 +182,6 @@ const ManageKit = () => {
                 confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
-                <p>Do you want to delete this KIT ?</p>
             </Modal>
             {/* Kit Detail Modal */}
             <Modal
@@ -195,23 +221,130 @@ const ManageKit = () => {
                 title="Title"
                 open={open}
                 onOk={handleOk}
+                footer=""
                 confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
-                <p>{modalText}</p>
+
+                <Form
+                    form={form}
+                    name="basic"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    style={{ maxWidth: 600 }}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                >
+                    <Form.Item
+                        label="Name"
+                        name="name"
+                        rules={[{ required: true, message: 'Please input your name!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Category"
+                        name="category_id"
+                        rules={[{ required: true, message: 'Please input your category!' }]}
+                    >
+                        <Select
+                            defaultValue="Please select a categories"
+                            style={{ width: 250 }}
+                            onChange={handleChange}
+                            options={categories.map(cate => (
+                                { value: cate._id, label: cate.name }
+                            ))}
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Description"
+                        name="description"
+                        rules={[{ required: true, message: 'Please input your description!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Status"
+                        name="status"
+                        rules={[{ required: true, message: 'Please input your status!' }]}
+                    >
+                        <Select
+                            defaultValue="Please select a status"
+                            style={{ width: 250 }}
+                            onChange={handleChange}
+                            options={[
+                                {
+                                    options: [
+                                        { label: <span>{kitStatus(statusOfKit.NEW)}</span>, value: statusOfKit.NEW },
+                                        { label: <span>{kitStatus(statusOfKit.ACTIVE)}</span>, value: statusOfKit.ACTIVE },
+                                        { label: <span>{kitStatus(statusOfKit.CONFIRMED_DELIVERED)}</span>, value: statusOfKit.CONFIRMED_DELIVERED },
+                                        { label: <span>{kitStatus(statusOfKit.DELIVERED)}</span>, value: statusOfKit.DELIVERED },
+                                        { label: <span>{kitStatus(statusOfKit.INACTIVE)}</span>, value: statusOfKit.INACTIVE },
+                                        { label: <span>{kitStatus(statusOfKit.IN_WAREHOUSE)}</span>, value: statusOfKit.IN_WAREHOUSE },
+                                        { label: <span>{kitStatus(statusOfKit.POPULAR)}</span>, value: statusOfKit.POPULAR },
+                                        { label: <span>{kitStatus(statusOfKit.RETURNED)}</span>, value: statusOfKit.RETURNED },
+                                        { label: <span>{kitStatus(statusOfKit.SHIPPED)}</span>, value: statusOfKit.SHIPPED },
+                                        { label: <span>{kitStatus(statusOfKit.SOLD_OUT)}</span>, value: statusOfKit.SOLD_OUT },
+                                    ],
+                                },
+                            ]}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label="Image URL"
+                        name="image_url"
+                        rules={[{ required: true, message: 'Please input your image url!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label="Video URL"
+                        name="video_url"
+                        rules={[{ required: true, message: 'Please input your video url!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Price"
+                        name="price"
+                        rules={[{ required: true, message: 'Please input your price!' }]}
+                    >
+                        <Input type="number" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="discount"
+                        name="discount"
+                        rules={[{ required: true, message: 'Please input your password!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
             </Modal>
-            <h1
+            <Title level={1}
                 className="text-center font-bold my-5"
-            >Manage KIT</h1>
-            <Button onClick={showModal} type="primary" className="my-5 float-right">Add new</Button>
+            >Manage KIT</Title>
+            <Button onClick={showModal} type="primary" className="mb-5 float-right">Add new</Button>
             <Table
                 columns={columns}
                 dataSource={dataKits}
-                pagination={false}
-                onChange={handleTableChange}
+                // pagination={false}
+                // onChange={handleTableChange}
                 rowKey="_id"
             />
-            <div className="flex justify-end py-8">
+            {/* <div className="flex justify-end py-8">
                 <Pagination
                     total={pagination.total}
                     showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
@@ -220,7 +353,7 @@ const ManageKit = () => {
                     onChange={handlePaginationChange}
                     showSizeChanger
                 />
-            </div>
+            </div> */}
         </>
     )
 }

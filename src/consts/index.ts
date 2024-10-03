@@ -5,32 +5,71 @@ import {PATH} from './path.ts'
 export {getRoleColor} from './getColor.ts'
 export {getRoleLabel} from './getLabel.ts'
 
-const statusOfKit = {
-  IN_WAREHOUSE: "in_warehouse",
+export const statusOfKit = {
   NEW: "new",
-}
+  IN_WAREHOUSE: "in_warehouse",
+  SHIPPED: "shipped",
+  DELIVERED: "delivered",
+  CONFIRMED_DELIVERED: "confirmed_delivered",
+  ACTIVE: "active", // Kit sẵn sàng sử dụng khi đã được giao nhận thành công
+  SOLD_OUT: "sold_out",
+  POPULAR: "popular",
+  INACTIVE: "inactive",
+  RETURNED: "returned"
+};
 export const kitStatus = (status: string) => {
   switch (status) {
     case statusOfKit.IN_WAREHOUSE:
-      return "In WareHouse"
+      return "In Warehouse";
     case statusOfKit.NEW:
-      return "New"
+      return "New";
+    case statusOfKit.SHIPPED:
+      return "Shipped";
+    case statusOfKit.DELIVERED:
+      return "Delivered";
+    case statusOfKit.CONFIRMED_DELIVERED:
+      return "Confirmed Delivered";
+    case statusOfKit.ACTIVE:
+      return "Active";
+    case statusOfKit.SOLD_OUT:
+      return "Sold Out";
+    case statusOfKit.POPULAR:
+      return "Popular";
+    case statusOfKit.INACTIVE:
+      return "Inactive";
+    case statusOfKit.RETURNED:
+      return "Returned";
+    default:
+      return "Unknown Status"; // Trả về giá trị mặc định nếu không khớp status
   }
-}
+};
 
 export const kitStatusColor = (status: string) => {
   switch (status) {
     case statusOfKit.IN_WAREHOUSE:
-      return "red"
+      return "red";
     case statusOfKit.NEW:
-      return "purple"
+      return "purple";
+    case statusOfKit.SHIPPED:
+      return "orange";
+    case statusOfKit.DELIVERED:
+      return "green";
+    case statusOfKit.CONFIRMED_DELIVERED:
+      return "blue";
+    case statusOfKit.ACTIVE:
+      return "teal";
+    case statusOfKit.SOLD_OUT:
+      return "gray";
+    case statusOfKit.POPULAR:
+      return "gold";
+    case statusOfKit.INACTIVE:
+      return "darkgray";
+    case statusOfKit.RETURNED:
+      return "brown";
+    default:
+      return "black"; // Màu mặc định nếu không khớp status
   }
-}
-
-
-
-
-
+};
 
 
 // Define the structure of the submenu

@@ -4,13 +4,13 @@ import { API } from "../consts";
 import { BaseService } from "./BaseService";
 import { Category } from "../models";
 
-export const getCategories = async (keyword: string = "", is_deleted: boolean = false, pageNum: number = 1, pageSize: number = 100) => {
+export const getCategories = async (keyword: string = "", pageNum: number, pageSize: number) => {
   try {
     const response = await BaseService.post({
       url: API.GET_CATEGORIES, payload: {
         "searchCondition": {
           "keyword": keyword,
-          "is_deleted": is_deleted
+          "is_deleted": false
         },
         "pageInfo": {
           "pageNum": pageNum,
