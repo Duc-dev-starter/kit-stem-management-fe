@@ -112,7 +112,7 @@ const AdminManageCategories: React.FC = () => {
           if (response.success) {
             setDataCategories((prevData) =>
               prevData.map((category) =>
-                category._id === values._id ? { ...category, ...response.data } : category
+                category._id === formData._id ? { ...category, ...response.data } : category
               )
             );
             setIsModalVisible(false);

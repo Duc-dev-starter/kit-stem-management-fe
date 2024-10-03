@@ -1,17 +1,17 @@
-import { useEffect, useState, useRef } from "react";
-import { Form, Input, Modal, Select, Upload, Image } from "antd";
+import { useState, useRef } from "react";
+import { Form, Image } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Login4 from "../../assets/Login4.jpg";
 import { PATH } from "../../consts";
 import {
   login,
   handleNavigateRole,
+  loginWithGoogle,
 
   // loginWithGoogle,
   // registerWithGoogle,
-} from "../../services/auth";
-import { getBase64, uploadFile } from "../../utils";
-import type { FormInstance, GetProp, UploadFile, UploadProps } from "antd";
+} from "../../services";
+import type { FormInstance } from "antd";
 import {
   BackButton,
   ButtonFormItem,
@@ -19,26 +19,15 @@ import {
   PasswordFormItem,
 } from "../../components";
 import { LoginFieldType } from "../../models/Auth";
-import { roles } from "../../enum";
+import { GoogleLogin } from '@react-oauth/google';
 
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [additionalFields, setAdditionalFields] = useState({
-    description: "",
-    phone_number: "",
-    video: "",
-  });
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [role, setRole] = useState("");
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [uploading, setUploading] = useState(false);
   const formRef = useRef<FormInstance>(null);
-  const modalFormRef = useRef<FormInstance>(null);
 
   const onFinish = async (values: LoginFieldType) => {
     const { email, password } = values;
@@ -54,21 +43,7 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleAdditionalFieldsChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { name, value } = e.target;
-    setAdditionalFields((prevFields) => ({
-      ...prevFields,
-      [name]: value,
-    }));
-  };
 
-  const handleRoleChange = (value: string) => {
-    setRole(value);
-  };
-
-  // const handleModalOk = async () => {
   //   try {
   //     await modalFormRef.current?.validateFields();
   //     const googleId = localStorage.getItem("token");
@@ -89,79 +64,19 @@ const LoginPage: React.FC = () => {
   //   }
   // };
 
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
 
-    formRef.current?.resetFields();
-    setFileList([]);
-    setAdditionalFields({
-      description: "",
-      phone_number: "",
-      video: "",
-    });
-  };
+  const renderGoogleLogin = () => (
+    <GoogleLogin
+      onSuccess={(credentialResponse) => {
+        loginWithGoogle(
+          credentialResponse.credential as string,
+          navigate,
+        );
+      }}
+    />
+  );
 
-  // const renderGoogleLogin = () => (
-  //   <GoogleLogin
-  //     onSuccess={(credentialResponse) => {
-  //       loginWithGoogle(
-  //         credentialResponse.credential as string,
-  //         navigate,
-  //         setIsModalVisible
-  //       );
-  //       localStorage.setItem("token", credentialResponse.credential as string);
-  //     }}
-  //   />
-  // );
 
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
-    }
-
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
-
-  const handleChange: UploadProps["onChange"] = async ({
-    fileList: newFileList,
-  }) => {
-    setFileList(newFileList);
-
-    if (newFileList.length > 0) {
-      const file = newFileList[newFileList.length - 1].originFileObj as File;
-      setUploading(true);
-      try {
-        const videoURL = await uploadFile(file);
-        setAdditionalFields((prevFields) => ({
-          ...prevFields,
-          video: videoURL,
-        }));
-      } catch (error) {
-        console.error("Error uploading file:", error);
-      }
-    } else {
-      setAdditionalFields((prevFields) => ({
-        ...prevFields,
-        video: "",
-      }));
-    }
-  };
-
-  const beforeUpload = (file: File) => {
-    console.log(file);
-    return false;
-  };
-
-  useEffect(() => {
-    return cleanup;
-  }, [additionalFields.video]);
-
-  const cleanup = () => {
-    if (additionalFields.video) {
-      URL.revokeObjectURL(additionalFields.video);
-    }
-  };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-[#fffcce] to-[#1e5b53] relative">
@@ -223,97 +138,9 @@ const LoginPage: React.FC = () => {
             <span className="text-center mx-2">or</span>
             <hr className="border-gray-300 w-1/3" />
           </div>
-          {/* <div className="flex justify-center mt-6">{renderGoogleLogin()}</div> */}
+          <div className="flex justify-center mt-6">{renderGoogleLogin()}</div>
         </div>
       </div>
-      <Modal
-        title="Select Role"
-        open={isModalVisible}
-        // onOk={handleModalOk}
-        onCancel={handleModalCancel}
-      >
-        <Form ref={modalFormRef}>
-          <Form.Item
-            label="Role"
-            required
-            labelCol={{ span: 24 }}
-            wrapperCol={{ span: 24 }}
-          >
-            <Select onChange={handleRoleChange}>
-              <Select.Option value="student">Student</Select.Option>
-              <Select.Option value="instructor">Instructor</Select.Option>
-            </Select>
-          </Form.Item>
-          {role === roles.MANAGER && (
-            <>
-              <Form.Item
-                label="Description"
-                required
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                rules={[{ required: true, message: "Please select a role" }]}
-              >
-                <Input
-                  placeholder="Enter Description"
-                  name="description"
-                  value={additionalFields.description}
-                  onChange={handleAdditionalFieldsChange}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Phone Number"
-                required
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Input
-                  placeholder="Enter Phone Number"
-                  name="phone_number"
-                  value={additionalFields.phone_number}
-                  onChange={handleAdditionalFieldsChange}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Video URL"
-                required
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Upload
-                  listType="picture-card"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  onChange={handleChange}
-                  beforeUpload={beforeUpload}
-                  showUploadList={{ showRemoveIcon: true }}
-                  customRequest={({ file, onSuccess, onError }) => {
-                    setUploading(true);
-                    uploadFile(file as File)
-                      .then((url) => {
-                        onSuccess?.(url);
-                        setUploading(false); // End uploading
-                      })
-                      .catch((error) => {
-                        onError?.(error);
-                        setUploading(false); // End uploading
-                      });
-                  }}
-                >
-                  {fileList.length < 1 && !uploading && <div>Upload</div>}
-                  {uploading && <div>Upload</div>}
-                </Upload>
-
-                {additionalFields.video && (
-                  <video width="320" height="240" controls>
-                    <source src={additionalFields.video} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-              </Form.Item>
-            </>
-          )}
-        </Form>
-      </Modal>
       {previewImage && (
         <Image
           wrapperStyle={{ display: "none" }}

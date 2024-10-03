@@ -1,9 +1,10 @@
 import { message } from 'antd';
-import { API } from '../consts';
+import { API, PATH } from '../consts';
 import { BaseService } from './BaseService';
 import { User, UserRole } from '../models';
 import { ValuesChangePassword } from '../interfaces';
 import { getUserFromLocalStorage } from '../utils';
+import { useNavigate } from 'react-router-dom';
 export const user = getUserFromLocalStorage();
 
 export const getUsers = async (
@@ -98,4 +99,21 @@ export const updateUser = async (id: string, updateData: User) => {
     await BaseService.put({url: `${API.GET_UPDATE_DELETE_USER}/${id}`, payload: updateData});
     message.success("User updated successfully");
 }
+
+export const registerWithGoogle = async (
+  googleId: string,
+  role: string,
+  navigate: ReturnType<typeof useNavigate>
+) => {
+  await BaseService.post({url: API.REGISTER_WITH_GOOGLE, payload:  {
+    google_id: googleId,
+    role: role,
+  }});
+  const responseLogin = await BaseService.post({url: API.LOGIN_WITH_GOOGLE, payload: {google_id: googleId}});
+  localStorage.setItem("token", responseLogin.data.token);
+  const currentUser = await BaseService.get({url: API.GET_CURRENT_LOGIN_USER});
+  localStorage.setItem("user", JSON.stringify(currentUser.data));
+  message.success("Registered and logged in successfully");
+  navigate(PATH.HOME);
+};
       

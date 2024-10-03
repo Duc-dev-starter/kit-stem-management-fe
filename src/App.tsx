@@ -6,6 +6,7 @@ import { FooterComponent, Header, Navbar } from './components';
 import { useLocation } from 'react-router-dom';
 import { PATH } from './consts';
 import { roles } from './enum';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 function App() {
   const clientId = config.GOOGLE_CLIENT_ID;
   const location = useLocation();
@@ -18,14 +19,16 @@ function App() {
     location.pathname.includes(PATH.REGISTER)
   return (
     <>
-      <div className="flex flex-col min-h-screen">
-        {!isNotUseHeaderFooter && <Navbar />}
-        {!isNotUseHeaderFooter && <Header />}
-        <div className="flex-grow">
-          <AppRouter />
+      <GoogleOAuthProvider clientId={clientId}>
+        <div className="flex flex-col min-h-screen">
+          {!isNotUseHeaderFooter && <Navbar />}
+          {!isNotUseHeaderFooter && <Header />}
+          <div className="flex-grow">
+            <AppRouter />
+          </div>
+          {!isNotUseHeaderFooter && <FooterComponent />}
         </div>
-        {!isNotUseHeaderFooter && <FooterComponent />}
-      </div>
+      </GoogleOAuthProvider>
     </>
   )
 }

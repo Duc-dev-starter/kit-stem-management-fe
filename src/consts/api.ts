@@ -5,6 +5,7 @@ export const API = {
     GET_CURRENT_LOGIN_USER: "/api/auth",
     FORGOT_PASSWORD: "/api/auth/forgot-password",
     LOGOUT: "/api/auth/logout",
+    LOGIN_WITH_GOOGLE: "/api/auth/google",
 
     //USERS
     REGISTER: "/api/users/register",
@@ -14,6 +15,7 @@ export const API = {
     CHANGE_ROLE: "/api/users/change-role",
     CHANGE_STATUS_USERS: "/api/users/change-status",
     GET_USERS: "/api/users/search",
+    REGISTER_WITH_GOOGLE: "/api/users/google",
 
     //CATEGORY
     CREATE_CATEGORY: "/api/category/create",

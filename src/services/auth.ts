@@ -70,52 +70,23 @@ export const login = async (email: string, password: string) => {
 };
 
 
-// export const loginWithGoogle = async (googleId: string, navigate: ReturnType<typeof useNavigate>, setIsModalVisible: (visible: boolean) => void) => {
-//   try {
-//     const responseLogin = await axiosInstance.post(API_LOGIN_WITH_GOOGLE, {
-//       google_id: googleId,
-//     });
-//     localStorage.setItem("token", responseLogin.data.token);
-//     const currentUser = await axiosInstance.get(API_CURRENT_LOGIN_USER);
-//     localStorage.setItem("user", JSON.stringify(currentUser.data));
-//     message.success("Login successfully");
-//     navigate(paths.HOME);
-//   } catch (error) {
-//     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//     // @ts-expect-error
-//     if(error.message === "Your account has been locked. Please contact admin via mail to activate!"){
-//       return;
-//     }
-//     else{
-//       setIsModalVisible(true);
-//     }
-//   }
-// };
+export const loginWithGoogle = async (googleId: string, navigate: ReturnType<typeof useNavigate>) => {
+  try {
+    const responseLogin = await BaseService.post({url: API.LOGIN_WITH_GOOGLE, payload: {google_id: googleId}});
+    localStorage.setItem("token", responseLogin.data.token);
+    const currentUser = await BaseService.get({url: API.GET_CURRENT_LOGIN_USER});
+    localStorage.setItem("user", JSON.stringify(currentUser.data));
+    message.success("Login successfully");
+    navigate(PATH.HOME);
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    if(error.message === "Your account has been locked. Please contact admin via mail to activate!"){
+      return;
+    }
+  }
+};
 
-// export const registerWithGoogle = async (
-//   googleId: string,
-//   role: string,
-//   additionalFields: {
-//     description: string;
-//     phone_number: string;
-//     video: string;
-//   },
-//   navigate: ReturnType<typeof useNavigate>
-// ) => {
-//   await axiosInstance.post(API_REGISTER_WITH_GOOGLE, {
-//     google_id: googleId,
-//     role: role,
-//     ...additionalFields,
-//   });
-//   const responseLogin = await axiosInstance.post(API_LOGIN_WITH_GOOGLE, {
-//     google_id: googleId,
-//   });
-//   localStorage.setItem("token", responseLogin.data.token);
-//   const currentUser = await axiosInstance.get(API_CURRENT_LOGIN_USER);
-//   localStorage.setItem("user", JSON.stringify(currentUser.data));
-//   message.success("Registered and logged in successfully");
-//   navigate(paths.HOME);
-// };
 
 
 export const handleNavigateRole = async (token: string, navigate: ReturnType<typeof useNavigate>) => {
@@ -159,7 +130,7 @@ export const logout = async ( navigate: ReturnType<typeof useNavigate>)=>  {
       navigate(PATH.STAFF_LOGIN)
       break;
       case roles.ADMIN:
-      navigate(PATH.ADMIN)
+      navigate(PATH.ADMIN_LOGIN)
       break;
       default:
       navigate(PATH.HOME);
