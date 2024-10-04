@@ -26,7 +26,7 @@ const ManageKit = () => {
     const [hideImage, setHideImage] = useState(false);
     const [hideVideo, setHideVideo] = useState(false);
     const [kitEdit, setKitEdit] = useState<Kit>()
-    const [  kitDetete, setKitDelete] = useState<Kit>()
+    const [kitDetete, setKitDelete] = useState<Kit>()
     // const navigate = useNavigate();
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
@@ -83,9 +83,9 @@ const ManageKit = () => {
 
     const handleDeleteKit = async (record: Kit) => {
         if (record.description === undefined || record.description === "") {
-            record.description = "temp to delete"; 
+            record.description = "temp to delete";
         }
-        
+
         const res = await deleteKit(record._id, record);
         if (res) {
             message.success("Delete Kit Successfully !")
@@ -133,8 +133,8 @@ const ManageKit = () => {
 
     const handleOk = async () => {
         setConfirmLoading(true);
-       const res =  await handleDeleteKit(kitDetete)
-       console.log("handle delete: ", res);
+        const res = await handleDeleteKit(kitDetete?._id)
+        console.log("handle delete: ", res);
         setTimeout(() => {
             setOpen(false);
             setOpenKitDetail(false);

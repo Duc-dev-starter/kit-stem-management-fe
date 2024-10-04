@@ -4,4 +4,4 @@ export { handleNavigateRole, login, logout, getCurrentLoginUser,loginWithGoogle 
 export { BaseService } from './BaseService'
 export {changePassword,changeStatusUser,changeUserRole,deleteUser,getUserDetail,getUsers,user, updateUser, createUser,registerWithGoogle} from './user'
 export {getKits} from './kit.services'
-export {getLabs} from './lab'
+export {getLabs} from './lab.services'

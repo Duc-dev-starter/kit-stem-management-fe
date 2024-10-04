@@ -35,11 +35,11 @@ export const API = {
     CHANGE_STATUS_KIT: "/api/kit/change-status",
 
     //LAB
-    CREATE_LAB: "/api/kit/create",
-    GET_LAB: "/api/kit/search",
-    GET_UPDATE_DELETE_LAB : "/api/kit",
+    CREATE_LAB: "/api/lab/create",
+    GET_LAB: "/api/lab/search",
+    GET_UPDATE_DELETE_LAB : "/api/lab",
     GET_LABS : "/api/lab/search",
-    CHANGE_STATUS_LAB: "/api/kit/change-status",
+    CHANGE_STATUS_LAB: "/api/lab/change-status",
     ADD_SUPPORTERS: "/api/lab/add-supporter",
     REMOVE_SUPPORTERS: "/api/lab/remove-supporter",
 
