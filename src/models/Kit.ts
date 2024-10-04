@@ -14,7 +14,7 @@ export interface Lab {
     is_deleted: boolean;
     supporters: string[];
     max_support_count?: number;
-    support_histories?: any[];
+    support_histories?: [];
   }
   
   export interface Kit {
@@ -33,5 +33,7 @@ export interface Lab {
     category_name: string;
     lab_count: number;
     labs: Lab[];
+    description: string;
+    video_url: string;
   }
   

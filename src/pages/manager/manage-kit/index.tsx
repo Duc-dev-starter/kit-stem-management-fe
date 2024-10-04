@@ -1,14 +1,17 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, FormProps, Image, Input, message, Modal, notification, Pagination, Select, Table, TablePaginationConfig, Tag } from "antd";
+import { Button, Form, FormProps, Image, Input, InputNumber, message, Modal, notification, Pagination, Select, Table, TablePaginationConfig, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { kitStatus, kitStatusColor, statusOfKit } from "../../../consts";
+import { kitStatus, kitStatusColor } from "../../../consts";
 import { Kit } from "../../../models/Kit";
 import { Link } from "react-router-dom";
 import { getCategories, getKits } from "../../../services";
 import { Category } from "../../../models";
-import { createKIT } from "../../../services/kit";
+import { createKIT, deleteKit, updateKit } from "../../../services/kit.services";
 import Title from "antd/es/typography/Title";
-
+interface FieldData {
+    name: string[]; // Mảng tên trường
+    value?: string;    // Giá trị của trường có thể là bất kỳ hoặc undefined
+}
 const ManageKit = () => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
@@ -20,24 +23,52 @@ const ManageKit = () => {
     const [dataKits, setDataKits] = useState<Kit[]>([])
     const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 100, total: 0 });
     const [categories, setCategories] = useState<Category[]>([])
+    const [hideImage, setHideImage] = useState(false);
+    const [hideVideo, setHideVideo] = useState(false);
+    const [kitEdit, setKitEdit] = useState<Kit>()
+    const [  kitDetete, setKitDelete] = useState<Kit>()
     // const navigate = useNavigate();
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
     };
     const onFinish: FormProps['onFinish'] = async (values: Kit) => {
-        const res = await createKIT(values);
-        if (res) {
-            handleOk();
-            form.resetFields();
-            console.log("res", res);
-            fetchKits();
-            message.success("Create KIT Successfully!")
+        if (kitEdit) {
+            console.log("id: ", values._id)
+            const res = await updateKit(kitEdit._id, values)
+            if (res) {
+                console.log("res updateKit", res);
+                handleOk();
+                form.resetFields();
+                console.log("res", res);
+                fetchKits();
+                message.success("Update KIT Successfully!")
+            }
+        } else {
+            const res = await createKIT(values);
+            if (res) {
+                handleOk();
+                form.resetFields();
+                console.log("res", res);
+                fetchKits();
+                message.success("Create KIT Successfully!")
+            }
         }
     };
     useEffect(() => {
         fetchKits();
         getAllCategories();
-    }, [])
+        if (kitEdit) {
+            form.setFieldsValue({
+                name: kitEdit.name,
+                category_id: kitEdit.category_id,
+                description: kitEdit.description,
+                image_url: kitEdit.image_url,
+                video_url: kitEdit.video_url,
+                price: kitEdit.price,
+                discount: kitEdit.discount,
+            });
+        }
+    }, [kitEdit, form])
 
     const fetchKits = async () => {
         const responseKits = await getKits();
@@ -50,13 +81,33 @@ const ManageKit = () => {
         // });
     }
 
+    const handleDeleteKit = async (record: Kit) => {
+        if (record.description === undefined || record.description === "") {
+            record.description = "temp to delete"; 
+        }
+        
+        const res = await deleteKit(record._id, record);
+        if (res) {
+            message.success("Delete Kit Successfully !")
+            console.log("res: ", res);
+        }
+        fetchKits()
+    }
 
-    const showModal = () => {
+    const showModal = (record?: Kit) => {
+        console.log("clicked")
         setOpen(true);
+        if (record) {
+            setKitEdit(record)
+        } else {
+            form.resetFields()
+        }
+
     };
 
-    const showModalConfirmDeleteKit = () => {
+    const showModalConfirmDeleteKit = (record: Kit) => {
         setOpenConfirmDeleteKit(true);
+        setKitDelete(record)
     };
 
     const showModalKitDetail = (record: Kit) => {
@@ -80,8 +131,10 @@ const ManageKit = () => {
         setPagination(pagination);
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
         setConfirmLoading(true);
+       const res =  await handleDeleteKit(kitDetete)
+       console.log("handle delete: ", res);
         setTimeout(() => {
             setOpen(false);
             setOpenKitDetail(false);
@@ -90,6 +143,19 @@ const ManageKit = () => {
             setOpenConfirmDeleteKit(false);
         }, 2000);
     };
+    type FieldsChangeHandler = (changedFields: FieldData[]) => void;
+    const handleFieldsChange: FieldsChangeHandler = (changedFields) => {
+        const imageUrl = changedFields.find(field => field.name[0] === 'image_url');
+        const videoUrl = changedFields.find(field => field.name[0] === 'video_url');
+        console.log("value img:", imageUrl?.value + "")
+        console.log("value video:", videoUrl?.value + "")
+        if (imageUrl && imageUrl.value !== undefined) {
+            setHideVideo(!!imageUrl.value); // Ẩn trường Video URL nếu Image URL được nhập
+        }
+        if (videoUrl && videoUrl.value !== undefined) {
+            setHideImage(!!videoUrl.value); // Ẩn trường Image URL nếu Video URL được nhập
+        }
+    };
 
     const handleCancel = () => {
         console.log('Clicked cancel button');
@@ -97,6 +163,7 @@ const ManageKit = () => {
         setOpenKitDetail(false);
         setOpenChangeStautsKit(false);
         setOpenConfirmDeleteKit(false);
+        // form.setFieldsValue([])
     };
 
     // const handleChangeStatus = (value: string) => {
@@ -152,14 +219,16 @@ const ManageKit = () => {
         },
         {
             title: 'Action',
-            render: () => (
+            render: (record: Kit) => (
                 <>
-                    <EditOutlined className="m-2 text-blue-500" />
-                    <DeleteOutlined onClick={showModalConfirmDeleteKit} className="m-2 text-red-500" />
+                    <EditOutlined onClick={() => showModal(record)} className="m-2 text-blue-500" />
+                    <DeleteOutlined onClick={() => showModalConfirmDeleteKit(record)}
+                        className="m-2 text-red-500" />
                 </>
             )
         },
     ];
+
     const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
@@ -182,6 +251,7 @@ const ManageKit = () => {
                 confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
+                <p>Do you want to delete {kitDetete?.name} ?</p>
             </Modal>
             {/* Kit Detail Modal */}
             <Modal
@@ -217,6 +287,7 @@ const ManageKit = () => {
                     placeholder="select it"
                 />
             </Modal>
+            {/* Add new kit and edit kit */}
             <Modal
                 title="Title"
                 open={open}
@@ -225,7 +296,6 @@ const ManageKit = () => {
                 confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
-
                 <Form
                     form={form}
                     name="basic"
@@ -236,6 +306,7 @@ const ManageKit = () => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
+                    onFieldsChange={(_, allFields) => handleFieldsChange(allFields)}
                 >
                     <Form.Item
                         label="Name"
@@ -268,7 +339,7 @@ const ManageKit = () => {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                         label="Status"
                         name="status"
                         rules={[{ required: true, message: 'Please input your status!' }]}
@@ -294,21 +365,25 @@ const ManageKit = () => {
                                 },
                             ]}
                         />
-                    </Form.Item>
-                    <Form.Item
-                        label="Image URL"
-                        name="image_url"
-                        rules={[{ required: true, message: 'Please input your image url!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Video URL"
-                        name="video_url"
-                        rules={[{ required: true, message: 'Please input your video url!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                    </Form.Item> */}
+                    {!hideImage && (
+                        <Form.Item
+                            label="Image URL"
+                            name="image_url"
+                            rules={[{ required: !hideVideo, message: 'Please input your image URL!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    )}
+                    {!hideVideo && (
+                        <Form.Item
+                            label="Video URL"
+                            name="video_url"
+                            rules={[{ required: !hideImage, message: 'Please input your video URL!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    )}
 
                     <Form.Item
                         label="Price"
@@ -319,12 +394,21 @@ const ManageKit = () => {
                     </Form.Item>
 
                     <Form.Item
-                        label="discount"
+                        label="Discount"
                         name="discount"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
+                        rules={[
+                            { required: true, message: 'Please input your discount must be between 0.1 and 1!' },
+                            {
+                                type: 'number',
+                                min: 0.1,
+                                max: 1,
+                                message: 'Discount must be between 0.1 and 1',
+                            },
+                        ]}
                     >
-                        <Input />
+                        <InputNumber type="number" min={0.1} max={1} step={0.1} />
                     </Form.Item>
+
 
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" htmlType="submit">
@@ -336,7 +420,7 @@ const ManageKit = () => {
             <Title level={1}
                 className="text-center font-bold my-5"
             >Manage KIT</Title>
-            <Button onClick={showModal} type="primary" className="mb-5 float-right">Add new</Button>
+            <Button onClick={() => showModal()} type="primary" className="mb-5 float-right">Add new</Button>
             <Table
                 columns={columns}
                 dataSource={dataKits}

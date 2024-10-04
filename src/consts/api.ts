@@ -30,6 +30,7 @@ export const API = {
     //KIT
     CREATE_KIT: "/api/kit/create",
     GET_KITS: "/api/kit/search",
+    GET_KIT: "/api/kit",
     GET_UPDATE_DELETE_KIT : "/api/kit",
     CHANGE_STATUS_KIT: "/api/kit/change-status",
 

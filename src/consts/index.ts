@@ -70,8 +70,57 @@ export const kitStatusColor = (status: string) => {
       return "black"; // Màu mặc định nếu không khớp status
   }
 };
+export const labStatus = (status: string) => {
+  switch (status) {
+    case statusOfLab.NEW:
+      return "New";
+    case statusOfLab.ACTIVE:
+      return "Active";
+    case statusOfLab.POPULAR:
+      return "Popular";
+    case statusOfLab.INACTIVE:
+      return "Inactive";
+    case statusOfLab.RETURNED:
+      return "Returned";
+    case statusOfLab.WAITING_APPROVE:
+      return "Waiting for Approval";
+    case statusOfLab.APPROVE:
+      return "Approved";
+    default:
+      return "Unknown Status"; // Trả về giá trị mặc định nếu không khớp status
+  }
+};
 
+export const labStatusColor = (status: string) => {
+  switch (status) {
+    case statusOfLab.NEW:
+      return "purple";
+    case statusOfLab.ACTIVE:
+      return "teal";
+    case statusOfLab.POPULAR:
+      return "gold";
+    case statusOfLab.INACTIVE:
+      return "darkgray";
+    case statusOfLab.RETURNED:
+      return "brown";
+    case statusOfLab.WAITING_APPROVE:
+      return "orange";
+    case statusOfLab.APPROVE:
+      return "green";
+    default:
+      return "black"; // Màu mặc định nếu không khớp status
+  }
+};
 
+export const statusOfLab = {
+  NEW: "new",
+  ACTIVE: "active",
+  POPULAR: "popular",
+  INACTIVE: "inactive",
+  RETURNED: "returned",
+  WAITING_APPROVE: 'waiting_approve',
+  APPROVE: 'approve'
+};
 // Define the structure of the submenu
 interface categoryCourse {
   [key: string]: string[];

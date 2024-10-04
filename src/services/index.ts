@@ -3,5 +3,5 @@ export { getCategories, deleteCategory, updateCategory,createCategory} from './c
 export { handleNavigateRole, login, logout, getCurrentLoginUser,loginWithGoogle } from './auth'
 export { BaseService } from './BaseService'
 export {changePassword,changeStatusUser,changeUserRole,deleteUser,getUserDetail,getUsers,user, updateUser, createUser,registerWithGoogle} from './user'
-export {getKits} from './kit'
+export {getKits} from './kit.services'
 export {getLabs} from './lab'
