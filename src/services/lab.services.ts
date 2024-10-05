@@ -58,13 +58,13 @@ export const deleteLab = async (id: string) => {
 }
 
 //Get LAB detail
-export const getLabDetail = async (id: string, labData: Lab) => {
-  const response = await BaseService.get({ url: `${API.GET_LAB}/${id}`, payload: labData });
+export const getLabDetail = async (id: string) => {
+  const response = await BaseService.get({ url: `${API.GET_LAB}/${id}` });
   return response;
 }
 
 //Add Supporter 
-export const AddSupporters = async (labId: string, supporterIds: supporterIds) => {
+export const AddSupporters = async (labId: string, supporterIds: string[]) => {
   const response = await BaseService.post({ url: `${API.ADD_SUPPORTERS}`, payload: { labId, supporterIds } });
   return response;
 }

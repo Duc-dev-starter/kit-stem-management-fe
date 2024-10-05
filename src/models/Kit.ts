@@ -1,3 +1,5 @@
+import { Supporter } from "./supporter.model";
+
 export interface Lab {
     _id: string;
     name: string;
@@ -12,7 +14,7 @@ export interface Lab {
     created_at: Date;
     updated_at: Date;
     is_deleted: boolean;
-    supporters: string[];
+    supporterDetails: Supporter[];
     max_support_count?: number;
     support_histories?: [];
   }

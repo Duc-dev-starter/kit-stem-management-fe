@@ -36,7 +36,7 @@ export const API = {
 
     //LAB
     CREATE_LAB: "/api/lab/create",
-    GET_LAB: "/api/lab/search",
+    GET_LAB: "/api/lab",
     GET_UPDATE_DELETE_LAB : "/api/lab",
     GET_LABS : "/api/lab/search",
     CHANGE_STATUS_LAB: "/api/lab/change-status",

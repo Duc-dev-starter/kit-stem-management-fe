@@ -8,17 +8,23 @@ import Title from "antd/es/typography/Title";
 import ModalCreateUpdate from "./modal-create-update-lab";
 import ModalDeleteLab from "./modal-delete-lab";
 import { deleteLab } from "../../../services/lab.services";
+import { Link } from "react-router-dom";
 
 const ManageLab = () => {
     const [dataLabs, setDataLabs] = useState<Lab[]>([]);
     const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 10, total: 0 });
     const [isOpenModalCreateUpdate, setIsOpenModalCreateUpdate] = useState<boolean>(false);
     const [isOpenModalDelete, setIsOpenModalDelete] = useState<boolean>(false);
+
     const [labEdit, setlabEdit] = useState<Lab>();
     const [labDelete, setLabDelete] = useState<Lab>();
+
     useEffect(() => {
         fetchLabs();
     }, [])
+
+
+
 
     const handleOkDelete = async () => {
         setIsOpenModalDelete(false);
@@ -120,10 +126,20 @@ const ManageLab = () => {
                 </>
             )
         },
+        {
+            title: 'Supporters',
+            render: (record: Lab) => (
+                <Link to={`/manager/manage-lab/${record._id}/manage-supporters`}>
+                   <p className="text-blue-500">{record.supporterDetails.length}</p>
+                </Link>
+            )
+        }
     ];
+
 
     return (
         <>
+
             <ModalDeleteLab
                 record={labDelete}
                 handleCancel={handleCancelDelete}

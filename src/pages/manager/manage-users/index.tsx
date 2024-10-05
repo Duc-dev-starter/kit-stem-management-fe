@@ -183,7 +183,7 @@ const ManagerManageUsers: React.FC = () => {
       email: values.email,
     };
 
-    await updateUser(formData._id, updatedUser);
+    await updateUser(formData._id+"", updatedUser);
 
     setDataUsers((prevData) =>
       prevData.map((user) =>
@@ -255,7 +255,7 @@ const ManagerManageUsers: React.FC = () => {
       render: (role: UserRole, record: User) => (
         <CustomSelect
           value={role}
-          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF]}
+          options={[ roles.CUSTOMER,  roles.STAFF]}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={(value) => handleRoleChange(value, record._id)}
@@ -357,7 +357,7 @@ const ManagerManageUsers: React.FC = () => {
         <CustomSelect
           className="w-full mt-2 mb-2 md:w-32 md:mt-0 md:ml-2"
           value={selectedRole}
-          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF, 'all']}
+          options={[ roles.CUSTOMER, roles.STAFF, 'all']}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={handleRolefilter}
@@ -414,7 +414,6 @@ const ManagerManageUsers: React.FC = () => {
               <Radio.Group>
                 <Radio value={roles.CUSTOMER}>Customer</Radio>
                 <Radio value={roles.STAFF}>Staff</Radio>
-                <Radio value={roles.MANAGER}>Manager</Radio>
               </Radio.Group>
             </Form.Item>
           )}
