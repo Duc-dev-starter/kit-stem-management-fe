@@ -64,10 +64,11 @@ const Dashboard: React.FC = () => {
     if (dataUser.role === roles.MANAGER) {
       setItems([
         getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
-        getItem('Manage KIT', '/manager/manage-kit', <UserOutlined />),
-        getItem('Manage LAB', '/manager/manage-lab', <DesktopOutlined />),
-        getItem('Manage Supporter', '/manager/manage-supporter', <DesktopOutlined />),
+        getItem('Manage KITs', '/manager/manage-kits', <UserOutlined />),
+        getItem('Manage LABs', '/manager/manage-labs', <DesktopOutlined />),
+        getItem('Manage Supporters', '/manager/manage-supporters', <DesktopOutlined />),
         getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
+        getItem('Manage Users', '/manager/manage-users', <DesktopOutlined />)
       ]);
     } else if (dataUser.role === roles.ADMIN) {
       setItems([

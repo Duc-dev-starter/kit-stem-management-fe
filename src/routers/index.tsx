@@ -1,12 +1,13 @@
 import { Route, Routes } from "react-router-dom"
 import {
     AboutPage, AdminManageBlogs, KitDetail, AdminManageCategories, AdminManageUsers, HomePage, Login, ManageKit,
-    ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, ManageUser, Register, AdminLoginPage,
+    ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, Register, AdminLoginPage,
     InternalServerError,
     Terms,
     AdminDashboard,
     NotFound,
-    ManageSupporter
+    ManageSupporter,
+    ManagerManageUsers
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -34,13 +35,13 @@ const AppRouter = () => {
             <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) && <Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
                 <Route path={PATH.MANAGER_HOME} element={<ManagerDashboard />} />
-                <Route path={PATH.MANAGER_USER} element={<ManageUser />} />
                 <Route path={PATH.MANAGER_KIT} element={<ManageKit />} />
                 <Route path={PATH.MANAGER_KIT_ID} element={<KitDetail />} />
                 <Route path={PATH.MANAGER_LAB} element={<ManageLab />} />
                 <Route path={PATH.MANAGER_KIT_DELIVERY} element={<ManageKitDelivery />} />
                 <Route path={PATH.MANAGER_KIT_DELIVERY_DETAIL} element={<ManageKitDeliveryDetail />} />
                 <Route path={PATH.MANAGER_MANAGE_SUPPORTER} element={<ManageSupporter />} />
+                <Route path={PATH.MANAGER_USER} element={<ManagerManageUsers />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
