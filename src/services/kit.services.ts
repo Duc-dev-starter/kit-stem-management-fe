@@ -63,3 +63,10 @@ export const getKitDetail = async (id: string, values:Kit) => {
   return response;
 }
 
+//Change KIT status
+export const changeKitStatus = async (id: string, status:string, comment: string) => {
+  const response = await BaseService.put({ url: `${API.CHANGE_STATUS_KIT}/${id}`, payload: {status, comment} });
+  return response;
+}
+
+

@@ -31,6 +31,7 @@ export const PATH = {
   MANAGER: '/manager/*',
   MANAGER_LOGIN : '/manager/login',
   MANAGER_HOME: 'dashboard',
+  MANAGER_MANAGE_SUPPORTER: "manage-supporter",
   MANAGER_MANAGE_KIT: "/manager/manage-kit",
   MANAGER_KIT_DELIVERY_DETAIL: "manage-kit-delivery-detail",
   MANAGER_KIT_DELIVERY: "manage-kit-delivery",

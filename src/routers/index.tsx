@@ -5,7 +5,8 @@ import {
     InternalServerError,
     Terms,
     AdminDashboard,
-    NotFound
+    NotFound,
+    ManageSupporter
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -29,6 +30,7 @@ const AppRouter = () => {
             </Route>
 
             <Route path={PATH.MANAGER_LOGIN} element={<AdminLoginPage />} />
+
             <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) && <Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
                 <Route path={PATH.MANAGER_HOME} element={<ManagerDashboard />} />
@@ -38,9 +40,11 @@ const AppRouter = () => {
                 <Route path={PATH.MANAGER_LAB} element={<ManageLab />} />
                 <Route path={PATH.MANAGER_KIT_DELIVERY} element={<ManageKitDelivery />} />
                 <Route path={PATH.MANAGER_KIT_DELIVERY_DETAIL} element={<ManageKitDeliveryDetail />} />
+                <Route path={PATH.MANAGER_MANAGE_SUPPORTER} element={<ManageSupporter />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
+
             <Route path={PATH.ADMIN} element={canAccess([roles.ADMIN]) && <Dashboard />}>
                 <Route path={PATH.ADMIN_HOME} element={<AdminDashboard />} />
                 <Route path={PATH.ADMIN_MANAGE_USER} element={<AdminManageUsers />} />

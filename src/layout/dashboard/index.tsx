@@ -66,6 +66,7 @@ const Dashboard: React.FC = () => {
         getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
         getItem('Manage KIT', '/manager/manage-kit', <UserOutlined />),
         getItem('Manage LAB', '/manager/manage-lab', <DesktopOutlined />),
+        getItem('Manage Supporter', '/manager/manage-supporter', <DesktopOutlined />),
         getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
       ]);
     } else if (dataUser.role === roles.ADMIN) {

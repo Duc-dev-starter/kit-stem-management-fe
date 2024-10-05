@@ -53,7 +53,7 @@ export const updateLab = async (id: string, labData: Lab) => {
 }
 //Delete LAB
 export const deleteLab = async (id: string) => {
-  const response = await BaseService.delete({ url: `${API.GET_UPDATE_DELETE_LAB}/${id}`});
+  const response = await BaseService.delete({ url: `${API.GET_UPDATE_DELETE_LAB}/${id}` });
   return response;
 }
 
@@ -61,4 +61,20 @@ export const deleteLab = async (id: string) => {
 export const getLabDetail = async (id: string, labData: Lab) => {
   const response = await BaseService.get({ url: `${API.GET_LAB}/${id}`, payload: labData });
   return response;
+}
+
+//Add Supporter 
+export const AddSupporters = async (labId: string, supporterIds: supporterIds) => {
+  const response = await BaseService.post({ url: `${API.ADD_SUPPORTERS}`, payload: { labId, supporterIds } });
+  return response;
+}
+
+//Add Supporter 
+export const RemoveSupporters = async (labId: string, supporterIds: supporterIds) => {
+  const response = await BaseService.post({ url: `${API.REMOVE_SUPPORTERS}`, payload: { labId, supporterIds } });
+  return response;
+}
+
+export interface supporterIds {
+  id: string[];
 }
