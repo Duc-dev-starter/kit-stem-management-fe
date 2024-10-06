@@ -1,11 +1,14 @@
 import { Form, Input } from "antd";
 import { passwordRules } from "../../consts";
-
-const PasswordFormItem: React.FC = () => {
+interface Password {
+    name: string,
+    label: string
+}
+const PasswordFormItem = ({ name, label }: Password) => {
     return (
         <Form.Item
-            name="password"
-            label="Password"
+            name={name}
+            label={label}
             rules={passwordRules}
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}

@@ -3,64 +3,47 @@ import {
   FormProps,
   Image,
   message,
-  Radio,
-  RadioChangeEvent,
-  Upload,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import type { GetProp, UploadFile, UploadProps } from "antd";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Register1 from "../../assets/Register1.jpg";
 import { useForm } from "antd/es/form/Form";
 import {
-  avatarUrlRules,
   roleRules,
 } from "../../consts";
-import { getBase64, uploadFile } from "../../utils";
 import {
   BackButton,
   ButtonFormItem,
-  DescriptionFormItem,
+
   EmailFormItem,
   NameFormItem,
   PasswordFormItem,
   PhoneNumberFormItem,
-  UploadButton,
-  VideoFormItem,
+
 } from "../../components";
 import { ResponseData } from "../../interfaces";
 import { roles } from "../../enum";
 import axiosInstance from "../../services/axiosInstance";
+import { registerUser } from "../../services/user";
 
-
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const RegisterPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [role, setRole] = useState<string>(roles.CUSTOMER);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const navigate = useNavigate();
   const [form] = useForm();
 
-  useEffect(() => {
-    form.setFieldsValue({ role });
-  }, [role, form]);
-
   const onFinish: FormProps["onFinish"] = async (values) => {
     setLoading(true);
-
-    if (values.role === roles.MANAGER && fileList.length > 0) {
-      const file = fileList[0].originFileObj as FileType;
-      const url = await uploadFile(file);
-      values.avatar = url;
+    
+    if(values.password != values.confirmPassword){
+      message.error("Password and Confirm Password are not the same!")
     }
 
     try {
-      const response: ResponseData = await axiosInstance.post("/register", { ...values });
+     const res = await registerUser(values)
       message.success("Successfully registered. Please check your email to login");
-      if (response.success) {
+      if (res) {
+        console.log("res: ", res);
         setTimeout(() => {
           navigate("/login");
         }, 2000);
@@ -68,22 +51,6 @@ const RegisterPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
-    }
-
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
-
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
-
-  const handleRoleChange = (e: RadioChangeEvent) => {
-    setRole(e.target.value);
   };
 
   return (
@@ -108,46 +75,24 @@ const RegisterPage: React.FC = () => {
                 name="basic"
                 className="flex flex-col gap-1"
                 style={{ maxWidth: 600, overflow: "hidden" }}
-                initialValues={{ remember: true, role }}
+                // initialValues={{ remember: true, role }}
                 onFinish={onFinish}
                 autoComplete="off"
               >
                 <EmailFormItem />
+                <PhoneNumberFormItem />
                 <NameFormItem />
-                <PasswordFormItem />
-
+                <PasswordFormItem label="Password" name="password"/>
+                <PasswordFormItem label="Confirm Password" name="confirmPassword"/>
                 <Form.Item
                   name="role"
                   rules={roleRules}
                   labelCol={{ span: 24 }}
                   wrapperCol={{ span: 24 }}
                   className="mb-3"
+                  initialValue={roles.CUSTOMER}
                 >
-                  <Radio.Group onChange={handleRoleChange}>
-                    <Radio value={roles.CUSTOMER}>Customer</Radio>
-                    <Radio value={roles.MANAGER}>Manager</Radio>
-                  </Radio.Group>
                 </Form.Item>
-
-                {role === roles.MANAGER && (
-                  <>
-                    <VideoFormItem />
-                    <DescriptionFormItem />
-                    <PhoneNumberFormItem />
-                    <Form.Item name="avatarUrl" label="Image" rules={avatarUrlRules} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-                      <Upload
-                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                        listType="picture-card"
-                        fileList={fileList}
-                        onPreview={handlePreview}
-                        onChange={handleChange}
-                      >
-                        {fileList.length >= 1 ? null : <UploadButton />}
-                      </Upload>
-                    </Form.Item>
-                  </>
-                )}
-
                 <Form.Item
                   wrapperCol={{ span: 24 }}
                   style={{ marginBottom: "0px" }}
@@ -172,18 +117,9 @@ const RegisterPage: React.FC = () => {
           </div>
         </div>
 
-        {previewImage && (
-          <Image
+        <Image
             wrapperStyle={{ display: "none" }}
-            preview={{
-              visible: previewOpen,
-              src: previewImage,
-              onVisibleChange: (value) => {
-                setPreviewOpen(value);
-              },
-            }}
           />
-        )}
         <div
           className="w-1/2 flex items-center justify-center"
           style={{ overflow: "hidden" }}

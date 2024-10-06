@@ -46,6 +46,20 @@ export const getUsers = async (
   }
 }
 
+interface RegisterUser {
+  name: string,
+  password: string
+  email: string;
+  description?: string
+  phone_number: string
+  role: string
+}
+
+export const registerUser = async (userData: RegisterUser) => {
+  const response = await BaseService.post({ url: `${API.REGISTER}`, payload: userData });
+  return response;
+};
+
 export const getUserDetail = async (_id: string) => {
   const response = await BaseService.get({ url: `${API.GET_UPDATE_DELETE_USER}/${_id}` });
   return response;
