@@ -22,18 +22,18 @@ export const PATH = {
   USER_DETAIL: "/user/:id",
   INTERNAL_SERVER_ERROR: "/internal-server-error",
   CHANGE_PASSWORD: "/change-password",
-   //Customer
-    CUSTOMER: '/customer/*',
-    CUSTOMER_PROFILE:"/profile",
-    CUSTOMER_CHANGE_PASSWORD:"/change-password",
-    //Staff
+  //Customer
+  CUSTOMER: '/customer/*',
+  CUSTOMER_PROFILE: "/profile",
+  CUSTOMER_CHANGE_PASSWORD: "/change-password",
+  //Staff
   STAFF: '/staff/*',
-  STAFF_LOGIN : '/manager/login',
+  STAFF_LOGIN: '/manager/login',
   STAFF_HOME: 'dashboard',
   STAFF_DASHBOARD: '/staff/dashboard',
   //Manager
   MANAGER: '/manager/*',
-  MANAGER_LOGIN : '/manager/login',
+  MANAGER_LOGIN: '/manager/login',
   MANAGER_HOME: 'dashboard',
   MANAGER_MANAGE_SUPPORTER: "manage-lab/:_id/manage-supporters",
   MANAGER_MANAGE_KIT: "/manager/manage-kits",

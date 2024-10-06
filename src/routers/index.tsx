@@ -9,7 +9,8 @@ import {
     ManagerManageUsers,
     ManageSupporters,
     CustomerProfilePage,
-    ChangePassword
+    ChangePassword,
+    ForgotPassword
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -33,6 +34,7 @@ const AppRouter = () => {
             </Route>
 
             {/* Customer Routers */}
+            <Route path={PATH.FORGOT_PASSWORD} element={<ForgotPassword />} />
             <Route path={PATH.CUSTOMER_PROFILE} element={<CustomerProfilePage />} />
             <Route path={PATH.CUSTOMER_CHANGE_PASSWORD} element={<ChangePassword />} />
 
