@@ -70,7 +70,7 @@ export const AddSupporters = async (labId: string, supporterIds: string[]) => {
 }
 
 //Add Supporter 
-export const RemoveSupporters = async (labId: string, supporterIds: supporterIds) => {
+export const RemoveSupporters = async (labId: string, supporterIds: string []) => {
   const response = await BaseService.post({ url: `${API.REMOVE_SUPPORTERS}`, payload: { labId, supporterIds } });
   return response;
 }

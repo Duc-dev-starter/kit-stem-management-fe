@@ -24,8 +24,6 @@ const ManageLab = () => {
     }, [])
 
 
-
-
     const handleOkDelete = async () => {
         setIsOpenModalDelete(false);
         const res = await deleteLab(labDelete?._id || "")

@@ -18,4 +18,4 @@ const ModalDeleteLab = ({ record, handleOk, handleCancel, isModalOpen }: DeleteL
     )
 }
 
-export default ModalDeleteLab;
+export default ModalDeleteLab; 
