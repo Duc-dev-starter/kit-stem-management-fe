@@ -66,7 +66,6 @@ const Dashboard: React.FC = () => {
         getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
         getItem('Manage KITs', '/manager/manage-kits', <UserOutlined />),
         getItem('Manage LABs', '/manager/manage-labs', <DesktopOutlined />),
-        getItem('Manage Supporters', '/manager/manage-supporters', <DesktopOutlined />),
         getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
         getItem('Manage Users', '/manager/manage-users', <DesktopOutlined />)
       ]);
