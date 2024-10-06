@@ -21,9 +21,8 @@ import {
   PhoneNumberFormItem,
 
 } from "../../components";
-import { ResponseData } from "../../interfaces";
+
 import { roles } from "../../enum";
-import axiosInstance from "../../services/axiosInstance";
 import { registerUser } from "../../services/user";
 
 
@@ -34,7 +33,7 @@ const RegisterPage: React.FC = () => {
 
   const onFinish: FormProps["onFinish"] = async (values) => {
     setLoading(true);
-    
+
     if(values.password != values.confirmPassword){
       message.error("Password and Confirm Password are not the same!")
     }

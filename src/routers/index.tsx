@@ -7,7 +7,9 @@ import {
     AdminDashboard,
     NotFound,
     ManagerManageUsers,
-    ManageSupporters
+    ManageSupporters,
+    CustomerProfilePage,
+    ChangePassword
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -30,8 +32,12 @@ const AppRouter = () => {
                 <Route path="*" element={<NotFound />} />
             </Route>
 
-            <Route path={PATH.MANAGER_LOGIN} element={<AdminLoginPage />} />
+            {/* Customer Routers */}
+            <Route path={PATH.CUSTOMER_PROFILE} element={<CustomerProfilePage />} />
+            <Route path={PATH.CUSTOMER_CHANGE_PASSWORD} element={<ChangePassword />} />
 
+            {/* Manager Routers */}
+            <Route path={PATH.MANAGER_LOGIN} element={<AdminLoginPage />} />
             <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) && <Dashboard />}>
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
                 <Route path={PATH.MANAGER_HOME} element={<ManagerDashboard />} />

@@ -68,7 +68,7 @@ const AdminLoginPage: React.FC = () => {
               autoComplete="off"
             >
               <EmailFormItem />
-              <PasswordFormItem />
+              <PasswordFormItem name="password" label="Password" />
               <ButtonFormItem buttonText="Login" htmlType="submit" />
             </Form>
           </div>

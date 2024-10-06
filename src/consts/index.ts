@@ -17,6 +17,8 @@ export const statusOfKit = {
   INACTIVE: "inactive",
   RETURNED: "returned"
 };
+
+
 export const kitStatus = (status: string) => {
   switch (status) {
     case statusOfKit.IN_WAREHOUSE:

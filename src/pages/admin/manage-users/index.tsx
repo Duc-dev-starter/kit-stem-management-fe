@@ -405,7 +405,7 @@ const AdminManageUsers: React.FC = () => {
           {modalMode === "Add" && <EmailFormItem />}
           {modalMode === "Add" && (
             <div className="mt-3">
-              <PasswordFormItem />
+              <PasswordFormItem name="password" label="Password"/>
             </div>
           )}
           {modalMode === "Add" && (

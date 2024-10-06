@@ -1,13 +1,47 @@
-import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { Col, Image, Row, Typography } from "antd";
+import {  ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Col, Dropdown, Image, MenuProps, Row, Space, Typography } from "antd";
 import "./navbar.css"; // Import CSS for hover effects
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
+import { getUserFromLocalStorage } from "../../utils";
 
 const { Text } = Typography;
 
 const Navbar = () => {
 
   const navigate = useNavigate();
+
+  const userData = getUserFromLocalStorage();
+
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: 'My Account',
+      disabled: true,
+    },
+    {
+      key: '2',
+      label: 'Profile',
+      onClick:()=>{
+        navigate("/customer/profile")
+      }
+    },
+    {
+      key: '3',
+      label: 'Change Password',
+      onClick:()=>{
+        navigate("/change-password")
+      }
+    },
+    {
+      key: '4',
+      label: 'Log out',
+      onClick:()=>{
+        localStorage.clear();
+        navigate("/login")
+      }
+    },
+
+  ];
 
   return (
     <Row
@@ -101,15 +135,27 @@ const Navbar = () => {
           </Col>
           <Col>
 
-            <UserOutlined
-              onClick={() => { navigate('login') }}
-              className="navbar-icon cursor-pointer logo-user"
-              style={{
-                fontSize: "24px",
-                color: "black",
-                textDecoration: "none",
-              }}
-            />
+            {
+              userData ?
+                <>
+                  <Dropdown className="mb-100" menu={{ items }}>
+                    <a onClick={(e) => e.preventDefault()}>
+                    <Space> <Avatar size="large" icon={<UserOutlined />} /></Space>
+                    </a>
+                  </Dropdown>
+
+                </>
+                :
+                <UserOutlined
+                  onClick={() => { navigate('login') }}
+                  className="navbar-icon cursor-pointer logo-user"
+                  style={{
+                    fontSize: "24px",
+                    color: "black",
+                    textDecoration: "none",
+                  }}
+                />
+            }
 
           </Col>
           <Col>

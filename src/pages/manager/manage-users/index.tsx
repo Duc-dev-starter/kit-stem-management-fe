@@ -312,7 +312,7 @@ const ManagerManageUsers: React.FC = () => {
                       name: "avatar.png",
                       status: "done",
                       url: avatarUrl,
-                    } as UploadFile<any>,
+                    } as UploadFile,
                   ]
                   : []
               );
@@ -405,7 +405,7 @@ const ManagerManageUsers: React.FC = () => {
           {modalMode === "Add" && <EmailFormItem />}
           {modalMode === "Add" && (
             <div className="mt-3">
-              <PasswordFormItem />
+              <PasswordFormItem name="password" label="Password" />
             </div>
           )}
           {modalMode === "Add" && (

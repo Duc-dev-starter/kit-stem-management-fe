@@ -2,7 +2,6 @@ export type UserRole = "admin" | "manager" | "customer" | "staff";
 
 export class User {
   _id: string;
-  
   google_id?: string;
   name: string;
   email: string; // unique

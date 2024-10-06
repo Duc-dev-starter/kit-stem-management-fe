@@ -107,7 +107,7 @@ const LoginPage: React.FC = () => {
             autoComplete="off"
           >
             <EmailFormItem />
-            <PasswordFormItem />
+            <PasswordFormItem name="password" label="Password" />
             <div className="flex justify-center">
               <Link
                 className="hover:text-blue-600 mt-2"
