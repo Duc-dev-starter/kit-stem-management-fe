@@ -1,4 +1,4 @@
-import { DownOutlined, ShoppingCartOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, Image, MenuProps, Row, Space, Typography } from "antd";
 import "./navbar.css"; // Import CSS for hover effects
 import { useNavigate } from "react-router-dom";

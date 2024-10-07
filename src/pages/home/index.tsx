@@ -1,6 +1,4 @@
 
-
-
 const HomePage: React.FC = () => {
 
 

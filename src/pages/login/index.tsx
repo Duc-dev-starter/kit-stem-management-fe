@@ -7,9 +7,6 @@ import {
   login,
   handleNavigateRole,
   loginWithGoogle,
-
-  // loginWithGoogle,
-  // registerWithGoogle,
 } from "../../services";
 import type { FormInstance } from "antd";
 import {
@@ -35,10 +32,13 @@ const LoginPage: React.FC = () => {
     try {
       const authResult = await login(email, password);
       if (authResult && "token" in authResult) {
+        console.log("auth token", authResult.token)
+        localStorage.setItem("auth token", authResult.token)
         await handleNavigateRole(authResult.token, navigate);
       }
       setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.log("login error: ", error)
     }
   };

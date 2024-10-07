@@ -1,7 +1,7 @@
-import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+import {  SmileOutlined } from "@ant-design/icons";
 import { Dropdown, MenuProps, Space } from "antd";
 import { useEffect, useState } from "react";
-import { getCategories } from "../../../services";
+import {  getCategoriesByClient } from "../../../services";
 import { Category } from "../../../models";
 import { useNavigate } from "react-router-dom";
 
@@ -50,7 +50,7 @@ const ShopDropDown = () => {
     },[])
 
     const getCategoriesFromHome = async()=>{
-        const res = await getCategories("", 1, 100)
+        const res = await getCategoriesByClient("", 1, 100)
         if(res){
             setCates(res.data.pageData)
         }
