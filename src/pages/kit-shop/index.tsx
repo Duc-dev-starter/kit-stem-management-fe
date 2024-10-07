@@ -31,7 +31,7 @@ const KitShop = () => {
     }));
 
     return (
-        <div className="container mx-auto mt-2">
+        <div className="container px-10 mt-2">
             <img src="https://www.crunchlabs.com/cdn/shop/files/crunchlabs-education-hero_ce8466b9-af5a-4f5f-a421-1efd4be7526b.png?v=1684885608" alt="" />
             <div className="mt-5 flex justify-between">
                 <div>
@@ -46,7 +46,7 @@ const KitShop = () => {
                     </Dropdown>
                 </div>
             </div>
-           <div className="grid grid-cols-4">
+           <div className="grid grid-cols-4 pl-10">
            {
                 cates.map(cate=>(
                     <>

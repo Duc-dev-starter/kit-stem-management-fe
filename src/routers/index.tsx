@@ -11,7 +11,8 @@ import {
     CustomerProfilePage,
     ChangePassword,
     ForgotPassword,
-    KitShop
+    KitShop,
+    KitDetailFromCLient
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -38,7 +39,7 @@ const AppRouter = () => {
             <Route path={PATH.FORGOT_PASSWORD} element={<ForgotPassword />} />
             <Route path={PATH.CUSTOMER_PROFILE} element={<CustomerProfilePage />} />
             <Route path={PATH.CUSTOMER_CHANGE_PASSWORD} element={<ChangePassword />} />
-
+            <Route path={PATH.CLIENT_KIT_DETAIL} element={<KitDetailFromCLient />} />
             {/* Manager Routers */}
             <Route path={PATH.MANAGER_LOGIN} element={<AdminLoginPage />} />
             <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) && <Dashboard />}>
@@ -53,6 +54,7 @@ const AppRouter = () => {
                 <Route path={PATH.MANAGER_MANAGE_SUPPORTER} element={<ManageSupporters />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
+
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
 
             <Route path={PATH.ADMIN} element={canAccess([roles.ADMIN]) && <Dashboard />}>
