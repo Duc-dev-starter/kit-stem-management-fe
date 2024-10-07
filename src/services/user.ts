@@ -74,7 +74,7 @@ export const createUser = async (userData: User) => {
 export const changePassword = async (values: ValuesChangePassword) => {
   const response = await BaseService.put({
     url: API.CHANGE_PASSWORD, payload: {
-      user_id: user._id+"",
+      user_id: user._id,
       old_password: values.oldPassword,
       new_password: values.newPassword,
     }

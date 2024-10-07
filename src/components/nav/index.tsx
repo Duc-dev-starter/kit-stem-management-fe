@@ -1,8 +1,9 @@
-import {  ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { DownOutlined, ShoppingCartOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, Image, MenuProps, Row, Space, Typography } from "antd";
 import "./navbar.css"; // Import CSS for hover effects
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUserFromLocalStorage } from "../../utils";
+import ShopDropDown from "./shop";
 
 const { Text } = Typography;
 
@@ -21,28 +22,28 @@ const Navbar = () => {
     {
       key: '2',
       label: 'Profile',
-      onClick:()=>{
+      onClick: () => {
         navigate("/customer/profile")
       }
     },
     {
       key: '3',
       label: 'Change Password',
-      onClick:()=>{
+      onClick: () => {
         navigate("/change-password")
       }
     },
     {
       key: '4',
       label: 'Log out',
-      onClick:()=>{
+      onClick: () => {
         localStorage.clear();
         navigate("/login")
       }
     },
 
   ];
-
+ 
   return (
     <Row
       className="navbar"
@@ -89,7 +90,7 @@ const Navbar = () => {
           <Col style={{ padding: "28px 14px" }}>
             <Text>
               <a href="#" className="navbar-link">
-                Shop
+                <ShopDropDown/>
               </a>
             </Text>
           </Col>
@@ -140,7 +141,7 @@ const Navbar = () => {
                 <>
                   <Dropdown className="mb-100" menu={{ items }}>
                     <a onClick={(e) => e.preventDefault()}>
-                    <Space> <Avatar size="large" icon={<UserOutlined />} /></Space>
+                      <Space> <Avatar size="large" icon={<UserOutlined />} /></Space>
                     </a>
                   </Dropdown>
 
