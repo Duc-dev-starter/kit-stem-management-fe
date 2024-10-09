@@ -1,9 +1,10 @@
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Dropdown, Image, MenuProps, Row, Space, Typography } from "antd";
+import { Col, Image, Row, Typography } from "antd";
 import "./navbar.css"; // Import CSS for hover effects
 import { useNavigate } from "react-router-dom";
-import { getUserFromLocalStorage } from "../../utils";
 import ShopDropDown from "./shop";
+import DropdownAvatar from "../dropdown/DropdownAvatar";
+import { user } from "../../services";
 
 const { Text } = Typography;
 
@@ -11,39 +12,6 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const userData = getUserFromLocalStorage();
-
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'My Account',
-      disabled: true,
-    },
-    {
-      key: '2',
-      label: 'Profile',
-      onClick: () => {
-        navigate("/customer/profile")
-      }
-    },
-    {
-      key: '3',
-      label: 'Change Password',
-      onClick: () => {
-        navigate("/change-password")
-      }
-    },
-    {
-      key: '4',
-      label: 'Log out',
-      onClick: () => {
-        localStorage.clear();
-        navigate("/login")
-      }
-    },
-
-  ];
- 
   return (
     <Row
       className="navbar"
@@ -90,7 +58,7 @@ const Navbar = () => {
           <Col style={{ padding: "28px 14px" }}>
             <Text>
               <a href="#" className="navbar-link">
-                <ShopDropDown/>
+                <ShopDropDown />
               </a>
             </Text>
           </Col>
@@ -137,14 +105,9 @@ const Navbar = () => {
           <Col>
 
             {
-              userData ?
+              user ?
                 <>
-                  <Dropdown className="mb-100" menu={{ items }}>
-                    <a onClick={(e) => e.preventDefault()}>
-                      <Space> <Avatar size="large" icon={<UserOutlined />} /></Space>
-                    </a>
-                  </Dropdown>
-
+                  <DropdownAvatar dataUser={user} />
                 </>
                 :
                 <UserOutlined

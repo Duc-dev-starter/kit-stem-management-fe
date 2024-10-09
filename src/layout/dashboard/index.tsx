@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { DesktopOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Col, Dropdown, Layout, Menu, MenuProps, Space, theme } from 'antd';
+import { BookOutlined, DashboardOutlined, DeliveredProcedureOutlined, ToolOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, MenuProps, Space, theme } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { logout } from '../../services';
 import { getUserFromLocalStorage } from '../../utils';
 import { roles } from '../../enum';
-import { Row } from 'antd'; // Correct import for Row component
+import { AiOutlineDashboard } from "react-icons/ai";
+import { BiCategory } from "react-icons/bi";
+import { FaRegNewspaper } from "react-icons/fa";
+import { IoLogOutOutline } from "react-icons/io5";
+import { DropdownAvatar } from '../../components';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -20,13 +24,16 @@ const Dashboard: React.FC = () => {
   } = theme.useToken();
 
   const [dataUser, setDataUser] = useState<{
-    role: string | null;
-    fullName: string | null;
+    name: string | null;
     email: string | null;
+    avatar: string | null;
+    google_id?: string,
+    role: string | null
   }>({
-    role: null,
-    fullName: null,
+    name: null,
     email: null,
+    avatar: null,
+    role: null
   });
 
   const user = getUserFromLocalStorage();
@@ -35,9 +42,11 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     if (userRole && user) {
       setDataUser({
-        role: userRole,
-        fullName: user.name,
+        name: user.name,
         email: user.email,
+        avatar: user.avatar,
+        google_id: user.google_id,
+        role: user.role
       });
     }
   }, [userRole]);
@@ -63,18 +72,18 @@ const Dashboard: React.FC = () => {
   const loadItems = async () => {
     if (dataUser.role === roles.MANAGER) {
       setItems([
-        getItem('Dashboard', '/manager/dashboard', <DesktopOutlined />),
-        getItem('Manage KITs', '/manager/manage-kits', <UserOutlined />),
-        getItem('Manage LABs', '/manager/manage-labs', <DesktopOutlined />),
-        getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <UserOutlined />),
-        getItem('Manage Users', '/manager/manage-users', <DesktopOutlined />)
+        getItem('Dashboard', '/manager/dashboard', <DashboardOutlined />),
+        getItem('Manage KITs', '/manager/manage-kits', <ToolOutlined />),
+        getItem('Manage LABs', '/manager/manage-labs', <BookOutlined />),
+        getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <DeliveredProcedureOutlined />),
+        getItem('Manage Users', '/manager/manage-users', <UserOutlined />)
       ]);
     } else if (dataUser.role === roles.ADMIN) {
       setItems([
-        getItem('Dashboard', '/admin/dashboard', <DesktopOutlined />),
+        getItem('Dashboard', '/admin/dashboard', <AiOutlineDashboard />),
         getItem('Manage Users', '/admin/manage-users', <UserOutlined />),
-        getItem('Manage Categories', '/admin/manage-categories', <UserOutlined />),
-        getItem('Manage Blogs', '/admin/manage-blogs', <DesktopOutlined />),
+        getItem('Manage Categories', '/admin/manage-categories', <BiCategory />),
+        getItem('Manage Blogs', '/admin/manage-blogs', <FaRegNewspaper />),
       ]);
     }
   };
@@ -82,64 +91,6 @@ const Dashboard: React.FC = () => {
   const handleClick = (e: { key: React.Key }) => {
     navigate(e.key as string); // Navigate to the selected key
   };
-
-  const dropdownItems: MenuProps["items"] =
-    dataUser.role === roles.MANAGER
-      ? [
-        {
-          label: (
-            <div className="text-sm">
-              <Row>
-                <Col span={8} className="p-4 pt-2 pb-2">
-                  <Avatar
-                    src={
-                      typeof user.avatar === "string"
-                        ? user.avatar
-                        : undefined
-                    }
-                    className="hover:cursor-pointer mr-5 border border-black"
-                    size={50}
-                    icon={<UserOutlined />}
-                  />
-                </Col>
-                <Col span={16} className="pt-3 pr-3">
-                  <Row>
-                    <p className="text-base font-bold">{dataUser.fullName}</p>
-                  </Row>
-                  <div>
-                    <p className="text-md">{dataUser.email}</p>
-                  </div>
-                </Col>
-              </Row>
-            </div>
-          ),
-          key: "1",
-        },
-        {
-          label: (
-            <p
-              onClick={() => logout(navigate)}
-              className="text-lg hover:cursor-pointer hover:text-red-600"
-            >
-              Logout
-            </p>
-          ),
-          key: "3",
-        },
-      ]
-      : [
-        {
-          label: (
-            <button
-              onClick={() => logout(navigate)}
-              className="text-lg hover:cursor-pointer hover:text-red-600 bg-transparent border-none p-0"
-            >
-              Logout
-            </button>
-          ),
-          key: "1",
-        },
-      ];
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -167,29 +118,14 @@ const Dashboard: React.FC = () => {
             <p>Welcome back</p>
           </div>
           {dataUser.role !== roles.ADMIN ? (
-            <Dropdown menu={{ items: dropdownItems }} trigger={["click"]}>
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <Avatar
-                    src={
-                      typeof user.avatar === "string"
-                        ? user.avatar
-                        : undefined
-                    }
-                    className="hover:cursor-pointer border border-black"
-                    size={40}
-                    icon={<UserOutlined />}
-                  />
-                </Space>
-              </a>
-            </Dropdown>
+            <DropdownAvatar dataUser={dataUser} />
           ) : (
             <Space>
               <button
                 onClick={() => logout(navigate)}
-                className="text-base text-white border border-red-300 bg-red-500 hover:border-red-700 hover:bg-red-700 px-3 py-1 rounded transition-colors duration-300"
+                className="flex gap-1 items-center text-base text-white border border-red-300 bg-red-500 hover:border-red-700 hover:bg-red-700 px-3 py-1 rounded transition-colors duration-300"
               >
-                Logout
+                <IoLogOutOutline /><span className='mb-[0.1rem]'>Sign out</span>
               </button>
             </Space>
           )}

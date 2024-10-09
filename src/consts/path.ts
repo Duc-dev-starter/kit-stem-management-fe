@@ -24,6 +24,7 @@ export const PATH = {
   CHANGE_PASSWORD: "/change-password",
   KIT_SHOP: "/kit-shop",
   CLIENT_KIT_DETAIL: "/kit-detail",
+  USER_PROFILE: "/profile",
   //Customer
   CUSTOMER: '/customer/*',
   CUSTOMER_PROFILE: "/profile",

@@ -83,7 +83,6 @@ const AdminManageCategories: React.FC = () => {
 
   const onFinish = useCallback(
     async (values: Category) => {
-      console.log(values)
       let parentCategoryId = null;
       if (values.parent_category_id && values.parent_category_id !== "none") {
         parentCategoryId = values.parent_category_id;
