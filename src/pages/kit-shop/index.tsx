@@ -15,7 +15,6 @@ const KitShop = () => {
     const getCategoriesFromHome = async () => {
         const res = await getCategoriesByClient("", 1, 100);
         if (res) {
-            console.log("res", res)
             setCates(res.data.pageData);
         }
     };
@@ -46,16 +45,16 @@ const KitShop = () => {
                     </Dropdown>
                 </div>
             </div>
-           <div className="grid grid-cols-4 pl-10">
-           {
-                cates.map(cate=>(
-                    <>
-                       <KitCard name={cate.name} />
-                    </>
-                ))
-            }
-           </div>
-         
+            <div className="grid grid-cols-4 pl-10">
+                {
+                    cates.map(cate => (
+                        <>
+                            <KitCard name={cate.name} />
+                        </>
+                    ))
+                }
+            </div>
+
         </div>
     );
 };

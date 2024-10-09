@@ -21,7 +21,6 @@ export const login = async (email: string, password: string) => {
   if (!response.success) {
     return;
   }
-  localStorage.setItem("res login", response+"")
   const token = response.data.token;
   const decodedToken: JwtPayload = jwtDecode(token);
   const userRole = decodedToken.role;

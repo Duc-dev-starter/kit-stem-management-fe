@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import {
     AboutPage, AdminManageBlogs, KitDetail, AdminManageCategories, AdminManageUsers, HomePage, Login, ManageKit,
     ManageKitDelivery, ManageKitDeliveryDetail, ManageLab, ManagerDashboard, Register, AdminLoginPage,
@@ -44,7 +44,8 @@ const AppRouter = () => {
             <Route path={PATH.CLIENT_KIT_DETAIL} element={<KitDetailFromCLient />} />
             {/* Manager Routers */}
             <Route path={PATH.MANAGER_LOGIN} element={<AdminLoginPage />} />
-            <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) && <Dashboard />}>
+            <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) ? <Dashboard /> : <Navigate to={PATH.MANAGER_LOGIN} />}
+            >
                 {/* <Route path="manager-page" element={<ManagerPage />} /> */}
                 <Route path={PATH.MANAGER_HOME} element={<ManagerDashboard />} />
                 <Route path={PATH.MANAGER_KIT} element={<ManageKit />} />
@@ -59,7 +60,8 @@ const AppRouter = () => {
 
             <Route path={PATH.ADMIN_LOGIN} element={<AdminLoginPage />} />
 
-            <Route path={PATH.ADMIN} element={canAccess([roles.ADMIN]) && <Dashboard />}>
+            <Route path={PATH.ADMIN} element={canAccess([roles.ADMIN]) ? <Dashboard /> : <Navigate to={PATH.ADMIN_LOGIN} />}
+            >
                 <Route path={PATH.ADMIN_HOME} element={<AdminDashboard />} />
                 <Route path={PATH.ADMIN_MANAGE_USER} element={<AdminManageUsers />} />
                 <Route path={PATH.ADMIN_MANAGE_BLOG} element={<AdminManageBlogs />} />

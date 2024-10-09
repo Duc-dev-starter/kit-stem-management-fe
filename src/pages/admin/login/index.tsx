@@ -36,8 +36,6 @@ const AdminLoginPage: React.FC = () => {
       const authResult = await login(email, password);
       if (authResult && "token" in authResult) {
         handleNavigateRole(authResult.token, navigate);
-        console.log(authResult);
-
       }
     } catch (error) {
       console.log(error);

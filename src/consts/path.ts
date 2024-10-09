@@ -25,6 +25,7 @@ export const PATH = {
   KIT_SHOP: "/kit-shop",
   CLIENT_KIT_DETAIL: "/kit-detail",
   BLOG_PAGE: "/blog",
+  USER_PROFILE: "/profile",
   //Customer
   CUSTOMER: '/customer/*',
   CUSTOMER_PROFILE: "/profile",

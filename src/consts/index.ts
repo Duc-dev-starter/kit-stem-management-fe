@@ -4,6 +4,7 @@ export {avatarUrlRules,commentRules,contentRules,descriptionRules,emailRules,nam
 import {PATH} from './path.ts'
 export {getRoleColor} from './getColor.ts'
 export {getRoleLabel} from './getLabel.ts'
+export {avatarReplace} from './others.ts'
 
 export const statusOfKit = {
   NEW: "new",
