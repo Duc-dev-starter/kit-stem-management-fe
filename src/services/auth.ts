@@ -24,14 +24,14 @@ export const login = async (email: string, password: string) => {
   localStorage.setItem("res login", response+"")
   const token = response.data.token;
   const decodedToken: JwtPayload = jwtDecode(token);
-
-  if (!rolesArr.includes(decodedToken.role)) {
+  const userRole = decodedToken.role;
+  if (!rolesArr.includes(userRole)) {
     message.error("Invalid user role");
     return null;
   }
 
   const currentPath = window.location.pathname;
-  const userRole = decodedToken.role;
+
 
   if (currentPath.includes("/admin") && userRole !== roles.ADMIN) {
     message.error("You don't have permission to access this page");

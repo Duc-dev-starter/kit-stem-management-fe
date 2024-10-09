@@ -12,7 +12,8 @@ import {
     ChangePassword,
     ForgotPassword,
     KitShop,
-    KitDetailFromCLient
+    KitDetailFromCLient,
+    BlogPage
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -30,6 +31,7 @@ const AppRouter = () => {
             <Route path={PATH.TERMS} element={<Terms />} />
             <Route path={PATH.INTERNAL_SERVER_ERROR} element={<InternalServerError />} />
             <Route path={PATH.STAFF_LOGIN} element={<AdminLoginPage />} />
+            <Route path={PATH.BLOG_PAGE} element={<BlogPage />} />
             <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) && <Dashboard />}>
                 <Route path="*" element={<NotFound />} />
             </Route>

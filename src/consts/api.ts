@@ -45,6 +45,6 @@ export const API = {
 
     //CLIENT
     CLIENT_GET_CATEGORIES: "/api/client/category/search",
-    CLIENT_GET_BLOGS: "/api/client/blogs",
+    CLIENT_GET_BLOGS: "/api/client/blog/search",
     CLIENT_GET_BLOG: "/api/client/blog"
 }

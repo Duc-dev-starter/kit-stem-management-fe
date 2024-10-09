@@ -1,4 +1,4 @@
-export { getBlogs, deleteBlog, handleGetBlogDetail,createBlog,updateBlog,getBlog } from './blog'
+export { getBlogs, deleteBlog, handleGetBlogDetail,createBlog,updateBlog,getBlog } from './blog.services'
 export { getCategories, deleteCategory, updateCategory,createCategory} from './category'
 export { handleNavigateRole, login, logout, getCurrentLoginUser,loginWithGoogle } from './auth'
 export { BaseService } from './BaseService'

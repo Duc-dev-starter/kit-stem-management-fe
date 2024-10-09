@@ -7,7 +7,6 @@ import { Blog } from "../models";
 
 export const getBlogs = async (
   category_id: string = "",
-  is_deleted: boolean = false,
   pageNum: number = 1,
   pageSize: number = 10
   ) => {
@@ -15,7 +14,7 @@ export const getBlogs = async (
     const response = await BaseService.post({url: API.GET_BLOGS, payload: {
       "searchCondition": {
         "category_id": category_id || "",
-        "is_deleted": is_deleted !== undefined ? is_deleted : false,
+        "is_deleted": false
       },
       "pageInfo": {
         "pageNum": pageNum || 1,
