@@ -23,7 +23,7 @@ export const PATH = {
   INTERNAL_SERVER_ERROR: "/internal-server-error",
   CHANGE_PASSWORD: "/change-password",
   KIT_SHOP: "/kit-shop",
-  CLIENT_KIT_DETAIL: "/kit-detail",
+  CLIENT_KIT_DETAIL: "/kit/:id",
   BLOG_PAGE: "/blog",
   USER_PROFILE: "/profile",
   //Customer
@@ -48,6 +48,7 @@ export const PATH = {
   MANAGER_KIT_ID: "manage-kit/:id",
   MANAGER_USER: "manage-users",
   MANAGER_DASHBOARD: "/manager/dashboard",
+  MANAGER_MANAGE_COMBO: 'manage-combos',
   //admin
   ADMIN: '/admin/*',
   ADMIN_LOGIN: "/admin/login",

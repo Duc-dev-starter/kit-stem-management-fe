@@ -1,10 +1,32 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Image, Row } from "antd";
 import Title from "antd/es/typography/Title";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getKitByClientService } from "../../services/client.services";
+import { Kit } from "../../models";
 
 const KitDetailFromCLient = () => {
+    const {id} = useParams();
     const [count, setCount] = useState<number>(0)
+    const [kit, setKit] = useState<Kit>()
+
+    useEffect(()=>{
+        if(id){
+            getKitDetail();
+        }
+    },[id])
+
+    const getKitDetail = async()=>{
+        if(id){
+            const response = await getKitByClientService(id, 1, 100)
+            console.log("res: ",response )
+            setKit(response.dẩ
+                
+            )
+        }
+    }
+   
     const handleSetCountPlus = () => {
         setCount(count + 1)
     }
@@ -19,7 +41,7 @@ const KitDetailFromCLient = () => {
                 <Col span={16}>
                     <Image
                         width={"80%"}
-                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                        src={kit?.image_url}
                     />
                 </Col>
                 <Col span={8}>

@@ -13,7 +13,8 @@ import {
     ForgotPassword,
     KitShop,
     KitDetailFromCLient,
-    BlogPage
+    BlogPage,
+    ManagerManageCombo
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -55,6 +56,7 @@ const AppRouter = () => {
                 <Route path={PATH.MANAGER_KIT_DELIVERY_DETAIL} element={<ManageKitDeliveryDetail />} />
                 <Route path={PATH.MANAGER_USER} element={<ManagerManageUsers />} />
                 <Route path={PATH.MANAGER_MANAGE_SUPPORTER} element={<ManageSupporters />} />
+                <Route path={PATH.MANAGER_MANAGE_COMBO} element={<ManagerManageCombo />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
 

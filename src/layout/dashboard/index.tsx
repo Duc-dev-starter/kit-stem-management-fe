@@ -73,10 +73,12 @@ const Dashboard: React.FC = () => {
     if (dataUser.role === roles.MANAGER) {
       setItems([
         getItem('Dashboard', '/manager/dashboard', <DashboardOutlined />),
+        getItem('Manage Combos', '/manager/manage-combos', <UserOutlined />),
         getItem('Manage KITs', '/manager/manage-kits', <ToolOutlined />),
         getItem('Manage LABs', '/manager/manage-labs', <BookOutlined />),
         getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <DeliveredProcedureOutlined />),
-        getItem('Manage Users', '/manager/manage-users', <UserOutlined />)
+        getItem('Manage Users', '/manager/manage-users', <UserOutlined />),
+       
       ]);
     } else if (dataUser.role === roles.ADMIN) {
       setItems([

@@ -1,15 +1,18 @@
 import { Button, Dropdown, MenuProps } from "antd";
 import Title from "antd/es/typography/Title";
-import { Category } from "../../models";
+import { Category, Kit } from "../../models";
 import { useEffect, useState } from "react";
 import { getCategoriesByClient } from "../../services";
 import KitCard from "../../components/card";
+import { getKitsByClientService } from "../../services/client.services";
+import { Link } from "react-router-dom";
 
 const KitShop = () => {
     const [cates, setCates] = useState<Category[]>([]);
-
+    const [kits, setKits] = useState<Kit[]>([]);
     useEffect(() => {
         getCategoriesFromHome();
+        getKitsByCLient()
     }, []);
 
     const getCategoriesFromHome = async () => {
@@ -19,6 +22,12 @@ const KitShop = () => {
         }
     };
 
+    const getKitsByCLient = async () => {
+        const response = await getKitsByClientService("", "", "", 1, 100)
+        if (response) {
+            setKits(response.data.pageData)
+        }
+    }
     // Chuyển đổi cates thành menu items cho Dropdown
     const items: MenuProps['items'] = cates.map((cate) => ({
         key: cate._id,
@@ -47,10 +56,15 @@ const KitShop = () => {
             </div>
             <div className="grid grid-cols-4 pl-10">
                 {
-                    cates.map(cate => (
-                        <>
-                            <KitCard name={cate.name} />
-                        </>
+                    kits.map(kit => (
+                        <Link to={`/kit/${kit._id}`}>
+                            <KitCard name={kit.name}
+                                image={kit.image_url}
+                                price={kit.price}
+                                category_name={kit.category_name}
+                                id={kit._id}
+                            />
+                        </Link>
                     ))
                 }
             </div>
