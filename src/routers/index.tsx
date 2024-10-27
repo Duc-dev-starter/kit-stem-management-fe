@@ -14,7 +14,8 @@ import {
     KitShop,
     KitDetailFromCLient,
     BlogPage,
-    ManagerManageCombo
+    ManagerManageCombo,
+    LabShop
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -33,12 +34,14 @@ const AppRouter = () => {
             <Route path={PATH.INTERNAL_SERVER_ERROR} element={<InternalServerError />} />
             <Route path={PATH.STAFF_LOGIN} element={<AdminLoginPage />} />
             <Route path={PATH.BLOG_PAGE} element={<BlogPage />} />
+            <Route path={PATH.KIT_SHOP} element={<KitShop />} />
+            <Route path={PATH.LAB_SHOP} element={<LabShop />} />
             <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) && <Dashboard />}>
                 <Route path="*" element={<NotFound />} />
             </Route>
 
             {/* Customer Routers */}
-            <Route path={PATH.KIT_SHOP} element={<KitShop />} />
+         
             <Route path={PATH.FORGOT_PASSWORD} element={<ForgotPassword />} />
             <Route path={PATH.CUSTOMER_PROFILE} element={<CustomerProfilePage />} />
             <Route path={PATH.CUSTOMER_CHANGE_PASSWORD} element={<ChangePassword />} />

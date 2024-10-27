@@ -113,3 +113,55 @@ export const getKitByClientService = async (id: string, pageNum:number, pageSize
     };
   }
 };
+
+export const getLabsByClientService = async (category_id: string, keyword: string, status: string, pageNum: number, pageSize: number) => {
+  try {
+    const response = await BaseService.post({
+      url: API.CLIENT_GET_LABS, payload: {
+        "searchCondition": {
+          "category_id": category_id || "",
+          "keyword": keyword || "",
+          "status": status || "",
+          "is_deleted": false
+        },
+        "pageInfo": {
+          "pageNum": pageNum || 1,
+          "pageSize": pageSize || 100
+        }
+      }
+    })
+    return response;
+  } catch (error) {
+    console.log(error);
+    return {
+      data: {
+        pageInfo: {
+          totalItems: 0,
+          pageNum,
+          pageSize
+        },
+        pageData: []
+      }
+    };
+  }
+};
+
+
+export const getLabByClientService = async (id: string, pageNum:number, pageSize:number) => {
+  try {
+    const response = await BaseService.get({ url: `${API.CLIENT_GET_LAB}/${id}` })
+    return response;
+  } catch (error) {
+    console.log(error);
+    return {
+      data: {
+        pageInfo: {
+          totalItems: 0,
+          pageNum,
+          pageSize
+        },
+        pageData: []
+      }
+    };
+  }
+};

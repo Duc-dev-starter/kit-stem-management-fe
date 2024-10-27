@@ -23,6 +23,7 @@ export const PATH = {
   INTERNAL_SERVER_ERROR: "/internal-server-error",
   CHANGE_PASSWORD: "/change-password",
   KIT_SHOP: "/kit-shop",
+  LAB_SHOP: "/lab-shop",
   CLIENT_KIT_DETAIL: "/kit/:id",
   BLOG_PAGE: "/blog",
   USER_PROFILE: "/profile",

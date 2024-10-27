@@ -31,14 +31,14 @@ export const API = {
     CREATE_KIT: "/api/kit/create",
     GET_KITS: "/api/kit/search",
     GET_KIT: "/api/kit",
-    GET_UPDATE_DELETE_KIT : "/api/kit",
+    GET_UPDATE_DELETE_KIT: "/api/kit",
     CHANGE_STATUS_KIT: "/api/kit/change-status",
 
     //LAB
     CREATE_LAB: "/api/lab/create",
     GET_LAB: "/api/lab",
-    GET_UPDATE_DELETE_LAB : "/api/lab",
-    GET_LABS : "/api/lab/search",
+    GET_UPDATE_DELETE_LAB: "/api/lab",
+    GET_LABS: "/api/lab/search",
     CHANGE_STATUS_LAB: "/api/lab/change-status",
     ADD_SUPPORTERS: "/api/lab/add-supporter",
     REMOVE_SUPPORTERS: "/api/lab/remove-supporter",
@@ -47,6 +47,8 @@ export const API = {
     CLIENT_GET_CATEGORIES: "/api/client/category/search",
     CLIENT_GET_BLOGS: "/api/client/blog/search",
     CLIENT_GET_BLOG: "/api/client/blog",
-     CLIENT_GET_KITS: "/api/client/kit/search",
-     CLIENT_GET_KIT: "/api/client/kit",
+    CLIENT_GET_KITS: "/api/client/kit/search",
+    CLIENT_GET_KIT: "/api/client/kit",
+    CLIENT_GET_LABS: "/api/client/lab/search",
+    CLIENT_GET_LAB: "/api/client/lab",
 }

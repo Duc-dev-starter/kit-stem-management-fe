@@ -4,6 +4,7 @@ export interface Lab {
     _id: string;
     name: string;
     category_id: string;
+    category_name: string;
     user_id: string;
     description: string;
     content: string;

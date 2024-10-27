@@ -1,24 +1,27 @@
 import { Card } from "antd";
 import Meta from "antd/es/card/Meta";
 
-interface iKitCard{
+interface ProductCard {
     name: string,
-    image: string,
+    image?: string,
+    lab_url?: string,
     price: number,
     category_name: string
     id: string
 }
 
-const KitCard = ({name, image, price, category_name, id}:iKitCard) => {
+const ProductCard = ({ name, image, price, category_name, id, lab_url }: ProductCard) => {
     return (
         <Card
             className="my-3"
             hoverable
             style={{ width: 240 }}
             cover={
-                <div style={{ height: 200, overflow: 'hidden' }}>
-                    <img alt="example" src={image} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+                image ? <div style={{ height: 200, overflow: 'hidden' }}>
+                    <img alt="example" src={image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
+                    : <div><iframe style={{ width: '100%', height: '100%', objectFit: 'cover' }}  src={lab_url}></iframe></div>
+
             }
         >
             <p className="my-2 text-gray-400">{category_name}</p>
@@ -32,4 +35,4 @@ const KitCard = ({name, image, price, category_name, id}:iKitCard) => {
     )
 }
 
-export default KitCard;
+export default ProductCard;
