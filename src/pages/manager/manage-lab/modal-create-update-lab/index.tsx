@@ -9,7 +9,8 @@ export interface iModalCreateUpdate {
     isModalOpen: boolean,
     handleOk: () => void;
     handleCancel: () => void;
-    labEdit?: Lab
+    labEdit?: Lab;
+    fetchLabs: () => void;
 }
 const ModalCreateUpdate = (props: iModalCreateUpdate) => {
     const [form] = Form.useForm();
@@ -40,6 +41,7 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                 console.log("res: ", res);
                 message.success("Update Lab Successfully!")
                 props.handleCancel()
+                props.fetchLabs()
             }
         } else {
             const res = await createLab(values);
@@ -47,6 +49,7 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                 console.log("res: ", res);
                 message.success("Create Lab Successfully!")
                 props.handleCancel()
+                props.fetchLabs()
             }
         }
     };
@@ -81,7 +84,16 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                     <Form.Item
                         label="Name"
                         name="name"
-                        rules={[{ required: true, message: 'Please input your name!' }]}
+                        rules={[{ required: true, message: 'Please input your name!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Name cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }
+                        ]}
                     >
                         <Input />
                     </Form.Item>
@@ -104,28 +116,60 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                     <Form.Item
                         label="Description"
                         name="description"
-                        rules={[{ required: true, message: 'Please input your description!' }]}
+                        rules={[{ required: true, message: 'Please input your description!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Description cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         label="Content"
                         name="content"
-                        rules={[{ required: true, message: 'Please input your content!' }]}
+                        rules={[{ required: true, message: 'Please input your content!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Content cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         label="Lab URL"
                         name="lab_url"
-                        rules={[{ required: true, message: 'Please input your lab_url!' }]}
+                        rules={[{ required: true, message: 'Please input your lab_url!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Lab URL cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         label="Price"
                         name="price"
-                        rules={[{ required: true, message: 'Please input your price!' }]}
+                        rules={[{ required: true, message: 'Please input your price!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Price cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input type="number" />
                     </Form.Item>
@@ -141,6 +185,14 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                                 max: 1,
                                 message: 'Discount must be between 0.1 and 1',
                             },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Discount cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }
                         ]}
                     >
                         <InputNumber type="number" min={0.1} max={1} step={0.1} />

@@ -1,66 +1,42 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  Button,
   Image,
   Input,
   Space,
   Switch,
   Table,
-  Modal,
-  Form,
   Pagination,
-  Upload,
-  Radio,
   Select,
   Avatar,
 } from "antd";
-import { EditOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
-import type { GetProp, TableColumnsType, TablePaginationConfig, UploadFile, UploadProps } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import type {  TableColumnsType, TablePaginationConfig } from "antd";
 import { User, UserRole } from "../../../models/User.ts";
-
-import { getRoleColor, getRoleLabel, roleRules } from "../../../consts";
+import { getRoleColor, getRoleLabel } from "../../../consts";
 import { useDebounce } from "../../../hooks";
 import {
-  CustomDeletePopconfirm,
   CustomSelect,
-  EmailFormItem,
   LoadingOverlay,
-  NameFormItem,
-  PasswordFormItem,
-  UploadButton,
   CustomBreadcrumb
 } from "../../../components";
-import { formatDate, getBase64, uploadFile } from "../../../utils";
-import { changeStatusUser, changeUserRole, createUser, deleteUser, getUsers, updateUser } from '../../../services';
+import { formatDate } from "../../../utils";
+import { changeStatusUser, changeUserRole, getUsers } from '../../../services';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { roles } from "../../../enum";
 
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const ManagerManageUsers: React.FC = () => {
   const [dataUsers, setDataUsers] = useState<User[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 10, total: 0 });
 
-  const [formData, setFormData] = useState<Partial<User>>({});
-
-  const [modalMode, setModalMode] = useState<"Add" | "Edit">("Add");
   const [selectedRole, setSelectedRole] = useState<string>("All");
   const [selectedStatus, setSelectedStatus] = useState<string>("true");
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
-    }
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
+
   const debouncedSearch = useDebounce(searchText, 500);
 
   useEffect(() => {
@@ -88,7 +64,7 @@ const ManagerManageUsers: React.FC = () => {
       });
 
 
-      setDataUsers(sortedUsers.filter((item:User) => item.role != "admin" && item.role != "manager"));
+      setDataUsers(sortedUsers.filter((item: User) => item.role != "admin" && item.role != "manager"));
       setPagination({
         ...pagination,
         total: responseUsers.data.pageInfo.totalItems,
@@ -111,45 +87,17 @@ const ManagerManageUsers: React.FC = () => {
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setPagination(pagination);
   };
+  // const showModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
-  const handleAddNewUser = useCallback(
-    async (values: User) => {
-      try {
-        let avatarUrl = values.avatar;
+  // const handleOk = () => {
+  //   setIsModalOpen(false);
+  // };
 
-        if (values.avatar && typeof values.avatar !== "string" && values.avatar?.file?.originFileObj) {
-          avatarUrl = await uploadFile(values.avatar.file.originFileObj);
-        }
-
-        const userData = { ...values, avatar: avatarUrl };
-        const response = await createUser(userData);
-        const newUser = response.data.data;
-        setDataUsers((prevData) => [newUser, ...prevData]);
-        setIsModalVisible(false);
-        form.resetFields();
-        fetchUsers();
-        setFileList([]);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [fetchUsers, form]
-  );
-
-  const handleAddClick = () => {
-    setModalMode("Add");
-    setIsModalVisible(true);
-    form.resetFields();
-    setFileList([]);
-    setFormData({});
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
-    setFileList([]);
-    setFormData({});
-    form.resetFields();
-  };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  // };
 
   const handleRoleChange = async (value: UserRole, userId: string) => {
     await changeUserRole(userId, value);
@@ -170,54 +118,8 @@ const ManagerManageUsers: React.FC = () => {
     setSelectedStatus(value);
   };
 
-  const handleEditUser = async (values: User) => {
-    let avatarUrl = values.avatar;
+ 
 
-    if (values.avatar && typeof values.avatar !== "string" && values.avatar.file?.originFileObj) {
-      avatarUrl = await uploadFile(values.avatar.file.originFileObj);
-    }
-
-    const updatedUser = {
-      ...values,
-      avatar: avatarUrl,
-      email: values.email,
-    };
-
-    await updateUser(formData._id+"", updatedUser);
-
-    setDataUsers((prevData) =>
-      prevData.map((user) =>
-        user._id === formData._id
-          ? {
-            ...user,
-            ...updatedUser,
-            role: values.role,
-          }
-          : user
-      )
-    );
-
-    setIsModalVisible(false);
-    form.resetFields();
-    setFormData({});
-    fetchUsers();
-  };
-
-  const onFinish = (values: User) => {
-    if (modalMode === "Edit") {
-      if (formData._id) {
-        handleEditUser({
-          ...formData,
-          ...values,
-        });
-      }
-    } else {
-      handleAddNewUser(values);
-    }
-    setIsModalVisible(false);
-  };
-
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => setFileList(newFileList);
 
   const columns: TableColumnsType<User> = [
     {
@@ -240,6 +142,11 @@ const ManagerManageUsers: React.FC = () => {
       dataIndex: "name",
       key: "name",
       width: "20%",
+      render: (role: UserRole, record: User) => (
+        <div  className="text-blue-500">
+          {record.name}
+        </div>
+      ),
     },
     {
       title: "Email",
@@ -255,7 +162,7 @@ const ManagerManageUsers: React.FC = () => {
       render: (role: UserRole, record: User) => (
         <CustomSelect
           value={role}
-          options={[ roles.CUSTOMER,  roles.STAFF]}
+          options={[roles.CUSTOMER, roles.STAFF]}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={(value) => handleRoleChange(value, record._id)}
@@ -287,46 +194,7 @@ const ManagerManageUsers: React.FC = () => {
           onChange={(checked) => changeStatusUser(checked, record._id, handleUserStatus)}
         />,
     },
-    {
-      title: "Action",
-      key: "action",
-      width: "15%",
-      render: (_: unknown, record: User) => (
-        <div>
-          <EditOutlined
-            className="hover:cursor-pointer text-blue-400 hover:opacity-60"
-            style={{ fontSize: "20px" }}
-            onClick={() => {
-              setModalMode("Edit");
-              setIsModalVisible(true);
-              form.setFieldsValue(record);
-              setFormData(record);
-
-              const avatarUrl = typeof record.avatar === "string" ? record.avatar : "";
-
-              setFileList(
-                avatarUrl
-                  ? [
-                    {
-                      uid: "-1",
-                      name: "avatar.png",
-                      status: "done",
-                      url: avatarUrl,
-                    } as UploadFile,
-                  ]
-                  : []
-              );
-            }}
-          />
-          <CustomDeletePopconfirm
-            title="Delete the User"
-            description="Are you sure to delete this User?"
-            onConfirm={() => deleteUser(record._id, record.name, fetchUsers)}
-          />
-        </div>
-      ),
-    },
-  ];
+  ]
 
   const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -335,13 +203,13 @@ const ManagerManageUsers: React.FC = () => {
 
   return (
     <div>
+       {/* <Modal title="User Detail" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}> */}
+        
+      {/* </Modal> */}
       {isLoading && <LoadingOverlay />}
       <div className="flex flex-row md:flex-row justify-between items-center mb-4">
         <div className="flex flex-row justify-between w-full mt-3 md:mt-0">
           <CustomBreadcrumb />
-          <Button type="primary" className="py-2 top-14" onClick={handleAddClick}>
-            <UserAddOutlined /> Add New User
-          </Button>
         </div>
       </div>
 
@@ -357,7 +225,7 @@ const ManagerManageUsers: React.FC = () => {
         <CustomSelect
           className="w-full mt-2 mb-2 md:w-32 md:mt-0 md:ml-2"
           value={selectedRole}
-          options={[ roles.CUSTOMER, roles.STAFF, 'all']}
+          options={[roles.CUSTOMER, roles.STAFF, 'all']}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={handleRolefilter}
@@ -389,7 +257,7 @@ const ManagerManageUsers: React.FC = () => {
         />
       </div>
 
-      <Modal
+      {/* <Modal
         title={modalMode === "Edit" ? "Edit User" : "Add New User"}
         open={isModalVisible}
         onCancel={() => handleModalCancel()}
@@ -436,7 +304,7 @@ const ManagerManageUsers: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal> */}
       {previewImage && (
         <Image
           wrapperStyle={{ display: "none" }}

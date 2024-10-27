@@ -110,7 +110,15 @@ const ManagerManageCombo = () => {
                     <Form.Item<FieldType>
                         label="Combo name"
                         name="comboName"
-                        rules={[{ required: true, message: "Please input combo's  name!" }]}
+                        rules={[{ required: true, message: "Please input combo's name!" },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Combo name cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input />
                     </Form.Item>
@@ -148,7 +156,15 @@ const ManagerManageCombo = () => {
                     <Form.Item<FieldType>
                         label="Image"
                         name="image"
-                        rules={[{ required: true, message: "Please input combo's iamge!" }]}
+                        rules={[{ required: true, message: "Please input combo's image!" },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Combo name cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input />
                     </Form.Item>

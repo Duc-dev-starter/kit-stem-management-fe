@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, FormProps, Image, Input, InputNumber, message, Modal, notification, Pagination, Select, Table, TablePaginationConfig, Tag } from "antd";
+import { Button, Form, FormProps, Image, Input, InputNumber, message, Modal, Select, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { kitStatus, kitStatusColor } from "../../../consts";
 import { Kit } from "../../../models/Kit";
@@ -18,10 +18,9 @@ const ManageKit = () => {
     const [openConfirmDeketeKit, setOpenConfirmDeleteKit] = useState(false);
     const [openChaneStatusKit, setOpenChangeStautsKit] = useState(false);
     const [openKitDetail, setOpenKitDetail] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
     const [kitDetail, setKitDetail] = useState<Kit>();
     const [dataKits, setDataKits] = useState<Kit[]>([])
-    const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 100, total: 0 });
+    // const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 100, total: 0 });
     const [categories, setCategories] = useState<Category[]>([])
     const [hideImage, setHideImage] = useState(false);
     const [hideVideo, setHideVideo] = useState(false);
@@ -82,16 +81,17 @@ const ManageKit = () => {
     }
 
     const handleDeleteKit = async (record: Kit) => {
+        console.log("record: ", record)
         if (record.description === undefined || record.description === "") {
             record.description = "temp to delete";
+        } else {
+            const res = await deleteKit(record._id, record);
+            if (res) {
+                message.success("Delete Kit Successfully !")
+                console.log("res: ", res);
+            }
+            fetchKits()
         }
-
-        const res = await deleteKit(record._id, record);
-        if (res) {
-            message.success("Delete Kit Successfully !")
-            console.log("res: ", res);
-        }
-        fetchKits()
     }
 
     const showModal = (record?: Kit) => {
@@ -119,29 +119,27 @@ const ManageKit = () => {
         setOpenChangeStautsKit(true);
     };
 
-    const handlePaginationChange = (page: number, pageSize?: number) => {
-        setPagination((prev) => ({
-            ...prev,
-            current: page,
-            pageSize: pageSize || 10,
-        }));
-    };
+    // const handlePaginationChange = (page: number, pageSize?: number) => {
+    //     setPagination((prev) => ({
+    //         ...prev,
+    //         current: page,
+    //         pageSize: pageSize || 10,
+    //     }));
+    // };
 
-    const handleTableChange = (pagination: TablePaginationConfig) => {
-        setPagination(pagination);
-    };
+    // const handleTableChange = (pagination: TablePaginationConfig) => {
+    //     setPagination(pagination);
+    // };
 
     const handleOk = async () => {
-        setConfirmLoading(true);
-        const res = await handleDeleteKit(kitDetete?._id)
-        console.log("handle delete: ", res);
-        setTimeout(() => {
-            setOpen(false);
-            setOpenKitDetail(false);
-            setOpenChangeStautsKit(false);
-            setConfirmLoading(false);
-            setOpenConfirmDeleteKit(false);
-        }, 2000);
+        if (kitDetete) {
+            const res = await handleDeleteKit(kitDetete)
+            console.log("handle delete: ", res);
+        }
+        setOpen(false);
+        setOpenKitDetail(false);
+        setOpenChangeStautsKit(false);
+        setOpenConfirmDeleteKit(false);
     };
     type FieldsChangeHandler = (changedFields: FieldData[]) => void;
     const handleFieldsChange: FieldsChangeHandler = (changedFields) => {
@@ -248,7 +246,6 @@ const ManageKit = () => {
                 title="Delete KIT"
                 open={openConfirmDeketeKit}
                 onOk={handleOk}
-                confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
                 <p>Do you want to delete {kitDetete?.name} ?</p>
@@ -259,7 +256,6 @@ const ManageKit = () => {
                 footer=""
                 open={openKitDetail}
                 onOk={handleOk}
-                confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
                 <div className="text-center">
@@ -276,7 +272,6 @@ const ManageKit = () => {
                 title="Change status kit"
                 open={openChaneStatusKit}
                 onOk={handleOk}
-                confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
                 <Select
@@ -293,7 +288,6 @@ const ManageKit = () => {
                 open={open}
                 onOk={handleOk}
                 footer=""
-                confirmLoading={confirmLoading}
                 onCancel={handleCancel}
             >
                 <Form
@@ -311,7 +305,15 @@ const ManageKit = () => {
                     <Form.Item
                         label="Name"
                         name="name"
-                        rules={[{ required: true, message: 'Please input your name!' }]}
+                        rules={[{ required: true, message: 'Please input your name!' },
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.trim() === "") {
+                                    return Promise.reject(new Error('Name cannot be just spaces!'));
+                                }
+                                return Promise.resolve();
+                            }
+                        }]}
                     >
                         <Input />
                     </Form.Item>
@@ -334,7 +336,15 @@ const ManageKit = () => {
                     <Form.Item
                         label="Description"
                         name="description"
-                        rules={[{ required: true, message: 'Please input your description!' }]}
+                        rules={[{ required: true, message: 'Please input your description!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Description cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input />
                     </Form.Item>
@@ -370,7 +380,15 @@ const ManageKit = () => {
                         <Form.Item
                             label="Image URL"
                             name="image_url"
-                            rules={[{ required: !hideVideo, message: 'Please input your image URL!' }]}
+                            rules={[{ required: !hideVideo, message: 'Please input your image URL!' },
+                                {
+                                    validator: (_, value) => {
+                                        if (!value || value.trim() === "") {
+                                            return Promise.reject(new Error('Image URL cannot be just spaces!'));
+                                        }
+                                        return Promise.resolve();
+                                    }
+                                }]}
                         >
                             <Input />
                         </Form.Item>
@@ -379,7 +397,15 @@ const ManageKit = () => {
                         <Form.Item
                             label="Video URL"
                             name="video_url"
-                            rules={[{ required: !hideImage, message: 'Please input your video URL!' }]}
+                            rules={[{ required: !hideImage, message: 'Please input your video URL!' },
+                                {
+                                    validator: (_, value) => {
+                                        if (!value || value.trim() === "") {
+                                            return Promise.reject(new Error('Video URL cannot be just spaces!'));
+                                        }
+                                        return Promise.resolve();
+                                    }
+                                }]}
                         >
                             <Input />
                         </Form.Item>
@@ -388,7 +414,15 @@ const ManageKit = () => {
                     <Form.Item
                         label="Price"
                         name="price"
-                        rules={[{ required: true, message: 'Please input your price!' }]}
+                        rules={[{ required: true, message: 'Please input your price!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Price cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }]}
                     >
                         <Input type="number" />
                     </Form.Item>
@@ -404,6 +438,14 @@ const ManageKit = () => {
                                 max: 1,
                                 message: 'Discount must be between 0.1 and 1',
                             },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Discount cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }
                         ]}
                     >
                         <InputNumber type="number" min={0.1} max={1} step={0.1} />

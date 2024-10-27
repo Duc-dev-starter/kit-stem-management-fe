@@ -128,7 +128,7 @@ const ManageLab = () => {
             title: 'Supporters',
             render: (record: Lab) => (
                 <Link to={`/manager/manage-lab/${record._id}/manage-supporters`}>
-                   <p className="text-blue-500">{record.supporterDetails.length}</p>
+                    <p className="text-blue-500">{record.supporterDetails.length}</p>
                 </Link>
             )
         }
@@ -137,14 +137,14 @@ const ManageLab = () => {
 
     return (
         <>
-
             <ModalDeleteLab
                 record={labDelete}
                 handleCancel={handleCancelDelete}
                 handleOk={handleOkDelete}
                 isModalOpen={isOpenModalDelete}
             />
-            <ModalCreateUpdate
+            <ModalCreateUpdate 
+                fetchLabs={fetchLabs}
                 isModalOpen={isOpenModalCreateUpdate}
                 handleOk={handleOk}
                 handleCancel={handleCancel}
