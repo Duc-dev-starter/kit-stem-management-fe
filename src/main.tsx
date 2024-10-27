@@ -6,6 +6,8 @@ import 'antd/dist/reset.css'; // Cấu trúc CSS mới nhất của Ant Design
 import { Provider } from 'react-redux';
 import { store } from './store';
 
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <BrowserRouter>

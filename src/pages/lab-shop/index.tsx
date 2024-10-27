@@ -1,4 +1,4 @@
-import { Button, Dropdown, MenuProps } from "antd";
+
 import Title from "antd/es/typography/Title";
 import { Category } from "../../models";
 import { useEffect, useState } from "react";
@@ -8,13 +8,17 @@ import { Link } from "react-router-dom";
 import { Lab } from "../../models/Kit";
 import { getLabsByClientService } from "../../services/client.services";
 
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+
 const LabShop = () => {
     const [cates, setCates] = useState<Category[]>([]);
     const [labs, setLabs] = useState<Lab[]>([]);
+    const [filterByCate, setFilterByCate] = useState<string>('')
+    const [filterByCateName, setFilterByCateName] = useState<string>('')
     useEffect(() => {
         getCategoriesFromHome();
-        getLabsByCLient()
-    }, []);
+        getLabsByCLient(filterByCate)
+    }, [filterByCate]);
 
     const getCategoriesFromHome = async () => {
         const res = await getCategoriesByClient("", 1, 100);
@@ -23,22 +27,18 @@ const LabShop = () => {
         }
     };
 
-    const getLabsByCLient = async () => {
-        const response = await getLabsByClientService("", "", "", 1, 100)
+    const getLabsByCLient = async (filterByCate: string) => {
+        const response = await getLabsByClientService(filterByCate, "", "", 1, 100)
         if (response) {
             setLabs(response.data.pageData)
         }
     }
-    // Chuyển đổi cates thành menu items cho Dropdown
-    const items: MenuProps['items'] = cates.map((cate) => ({
-        key: cate._id,
-        label: (
-            <a href={`/category/${cate._id}`}>
-                {cate.name}
-            </a>
-        ),
-    }));
 
+    const handleFilterByCate = (e: DropdownChangeEvent) => {
+        console.log("e: ", e)
+        setFilterByCate(e._id)
+        setFilterByCateName(e.name)
+    }
     return (
         <div className="container px-10 mt-2">
             <img src="https://www.crunchlabs.com/cdn/shop/files/crunchlabs-education-hero_ce8466b9-af5a-4f5f-a421-1efd4be7526b.png?v=1684885608" alt="" />
@@ -47,12 +47,10 @@ const LabShop = () => {
                     <Title level={1} className="font-bold">Merchandise</Title>
                 </div>
                 <div>
-                    <Button className="mr-5 border-black">
-                        Filter
-                    </Button>
-                    <Dropdown menu={{ items }} placement="bottom">
-                        <Button>Categories</Button>
-                    </Dropdown>
+                    <div className="card flex justify-center">
+                        <Dropdown onChange={(e) => handleFilterByCate(e.value)} style={{ backgroundColor: "white" }} options={cates} optionLabel="name"
+                            placeholder={`${filterByCate}` ? `Sort by: ${filterByCateName}` : "Selected All"} className="w-full md:w-14rem" />
+                    </div>
                 </div>
             </div>
             <div className="grid grid-cols-4 pl-10">

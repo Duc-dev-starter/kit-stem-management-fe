@@ -1,4 +1,4 @@
-import {  SmileOutlined } from "@ant-design/icons";
+
 import { Dropdown, MenuProps, Space } from "antd";
 import { useEffect, useState } from "react";
 import {  getCategoriesByClient } from "../../../services";
@@ -22,27 +22,21 @@ const ShopDropDown = () => {
         {
             key: '2',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-                    2nd menu item (disabled)
-                </a>
+                <p>LAB</p>
             ),
-            icon: <SmileOutlined />,
-            disabled: true,
+            onClick:()=>{
+                navigate("/lab-shop")
+            }
         },
         {
             key: '3',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                    3rd menu item (disabled)
-                </a>
+                <p>Combo</p>
             ),
-            disabled: true,
-        },
-        {
-            key: '4',
-            danger: true,
-            label: 'a danger item',
-        },
+            onClick:()=>{
+                navigate("/combo-shop")
+            }
+        }
     ];
 
     useEffect(()=>{

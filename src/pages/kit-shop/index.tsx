@@ -1,4 +1,4 @@
-import { Button, Dropdown, MenuProps } from "antd";
+
 import Title from "antd/es/typography/Title";
 import { Category, Kit } from "../../models";
 import { useEffect, useState } from "react";
@@ -6,14 +6,16 @@ import { getCategoriesByClient } from "../../services";
 import KitCard from "../../components/card";
 import { getKitsByClientService } from "../../services/client.services";
 import { Link } from "react-router-dom";
-
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 const KitShop = () => {
     const [cates, setCates] = useState<Category[]>([]);
     const [kits, setKits] = useState<Kit[]>([]);
+    const [filterByCate, setFilterByCate] = useState<string>('')
+    const [filterByCateName, setFilterByCateName] = useState<string>('')
     useEffect(() => {
         getCategoriesFromHome();
         getKitsByCLient()
-    }, []);
+    }, [filterByCate]);
 
     const getCategoriesFromHome = async () => {
         const res = await getCategoriesByClient("", 1, 100);
@@ -23,20 +25,18 @@ const KitShop = () => {
     };
 
     const getKitsByCLient = async () => {
-        const response = await getKitsByClientService("", "", "", 1, 100)
+        const response = await getKitsByClientService(filterByCate, "", "", 1, 100)
         if (response) {
             setKits(response.data.pageData)
         }
     }
-    // Chuyển đổi cates thành menu items cho Dropdown
-    const items: MenuProps['items'] = cates.map((cate) => ({
-        key: cate._id,
-        label: (
-            <a href={`/category/${cate._id}`}>
-                {cate.name}
-            </a>
-        ),
-    }));
+  
+
+   const handleFilterByCate = (e: DropdownChangeEvent) => {
+        console.log("e: ", e)
+        setFilterByCate(e._id)
+        setFilterByCateName(e.name)
+    }
 
     return (
         <div className="container px-10 mt-2">
@@ -46,12 +46,10 @@ const KitShop = () => {
                     <Title level={1} className="font-bold">Merchandise</Title>
                 </div>
                 <div>
-                    <Button className="mr-5 border-black">
-                        Filter
-                    </Button>
-                    <Dropdown menu={{ items }} placement="bottom">
-                        <Button>Categories</Button>
-                    </Dropdown>
+                    <div className="card flex justify-center">
+                        <Dropdown onChange={(e) => handleFilterByCate(e.value)} style={{ backgroundColor: "white" }} options={cates} optionLabel="name"
+                            placeholder={`${filterByCate}` ? `Sort by: ${filterByCateName}` : "Selected All"} className="w-full md:w-14rem" />
+                    </div>
                 </div>
             </div>
             <div className="grid grid-cols-4 pl-10">

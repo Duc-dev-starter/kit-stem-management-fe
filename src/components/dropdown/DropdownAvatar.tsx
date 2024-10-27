@@ -13,7 +13,7 @@ import { IoSettingsOutline } from 'react-icons/io5';
 
 const DropdownAvatar: React.FC<DropdownAvatarProps> = ({ dataUser }) => {
     const navigate = useNavigate();
-
+  const   name = dataUser.name?.split(" ")
     const items: MenuProps['items'] = dataUser.role === roles.MANAGER
         ? [
             {
@@ -128,7 +128,7 @@ const DropdownAvatar: React.FC<DropdownAvatarProps> = ({ dataUser }) => {
                                 </Col>
                                 <Col span={16} className="pt-3 pr-4 pl-1">
                                     <Row>
-                                        <p className="text-[1.2rem] font-bold">{dataUser.name}</p>
+                                        <p className="text-[1.2rem] font-bold">{name[name?.length-1]}</p>
                                     </Row>
                                     <div>
                                         <p className="text-[0.875rem] mt-[0.8rem]">{dataUser.email}</p>
