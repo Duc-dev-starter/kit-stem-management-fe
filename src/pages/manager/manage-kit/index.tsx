@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { kitStatus, kitStatusColor } from "../../../consts";
 import { Kit } from "../../../models/Kit";
 import { Link } from "react-router-dom";
-import { getCategories, getKits } from "../../../services";
-import { Category } from "../../../models";
+import { getCategories, getKits, getUserDetail } from "../../../services";
+import { Category, User } from "../../../models";
 import { createKIT, deleteKit, updateKit } from "../../../services/kit.services";
 import Title from "antd/es/typography/Title";
+import ModalUser from "./modal-user";
 interface FieldData {
     name: string[]; // Mảng tên trường
     value?: string;    // Giá trị của trường có thể là bất kỳ hoặc undefined
@@ -18,6 +19,7 @@ const ManageKit = () => {
     const [openConfirmDeketeKit, setOpenConfirmDeleteKit] = useState(false);
     const [openChaneStatusKit, setOpenChangeStautsKit] = useState(false);
     const [openKitDetail, setOpenKitDetail] = useState(false);
+    const [openModalUser, setOpenModalUser] = useState(false);
     const [kitDetail, setKitDetail] = useState<Kit>();
     const [dataKits, setDataKits] = useState<Kit[]>([])
     // const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 100, total: 0 });
@@ -26,6 +28,7 @@ const ManageKit = () => {
     const [hideVideo, setHideVideo] = useState(false);
     const [kitEdit, setKitEdit] = useState<Kit>()
     const [kitDetete, setKitDelete] = useState<Kit>()
+    const [user, setUser] = useState<User>()
     // const navigate = useNavigate();
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
@@ -105,6 +108,18 @@ const ManageKit = () => {
 
     };
 
+    const showModalUser = async (userId: string) => {
+
+        if (userId) {
+            const response = await getUserDetail(userId)
+            if (response) {
+                console.log("res: ", response)
+                setUser(response.data)
+                setOpenModalUser(true)
+            }
+        }
+    };
+
     const showModalConfirmDeleteKit = (record: Kit) => {
         setOpenConfirmDeleteKit(true);
         setKitDelete(record)
@@ -140,6 +155,7 @@ const ManageKit = () => {
         setOpenKitDetail(false);
         setOpenChangeStautsKit(false);
         setOpenConfirmDeleteKit(false);
+        setOpenModalUser(false)
     };
     type FieldsChangeHandler = (changedFields: FieldData[]) => void;
     const handleFieldsChange: FieldsChangeHandler = (changedFields) => {
@@ -161,6 +177,7 @@ const ManageKit = () => {
         setOpenKitDetail(false);
         setOpenChangeStautsKit(false);
         setOpenConfirmDeleteKit(false);
+        setOpenModalUser(false)
         // form.setFieldsValue([])
     };
 
@@ -183,8 +200,8 @@ const ManageKit = () => {
             title: 'User Name',
             dataIndex: 'user_name',
             key: 'user_name',
-            render: (user_name: string) => (
-                <div onClick={() => showModalKitDetail} className="text-blue-500 cursor-pointer">
+            render: (user_name: string, record:Kit) => (
+                <div onClick={() => showModalUser(record.user_id)} className="text-blue-500 cursor-pointer">
                     {user_name}
                 </div>
             )
@@ -242,6 +259,13 @@ const ManageKit = () => {
 
     return (
         <>
+            <ModalUser
+                handleCancel={handleCancel}
+                handleOk={handleOk}
+                isModalOpen={openModalUser}
+                user={user}
+            />
+            {/* Modal Delete KIT */}
             <Modal
                 title="Delete KIT"
                 open={openConfirmDeketeKit}
@@ -337,14 +361,14 @@ const ManageKit = () => {
                         label="Description"
                         name="description"
                         rules={[{ required: true, message: 'Please input your description!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Description cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.trim() === "") {
+                                    return Promise.reject(new Error('Description cannot be just spaces!'));
                                 }
-                            }]}
+                                return Promise.resolve();
+                            }
+                        }]}
                     >
                         <Input />
                     </Form.Item>
@@ -381,14 +405,14 @@ const ManageKit = () => {
                             label="Image URL"
                             name="image_url"
                             rules={[{ required: !hideVideo, message: 'Please input your image URL!' },
-                                {
-                                    validator: (_, value) => {
-                                        if (!value || value.trim() === "") {
-                                            return Promise.reject(new Error('Image URL cannot be just spaces!'));
-                                        }
-                                        return Promise.resolve();
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Image URL cannot be just spaces!'));
                                     }
-                                }]}
+                                    return Promise.resolve();
+                                }
+                            }]}
                         >
                             <Input />
                         </Form.Item>
@@ -398,14 +422,14 @@ const ManageKit = () => {
                             label="Video URL"
                             name="video_url"
                             rules={[{ required: !hideImage, message: 'Please input your video URL!' },
-                                {
-                                    validator: (_, value) => {
-                                        if (!value || value.trim() === "") {
-                                            return Promise.reject(new Error('Video URL cannot be just spaces!'));
-                                        }
-                                        return Promise.resolve();
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Video URL cannot be just spaces!'));
                                     }
-                                }]}
+                                    return Promise.resolve();
+                                }
+                            }]}
                         >
                             <Input />
                         </Form.Item>
@@ -415,14 +439,14 @@ const ManageKit = () => {
                         label="Price"
                         name="price"
                         rules={[{ required: true, message: 'Please input your price!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Price cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.trim() === "") {
+                                    return Promise.reject(new Error('Price cannot be just spaces!'));
                                 }
-                            }]}
+                                return Promise.resolve();
+                            }
+                        }]}
                     >
                         <Input type="number" />
                     </Form.Item>

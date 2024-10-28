@@ -3,28 +3,36 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Input, Select, Table } from 'antd';
 import type { FormProps } from 'antd';
-import { Kit } from '../../../models';
+import { Category, Kit } from '../../../models';
 import { Lab } from '../../../models/Kit';
-import { getKits, getLabs } from '../../../services';
+import { getCategories, getKits, getLabs } from '../../../services';
 import Title from 'antd/es/typography/Title';
 const ManagerManageCombo = () => {
     const [kits, setKits] = useState<Kit[]>([])
     const [labs, setLabs] = useState<Lab[]>([])
-
+    const [cates, setCates] = useState<Category[]>([])
     useEffect(() => {
-        getKtsFromClient()
-        getLabsFromCLient()
+        getKitsFromManager()
+        getLabsFromManager()
+        getCategoriesFromManager()
     }, [])
 
-    const getKtsFromClient = async () => {
+    const getCategoriesFromManager = async () => {
+        const response = await getCategories("", 1, 100);
+        if (response) {
+            console.log("getCategoriesFromManager: ",response)
+            setCates(response.data.pageData)
+        }
+    }
+    const getKitsFromManager = async () => {
         const response = await getKits("", "", "", false, 1, 100);
         if (response) {
-            console.log("getKtsFromClient: ",response)
+            console.log("getKitsFromManager: ",response)
             setKits(response.data.pageData)
         }
     }
 
-    const getLabsFromCLient = async () => {
+    const getLabsFromManager = async () => {
         const response = await getLabs("", "", "", false, 1, 100);
         if (response) {
             console.log("getLabsFromCLient: ",response)
@@ -36,6 +44,7 @@ const ManagerManageCombo = () => {
         image: string;
         kitId: string;
         labId: string;
+        cateId: string;
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -152,7 +161,20 @@ const ManagerManageCombo = () => {
                             }))}
                         />
                     </Form.Item>
-
+                    <Form.Item<FieldType>
+                        label="Category name"
+                        name="cateId"
+                        rules={[{ required: true, message: "Please input combo's category name!" }]}
+                    >
+                        <Select
+                            defaultValue="Please select Catefory's name"
+                            style={{ width: 310 }}
+                            onChange={handleChangeKITname}
+                            options={cates.map(item=>({
+                                value:item._id, label: item.name
+                            }))}
+                        />
+                    </Form.Item>
                     <Form.Item<FieldType>
                         label="Image"
                         name="image"
