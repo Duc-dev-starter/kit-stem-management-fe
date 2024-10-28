@@ -87,6 +87,10 @@ const Dashboard: React.FC = () => {
         getItem('Manage Categories', '/admin/manage-categories', <BiCategory />),
         getItem('Manage Blogs', '/admin/manage-blogs', <FaRegNewspaper />),
       ]);
+    }else if (dataUser.role === roles.STAFF) {
+      setItems([
+        getItem('Dashboard', '/staff/dashboard', <AiOutlineDashboard />),
+      ]);
     }
   };
 
