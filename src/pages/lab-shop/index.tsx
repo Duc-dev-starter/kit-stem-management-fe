@@ -3,12 +3,11 @@ import Title from "antd/es/typography/Title";
 import { Category } from "../../models";
 import { useEffect, useState } from "react";
 import { getCategoriesByClient } from "../../services";
-import KitCard from "../../components/card";
-import { Link } from "react-router-dom";
 import { Lab } from "../../models/Kit";
 import { getLabsByClientService } from "../../services/client.services";
 
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import LabCard from "../../components/lab-card";
 
 const LabShop = () => {
     const [cates, setCates] = useState<Category[]>([]);
@@ -56,16 +55,14 @@ const LabShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     labs.map(lab => (
-                        <Link to={`/lab/${lab._id}`}>
-                            <KitCard
+                        <LabCard
                                 name={lab.name}
                                 lab_url={lab.lab_url}
                                 price={lab.price}
                                 category_name={lab.category_name}
-                                id={lab._id}
+                                labId={lab._id}
                                 discount={lab.discount}
                             />
-                        </Link>
                     ))
                 }
             </div>

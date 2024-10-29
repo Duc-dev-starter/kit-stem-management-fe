@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Combo } from "../../models/Combo.model";
 import { getCombosByClientService } from "../../services/client.services";
+import ComboCard from "../../components/combo-card";
 const ComboShop = () => {
     const [cates, setCates] = useState<Category[]>([]);
     const [combos, setCombos] = useState<Combo[]>([]);
@@ -38,6 +39,13 @@ const ComboShop = () => {
         setFilterByCateName(e.name)
     }
 
+    const handleAddToCart =()=>{
+        const user = getUserFromLocalStorage()
+        if(!user){
+            navigate(PATH.LOGIN)
+        }
+    }
+
     return (
         <div className="container px-10 mt-2">
             <img src="https://www.crunchlabs.com/cdn/shop/files/crunchlabs-education-hero_ce8466b9-af5a-4f5f-a421-1efd4be7526b.png?v=1684885608" alt="" />
@@ -55,15 +63,13 @@ const ComboShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     combos.map(combo => (
-                        <Link to={`/combo/${combo._id}`}>
-                            <KitCard name={combo.name}
-                                image={combo.items[0].details.image_url}
-                                price={combo.price}
-                                category_name={combo.category_name}
-                                id={combo._id}
-                                discount={combo.discount}
-                            />
-                        </Link>
+                        <ComboCard name={combo.name}
+                        image={combo.items[0].details.image_url}
+                        price={combo.price}
+                        category_name={combo.category_name}
+                        comboId={combo._id}
+                        discount={combo.discount}
+                    />
                     ))
                 }
             </div>

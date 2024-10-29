@@ -6,20 +6,21 @@ import { getUserFromLocalStorage } from "../../utils";
 
 interface ProductCard {
     name: string,
-    image?: string;
+    image?: string,
     price: number,
     discount: number;
     category_name: string
-    id?: string,
     comboId?: string;
 }
 
-const KitCard = ({ name, image, price, category_name, discount, comboId }: ProductCard) => {
+const ComboCard = ({ name, image, price, category_name, discount, comboId }: ProductCard) => {
     const navigate = useNavigate();
-    const handleAddToCart =()=>{
+    const handleAddToCart = () => {
         const user = getUserFromLocalStorage()
-        if(!user){
+        if (!user) {
             navigate(PATH.LOGIN)
+        }else{
+            //
         }
     }
     return (
@@ -47,4 +48,4 @@ const KitCard = ({ name, image, price, category_name, discount, comboId }: Produ
     )
 }
 
-export default KitCard;
+export default ComboCard;

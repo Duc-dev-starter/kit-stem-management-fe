@@ -3,10 +3,11 @@ import Title from "antd/es/typography/Title";
 import { Category, Kit } from "../../models";
 import { useEffect, useState } from "react";
 import { getCategoriesByClient } from "../../services";
-import KitCard from "../../components/card";
+
 import { getKitsByClientService } from "../../services/client.services";
 import { Link } from "react-router-dom";
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import KitCard from "../../components/kit-card";
 const KitShop = () => {
     const [cates, setCates] = useState<Category[]>([]);
     const [kits, setKits] = useState<Kit[]>([]);
@@ -55,15 +56,13 @@ const KitShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     kits.map(kit => (
-                        <Link to={`/kit/${kit._id}`}>
-                            <KitCard name={kit.name}
-                                image={kit.image_url}
-                                price={kit.price}
-                                category_name={kit.category_name}
-                                id={kit._id}
-                                discount={kit.discount}
-                            />
-                        </Link>
+                        <KitCard name={kit.name}
+                        image={kit.image_url}
+                        price={kit.price}
+                        category_name={kit.category_name}
+                        kitId={kit._id}
+                        discount={kit.discount}
+                    />
                     ))
                 }
             </div>

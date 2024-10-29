@@ -2,17 +2,18 @@ import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Image, Row } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getComboByClientService } from "../../services/client.services";
-import { currencyUnit } from "../../consts";
+import { currencyUnit, PATH } from "../../consts";
 import { Combo } from "../../models/Combo.model";
 import ProductCard from "../../components/card";
+import { getUserFromLocalStorage } from "../../utils";
 
 const ClientComboDetail = () => {
     const { id } = useParams();
     const [count, setCount] = useState<number>(0)
     const [combo, setCombo] = useState<Combo>()
-
+    const navigate = useNavigate();
     useEffect(() => {
         if (id) {
             getLabDetail();
@@ -33,6 +34,12 @@ const ClientComboDetail = () => {
     const handleSetCountMinus = () => {
         if (count > 0) {
             setCount(count - 1)
+        }
+    }
+    const handleAddToCart =()=>{
+        const user = getUserFromLocalStorage()
+        if(!user){
+            navigate(PATH.LOGIN)
         }
     }
     return (
@@ -68,7 +75,7 @@ const ClientComboDetail = () => {
                         </button>
                     </div>
                     <div className="flex justify-center mt-3">
-                        <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                        <button onClick={()=>handleAddToCart()}  type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                             Add To Cart
                         </button>
                     </div>
@@ -76,6 +83,7 @@ const ClientComboDetail = () => {
             </Row>
             {/* <Link to={`/lab/${combo?.labs._id}`}>
             </Link> */}
+            <Title level={2}>Labs of combo</Title>
             <ProductCard
                 name={combo?.labs.name}
                 lab_url={combo?.labs.lab_url}
