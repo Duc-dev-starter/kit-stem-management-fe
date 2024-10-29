@@ -2,27 +2,28 @@ import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Image, Row } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getKitByClientService } from "../../services/client.services";
-import { Kit } from "../../models";
+import { Link, useParams } from "react-router-dom";
+import { getComboByClientService } from "../../services/client.services";
 import { currencyUnit } from "../../consts";
+import { Combo } from "../../models/Combo.model";
+import ProductCard from "../../components/card";
 
-const KitDetailFromCLient = () => {
+const ClientComboDetail = () => {
     const { id } = useParams();
     const [count, setCount] = useState<number>(0)
-    const [kit, setKit] = useState<Kit>()
+    const [combo, setCombo] = useState<Combo>()
 
     useEffect(() => {
         if (id) {
-            getKitDetail();
+            getLabDetail();
         }
     }, [id])
 
-    const getKitDetail = async () => {
+    const getLabDetail = async () => {
         if (id) {
-            const response = await getKitByClientService(id, 1, 100)
+            const response = await getComboByClientService(id)
             console.log("res: ", response)
-            setKit(response.data)
+            setCombo(response.data)
         }
     }
 
@@ -40,26 +41,17 @@ const KitDetailFromCLient = () => {
                 <Col span={12}>
                     <Image
                         width={"60%"}
-                        src={kit?.image_url}
+                        src={combo?.kits.image_url}
                     />
                     <p className="mt-3">
-                        {kit?.description}
+                        {combo?.description}
                     </p>
                 </Col>
                 <Col span={12}>
                     <Title  level={4}>
-                        {kit?.name}
+                        {combo?.name}
                     </Title>
-                    <Title level={3} className="mt-3 font-bold">{kit?.price.toLocaleString("vi-VN")} {currencyUnit}</Title>
-
-                    {/* < Title level={3} className="mt-3">FREE SHIPPING IN THE US!</Title>
-                    <p>
-                        Custom, 100% polyester Phat Gus plush toy
-                    </p>
-                    <p>100% cotton filling</p>
-                    <p>Custom CrunchLabs label with care instructions</p>
-                    <p>10" tall</p>
-                    <p>Ages 3+</p> */}
+                    <Title level={3} className="mt-3 font-bold">{combo?.price.toLocaleString("vi-VN")} {currencyUnit}</Title>
                     <div className="mt-2 grid grid-cols-3" style={{ padding: 0 }}>
                         <button
                             onClick={() => handleSetCountMinus()}
@@ -82,8 +74,17 @@ const KitDetailFromCLient = () => {
                     </div>
                 </Col>
             </Row>
+            {/* <Link to={`/lab/${combo?.labs._id}`}>
+            </Link> */}
+            <ProductCard
+                name={combo?.labs.name}
+                lab_url={combo?.labs.lab_url}
+                price={combo?.labs.price}
+                category_name={combo?.category_name||""}
+                discount={combo?.labs.discount}
+                />
         </div>
     )
 }
 
-export default KitDetailFromCLient;
+export default ClientComboDetail;

@@ -4,10 +4,10 @@ import { Category } from "../../models";
 import { useEffect, useState } from "react";
 import { getCategoriesByClient } from "../../services";
 import KitCard from "../../components/card";
-import { getCombosByClientService } from "../../services/client.services";
 import { Link } from "react-router-dom";
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Combo } from "../../models/Combo.model";
+import { getCombosByClientService } from "../../services/client.services";
 const ComboShop = () => {
     const [cates, setCates] = useState<Category[]>([]);
     const [combos, setCombos] = useState<Combo[]>([]);
@@ -43,7 +43,7 @@ const ComboShop = () => {
             <img src="https://www.crunchlabs.com/cdn/shop/files/crunchlabs-education-hero_ce8466b9-af5a-4f5f-a421-1efd4be7526b.png?v=1684885608" alt="" />
             <div className="mt-5 flex justify-between">
                 <div>
-                    <Title level={1} className="font-bold">Merchandise</Title>
+                    <Title level={1} className="font-bold">Combo Shop</Title>
                 </div>
                 <div>
                     <div className="card flex justify-center">
@@ -54,13 +54,14 @@ const ComboShop = () => {
             </div>
             <div className="grid grid-cols-4 pl-10">
                 {
-                    combos.map(kit => (
-                        <Link to={`/kit/${kit._id}`}>
-                            <KitCard name={kit.name}
-                                image={kit.image_url}
-                                price={kit.price}
-                                category_name={kit.category_name}
-                                id={kit._id}
+                    combos.map(combo => (
+                        <Link to={`/combo/${combo._id}`}>
+                            <KitCard name={combo.name}
+                                image={combo.items[0].details.image_url}
+                                price={combo.price}
+                                category_name={combo.category_name}
+                                id={combo._id}
+                                discount={combo.discount}
                             />
                         </Link>
                     ))

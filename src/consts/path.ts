@@ -26,6 +26,8 @@ export const PATH = {
   LAB_SHOP: "/lab-shop",
   COMBO_SHOP: "/combo-shop",
   CLIENT_KIT_DETAIL: "/kit/:id",
+  CLIENT_LAB_DETAIL: "/lab/:id",
+  CLIENT_COMBO_DETAIL: "/combo/:id",
   BLOG_PAGE: "/blog",
   USER_PROFILE: "/profile",
   //Customer

@@ -16,7 +16,7 @@ interface ComboValues {
 export const getCombosByClientService = async (category_id: string, keyword: string, pageNum: number, pageSize: number) => {
   try {
     const response = await BaseService.post({
-      url: API.CLIENT_GET_COMBOS, payload: {
+      url: API.GET_COMBOS, payload: {
         "searchCondition": {
           "category_id": category_id || "",
           "keyword": keyword || "",

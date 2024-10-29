@@ -95,7 +95,7 @@ export const getKitsByClientService = async (category_id: string, keyword: strin
 };
 
 
-export const getKitByClientService = async (id: string, pageNum:number, pageSize:number) => {
+export const getKitByClientService = async (id: string, pageNum: number, pageSize: number) => {
   try {
     const response = await BaseService.get({ url: `${API.CLIENT_GET_KIT}/${id}` })
     return response;
@@ -147,7 +147,7 @@ export const getLabsByClientService = async (category_id: string, keyword: strin
 };
 
 
-export const getLabByClientService = async (id: string, pageNum:number, pageSize:number) => {
+export const getLabByClientService = async (id: string, pageNum: number, pageSize: number) => {
   try {
     const response = await BaseService.get({ url: `${API.CLIENT_GET_LAB}/${id}` })
     return response;
@@ -190,6 +190,27 @@ export const getCombosByClientService = async (category_id: string, keyword: str
           totalItems: 0,
           pageNum,
           pageSize
+        },
+        pageData: []
+      }
+    };
+  }
+};
+
+export const getComboByClientService = async (id: string) => {
+  try {
+    const response = await BaseService.get({
+      url: `${API.CLIENT_GET_COMBO}/${id}`
+    })
+    return response;
+  } catch (error) {
+    console.log(error);
+    return {
+      data: {
+        pageInfo: {
+          totalItems: 0,
+          pageNum: 1,
+          pageSize: 100
         },
         pageData: []
       }

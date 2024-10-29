@@ -44,7 +44,7 @@ const LabShop = () => {
             <img src="https://www.crunchlabs.com/cdn/shop/files/crunchlabs-education-hero_ce8466b9-af5a-4f5f-a421-1efd4be7526b.png?v=1684885608" alt="" />
             <div className="mt-5 flex justify-between">
                 <div>
-                    <Title level={1} className="font-bold">Merchandise</Title>
+                    <Title level={1} className="font-bold">LAB Shop</Title>
                 </div>
                 <div>
                     <div className="card flex justify-center">
@@ -56,13 +56,14 @@ const LabShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     labs.map(lab => (
-                        <Link to={`/kit/${lab._id}`}>
+                        <Link to={`/lab/${lab._id}`}>
                             <KitCard
                                 name={lab.name}
                                 lab_url={lab.lab_url}
                                 price={lab.price}
                                 category_name={lab.category_name}
                                 id={lab._id}
+                                discount={lab.discount}
                             />
                         </Link>
                     ))

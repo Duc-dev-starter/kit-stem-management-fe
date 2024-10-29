@@ -17,7 +17,9 @@ import {
     ManagerManageCombo,
     LabShop,
     StaffDashboard,
-    ComboShop
+    ComboShop,
+    ClientLabDetail,
+    ClientComboDetail
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -39,17 +41,21 @@ const AppRouter = () => {
             <Route path={PATH.KIT_SHOP} element={<KitShop />} />
             <Route path={PATH.LAB_SHOP} element={<LabShop />} />
             <Route path={PATH.COMBO_SHOP} element={<ComboShop />} />
+            <Route path={PATH.CLIENT_KIT_DETAIL} element={<KitDetailFromCLient />} />
+            <Route path={PATH.CLIENT_LAB_DETAIL} element={<ClientLabDetail />} />
+            <Route path={PATH.CLIENT_COMBO_DETAIL} element={<ClientComboDetail />} />
+            {/* Staff */}
             <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) && <Dashboard />}>
-            <Route path={PATH.STAFF_HOME} element={<StaffDashboard />} />
+                <Route path={PATH.STAFF_HOME} element={<StaffDashboard />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
 
             {/* Customer Routers */}
-         
+
             <Route path={PATH.FORGOT_PASSWORD} element={<ForgotPassword />} />
             <Route path={PATH.CUSTOMER_PROFILE} element={<CustomerProfilePage />} />
             <Route path={PATH.CUSTOMER_CHANGE_PASSWORD} element={<ChangePassword />} />
-            <Route path={PATH.CLIENT_KIT_DETAIL} element={<KitDetailFromCLient />} />
+
             {/* Manager Routers */}
             <Route path={PATH.MANAGER_LOGIN} element={<AdminLoginPage />} />
             <Route path={PATH.MANAGER} element={canAccess([roles.MANAGER]) ? <Dashboard /> : <Navigate to={PATH.MANAGER_LOGIN} />}

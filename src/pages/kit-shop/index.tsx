@@ -43,7 +43,7 @@ const KitShop = () => {
             <img src="https://www.crunchlabs.com/cdn/shop/files/crunchlabs-education-hero_ce8466b9-af5a-4f5f-a421-1efd4be7526b.png?v=1684885608" alt="" />
             <div className="mt-5 flex justify-between">
                 <div>
-                    <Title level={1} className="font-bold">Merchandise</Title>
+                    <Title level={1} className="font-bold">KIT Shop</Title>
                 </div>
                 <div>
                     <div className="card flex justify-center">
@@ -61,6 +61,7 @@ const KitShop = () => {
                                 price={kit.price}
                                 category_name={kit.category_name}
                                 id={kit._id}
+                                discount={kit.discount}
                             />
                         </Link>
                     ))

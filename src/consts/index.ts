@@ -20,10 +20,11 @@ export const statusOfKit = {
 };
 
 export const priceDiscounted = (price: number, discount: number) => {
-  return price - (price * discount / 100);
+  return (price - (price * discount / 100)).toLocaleString("vi-VN");
 }
 
 export const currencyUnit = "VND"
+
 export const kitStatus = (status: string) => {
   switch (status) {
     case statusOfKit.IN_WAREHOUSE:
