@@ -50,8 +50,8 @@ const Navbar = () => {
           </Col>
           <Col style={{ padding: "28px 14px" }}>
             <Text>
-              <a href="#" className="navbar-link">
-                Our Company
+              <a href="/blog" className="navbar-link">
+                Blog
               </a>
             </Text>
           </Col>

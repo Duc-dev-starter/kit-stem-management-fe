@@ -24,6 +24,7 @@ export const PATH = {
   CHANGE_PASSWORD: "/change-password",
   KIT_SHOP: "/kit-shop",
   LAB_SHOP: "/lab-shop",
+  COMBO_SHOP: "/combo-shop",
   CLIENT_KIT_DETAIL: "/kit/:id",
   BLOG_PAGE: "/blog",
   USER_PROFILE: "/profile",
@@ -35,6 +36,7 @@ export const PATH = {
   STAFF: '/staff/*',
   STAFF_LOGIN: '/manager/login',
   STAFF_HOME: 'dashboard',
+  STAFF_DELIVERY: 'delivery',
   STAFF_DASHBOARD: '/staff/dashboard',
   //Manager
   MANAGER: '/manager/*',

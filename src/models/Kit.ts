@@ -38,5 +38,6 @@ export interface Lab {
     labs: Lab[];
     description: string;
     video_url: string;
+    quantity?: number
   }
   

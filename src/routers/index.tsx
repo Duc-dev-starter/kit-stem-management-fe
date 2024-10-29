@@ -16,7 +16,8 @@ import {
     BlogPage,
     ManagerManageCombo,
     LabShop,
-    StaffDashboard
+    StaffDashboard,
+    ComboShop
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -37,6 +38,7 @@ const AppRouter = () => {
             <Route path={PATH.BLOG_PAGE} element={<BlogPage />} />
             <Route path={PATH.KIT_SHOP} element={<KitShop />} />
             <Route path={PATH.LAB_SHOP} element={<LabShop />} />
+            <Route path={PATH.COMBO_SHOP} element={<ComboShop />} />
             <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) && <Dashboard />}>
             <Route path={PATH.STAFF_HOME} element={<StaffDashboard />} />
                 <Route path="*" element={<NotFound />} />

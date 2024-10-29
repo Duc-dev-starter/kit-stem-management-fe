@@ -191,9 +191,10 @@ const ManageKit = () => {
             dataIndex: 'name',
             key: 'name',
             render: (name: string, record: Kit) => (
-                <Link className="text-blue-500" to={`/manager/manage-kit/${record._id}`}>
-                    {name}
-                </Link>
+                // <Link className="text-blue-500" to={`/manager/manage-kit/${record._id}`}>
+                //     {name}
+                // </Link>
+                <>{name}</>
             )
         },
         {

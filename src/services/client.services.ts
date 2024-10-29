@@ -165,3 +165,34 @@ export const getLabByClientService = async (id: string, pageNum:number, pageSize
     };
   }
 };
+
+export const getCombosByClientService = async (category_id: string, keyword: string, pageNum: number, pageSize: number) => {
+  try {
+    const response = await BaseService.post({
+      url: API.CLIENT_GET_COMBOS, payload: {
+        "searchCondition": {
+          "category_id": category_id || "",
+          "keyword": keyword || "",
+          "is_deleted": false
+        },
+        "pageInfo": {
+          "pageNum": pageNum || 1,
+          "pageSize": pageSize || 100
+        }
+      }
+    })
+    return response;
+  } catch (error) {
+    console.log(error);
+    return {
+      data: {
+        pageInfo: {
+          totalItems: 0,
+          pageNum,
+          pageSize
+        },
+        pageData: []
+      }
+    };
+  }
+};

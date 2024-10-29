@@ -90,9 +90,10 @@ const ManageLab = () => {
             dataIndex: 'name',
             key: 'name',
             render: (name: string) => (
-                <div className="text-blue-500 cursor-pointer">
-                    {name}
-                </div>
+                // <div className="text-blue-500 cursor-pointer">
+                //     {name}
+                // </div>
+                <>{name}</>
             )
         },
         {
@@ -133,7 +134,6 @@ const ManageLab = () => {
             )
         }
     ];
-
 
     return (
         <>

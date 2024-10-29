@@ -2,31 +2,30 @@ import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Image, Row } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getKitByClientService } from "../../services/client.services";
 import { Kit } from "../../models";
+import ProductCard from "../../components/card";
 
 const KitDetailFromCLient = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const [count, setCount] = useState<number>(0)
     const [kit, setKit] = useState<Kit>()
 
-    useEffect(()=>{
-        if(id){
+    useEffect(() => {
+        if (id) {
             getKitDetail();
         }
-    },[id])
+    }, [id])
 
-    const getKitDetail = async()=>{
-        if(id){
+    const getKitDetail = async () => {
+        if (id) {
             const response = await getKitByClientService(id, 1, 100)
-            console.log("res: ",response )
-            setKit(response.dẩ
-                
-            )
+            console.log("res: ", response)
+            setKit(response.data)
         }
     }
-   
+
     const handleSetCountPlus = () => {
         setCount(count + 1)
     }
@@ -40,7 +39,7 @@ const KitDetailFromCLient = () => {
             <Row>
                 <Col span={16}>
                     <Image
-                        width={"80%"}
+                        width={"60%"}
                         src={kit?.image_url}
                     />
                 </Col>
@@ -48,18 +47,18 @@ const KitDetailFromCLient = () => {
                     <Title className="mt-3" level={1}>
                         Phat Gus Plush Toy
                     </Title>
-                    <Title level={3} className="mt-3 font-bold">$30.00</Title>
+                    <Title level={3} className="mt-3 font-bold">{kit?.price}</Title>
                     <p className="mt-3">
-                        Hold on to your walnuts, she's here! Get your very own Phantastic Gus squirrel plush toy, the greatest bushy tailed athlete and master of physics.
+                        {kit?.description}
                     </p>
-                    < Title level={3} className="mt-3">FREE SHIPPING IN THE US!</Title>
+                    {/* < Title level={3} className="mt-3">FREE SHIPPING IN THE US!</Title>
                     <p>
                         Custom, 100% polyester Phat Gus plush toy
                     </p>
                     <p>100% cotton filling</p>
                     <p>Custom CrunchLabs label with care instructions</p>
                     <p>10" tall</p>
-                    <p>Ages 3+</p>
+                    <p>Ages 3+</p> */}
                     <div className="mt-2 grid grid-cols-3" style={{ padding: 0 }}>
                         <button
                             onClick={() => handleSetCountMinus()}
@@ -76,12 +75,28 @@ const KitDetailFromCLient = () => {
                         </button>
                     </div>
                     <div className="flex justify-center mt-3">
-                    <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                    Add To Cart
-                    </button>
+                        <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                            Add To Cart
+                        </button>
                     </div>
                 </Col>
             </Row>
+            <Title level={3}>LABs Of {kit?.name}</Title>
+            <div>
+                <div className="grid grid-cols-4">
+                    {
+                        kit?.labs.map(item => (
+                            <Link to={`/kit/${item._id}`}>
+                                <ProductCard name={item.name}
+                                    image={item.lab_url}
+                                    price={item.price}
+                                    category_name={item.category_name}
+                                />
+                            </Link>
+                        ))
+                    }
+                </div>
+            </div>
         </div>
     )
 }

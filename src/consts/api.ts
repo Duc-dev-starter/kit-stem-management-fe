@@ -51,4 +51,7 @@ export const API = {
     CLIENT_GET_KIT: "/api/client/kit",
     CLIENT_GET_LABS: "/api/client/lab/search",
     CLIENT_GET_LAB: "/api/client/lab",
+    CLIENT_GET_COMBOS: "/api/combo/search",
+    //COMBO
+    CREATE_COMBO: "/api/combo/create",
 }
