@@ -1,10 +1,10 @@
 export { API } from './api';
 export { PATH } from './path'
-export {avatarUrlRules,commentRules,contentRules,descriptionRules,emailRules,nameRules,passwordRules,phoneNumberRules,ratingRules,rejectRules,roleRules,titleRules,videoRules} from './formItem.ts'
-import {PATH} from './path.ts'
-export {getRoleColor} from './getColor.ts'
-export {getRoleLabel} from './getLabel.ts'
-export {avatarReplace} from './others.ts'
+export { avatarUrlRules, commentRules, contentRules, descriptionRules, emailRules, nameRules, passwordRules, phoneNumberRules, ratingRules, rejectRules, roleRules, titleRules, videoRules } from './formItem.ts'
+import { PATH } from './path.ts'
+export { getRoleColor } from './getColor.ts'
+export { getRoleLabel } from './getLabel.ts'
+export { avatarReplace } from './others.ts'
 
 export const statusOfKit = {
   NEW: "new",
@@ -19,7 +19,11 @@ export const statusOfKit = {
   RETURNED: "returned"
 };
 
+export const priceDiscounted = (price: number, discount: number) => {
+  return price - (price * discount / 100);
+}
 
+export const currencyUnit = "VND"
 export const kitStatus = (status: string) => {
   switch (status) {
     case statusOfKit.IN_WAREHOUSE:

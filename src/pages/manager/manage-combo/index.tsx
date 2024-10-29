@@ -10,14 +10,18 @@ import Title from 'antd/es/typography/Title';
 import { createComboService, getCombosByClientService } from '../../../services/combo.services';
 import { Combo } from '../../../models/Combo.model';
 import ModalKitDetail from './modal-kit-detail';
+import ModalLabDetail from './modal-lab-detail';
+import { currencyUnit, priceDiscounted } from '../../../consts';
 const ManagerManageCombo = () => {
     const [kits, setKits] = useState<Kit[]>([])
     const [kitDetail, setKitDetail] = useState<Kit>()
     const [labs, setLabs] = useState<Lab[]>([])
+    const [labDetail, setLabDetail] = useState<Lab>()
     const [cates, setCates] = useState<Category[]>([])
     const [combos, setCombos] = useState<Combo[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalKitDetailOpen, setIsModalKitDetailOpen] = useState(false);
+    const [isModalLabDetailOpen, setIsModalLabDetailOpen] = useState(false);
     useEffect(() => {
         getKitsFromManager()
         getLabsFromManager()
@@ -84,11 +88,13 @@ const ManagerManageCombo = () => {
     const handleOk = () => {
         setIsModalOpen(false);
         setIsModalKitDetailOpen(false);
+        setIsModalLabDetailOpen(false);
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
         setIsModalKitDetailOpen(false);
+        setIsModalLabDetailOpen(false);
     };
 
     const handleChangeKITname = (value: string) => {
@@ -102,6 +108,11 @@ const ManagerManageCombo = () => {
     const showModalKitDetail = (record: Kit) => {
         setIsModalKitDetailOpen(true);
         setKitDetail(record)
+    };
+
+    const showModalLabDetail = (record: Lab) => {
+        setIsModalLabDetailOpen(true);
+        setLabDetail(record)
     };
 
     const columns = [
@@ -121,15 +132,35 @@ const ManagerManageCombo = () => {
         {
             title: 'Lab',
             render: (record: Combo) => (
-                <>
+                <div className='text-blue-500 cursor-pointer' onClick={()=>showModalLabDetail(record?.items[1].details)}>
                     {record?.items[1].details.name}
-                </>
+                </div>
+            )
+        },
+        {
+            title: 'Price Discounted',
+            render:(record: Combo)=>(
+                <div>
+                {priceDiscounted(record.price, record.discount)} {currencyUnit} 
+                </div>
             )
         },
         {
             title: 'Price',
-            dataIndex: 'price',
-            key: 'Price',
+            render:(record: Combo)=>(
+                <div>
+                {record.price} {currencyUnit} 
+                </div>
+            )
+
+        },
+        {
+            title: 'Discount',
+            render:(record: Combo)=>(
+                <div>
+                {record.discount}% 
+                </div>
+            )
         },
         {
             title: 'Category',
@@ -151,6 +182,12 @@ const ManagerManageCombo = () => {
             handleCancel={handleCancel}
             handleOk={handleOk}
             isModalOpen={isModalKitDetailOpen}
+            />
+             <ModalLabDetail
+            lab={labDetail}
+            handleCancel={handleCancel}
+            handleOk={handleOk}
+            isModalOpen={isModalLabDetailOpen}
             />
             <Modal footer="" title="Create Combo" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Form

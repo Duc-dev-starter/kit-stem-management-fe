@@ -3,7 +3,7 @@ import { Button, message, Pagination, Table, TablePaginationConfig, Tag } from "
 import { useEffect, useState } from "react";
 import { Lab } from "../../../models/Kit";
 import { getLabs } from "../../../services";
-import { labStatus, labStatusColor } from "../../../consts";
+import { currencyUnit, labStatus, labStatusColor, priceDiscounted } from "../../../consts";
 import Title from "antd/es/typography/Title";
 import ModalCreateUpdate from "./modal-create-update-lab";
 import ModalDeleteLab from "./modal-delete-lab";
@@ -94,6 +94,31 @@ const ManageLab = () => {
                 //     {name}
                 // </div>
                 <>{name}</>
+            )
+        },
+        {
+            title: 'Price Discounted',
+            render: (record: Lab) => (
+                <div>
+                    {priceDiscounted (record.price, record.discount)} {currencyUnit}
+                </div>
+            )
+        },
+        {
+            title: 'Price',
+            render: (record: Lab) => (
+                <div>
+                    {record.price} {currencyUnit}
+                </div>
+            )
+
+        },
+        {
+            title: 'Discount',
+            render: (record: Lab) => (
+                <div>
+                    {record.discount}%
+                </div>
             )
         },
         {

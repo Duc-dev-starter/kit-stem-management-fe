@@ -1,7 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, FormProps, Image, Input, InputNumber, message, Modal, Select, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { kitStatus, kitStatusColor } from "../../../consts";
+import { currencyUnit, kitStatus, kitStatusColor, priceDiscounted } from "../../../consts";
 import { Kit } from "../../../models/Kit";
 import { Link } from "react-router-dom";
 import { getCategories, getKits, getUserDetail } from "../../../services";
@@ -201,7 +201,7 @@ const ManageKit = () => {
             title: 'User Name',
             dataIndex: 'user_name',
             key: 'user_name',
-            render: (user_name: string, record:Kit) => (
+            render: (user_name: string, record: Kit) => (
                 <div onClick={() => showModalUser(record.user_id)} className="text-blue-500 cursor-pointer">
                     {user_name}
                 </div>
@@ -212,16 +212,30 @@ const ManageKit = () => {
             dataIndex: 'category_name',
             key: 'category_name',
         },
-
+        {
+            title: 'Price Discounted',
+            render: (record: Kit) => (
+                <div>
+                    {priceDiscounted(record.price, record.discount)} {currencyUnit}
+                </div>
+            )
+        },
         {
             title: 'Price',
-            dataIndex: 'price',
-            key: 'price',
+            render: (record: Kit) => (
+                <div>
+                    {record.price} {currencyUnit}
+                </div>
+            )
+
         },
         {
             title: 'Discount',
-            dataIndex: 'discount',
-            key: 'discount',
+            render: (record: Kit) => (
+                <div>
+                    {record.discount}%
+                </div>
+            )
         },
         {
             title: 'Status',

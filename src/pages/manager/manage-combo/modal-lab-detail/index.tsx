@@ -1,15 +1,15 @@
 import { Modal } from "antd";
 import type { FormProps } from 'antd';
 import { Form, Input } from 'antd';
-import { Kit } from "../../../../models";
 import { formatDate } from "../../../../utils";
+import { Lab } from "../../../../models/Kit";
 import TextArea from "antd/es/input/TextArea";
 
-export interface iModalKitDetail {
+export interface iModalLabDetail {
     isModalOpen: boolean,
     handleOk: () => void;
     handleCancel: () => void;
-    kit: Kit;
+    lab: Lab;
 }
 
 type FieldType = {
@@ -17,7 +17,7 @@ type FieldType = {
     category_id: string;
     user_id: string;
     status: string;
-    image_url: string;
+    lab_url: string;
     price: number;
     discount: number;
     created_at: Date;
@@ -26,32 +26,34 @@ type FieldType = {
     user_name: string;
     category_name: string;
     description: string;
-    video_url: string;
-    quantity?: number
+    content: string;
+    max_support_count?: number
 };
 
-const ModalKitDetail = ({ handleOk, handleCancel, isModalOpen, kit }: iModalKitDetail) => {
+const ModalLabDetail = ({ handleOk, handleCancel, isModalOpen, lab }: iModalLabDetail) => {
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         console.log('Success:', values);
     };
 
     return (
         <div>
-            <Modal title="Kit Detail" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Lab Detail" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Form
                     name="basic"
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
                     style={{ maxWidth: 600 }}
                     initialValues={{
-                        name: kit?.name,
-                        description: kit?.description,
-                        status: kit?.status,
-                        price: kit?.price,
-                        discount: kit?.discount,
-                        quantity: kit?.quantity,
-                        created_at: formatDate(kit?.created_at),
-                        updated_at: formatDate(kit?.updated_at),
+                        name: lab?.name,
+                        description: lab?.description,
+                        status: lab?.status,
+                        price: lab?.price,
+                        discount: lab?.discount,
+                        content: lab?.content,
+                        lab_url: lab?.lab_url,
+                        created_at: formatDate(lab?.created_at),
+                        updated_at: formatDate(lab?.updated_at),
+                        max_support_count: lab?.max_support_count,
                     }}
                     onFinish={onFinish}
                     autoComplete="off"
@@ -69,7 +71,7 @@ const ModalKitDetail = ({ handleOk, handleCancel, isModalOpen, kit }: iModalKitD
                         name="description"
                         rules={[{ required: true, message: 'Please input description!' }]}
                     >
-                        <TextArea disabled />
+                        <Input disabled />
                     </Form.Item>
 
                     <Form.Item<FieldType>
@@ -97,9 +99,25 @@ const ModalKitDetail = ({ handleOk, handleCancel, isModalOpen, kit }: iModalKitD
                     </Form.Item>
 
                     <Form.Item<FieldType>
-                        label="Quantity"
-                        name="quantity"
-                        rules={[{ required: true, message: 'Please input quantity!' }]}
+                        label="Content"
+                        name="content"
+                        rules={[{ required: true, message: 'Please input content!' }]}
+                    >
+                        <TextArea disabled />
+                    </Form.Item>
+
+                    <Form.Item<FieldType>
+                        label="Lab URL"
+                        name="lab_url"
+                        rules={[{ required: true, message: 'Please input lab URL!' }]}
+                    >
+                        <Input disabled />
+                    </Form.Item>
+
+                    <Form.Item<FieldType>
+                        label="Max Support Count"
+                        name="max_support_count"
+                        rules={[{ required: true, message: 'Please input max support count!' }]}
                     >
                         <Input disabled />
                     </Form.Item>
@@ -121,9 +139,10 @@ const ModalKitDetail = ({ handleOk, handleCancel, isModalOpen, kit }: iModalKitD
                     </Form.Item>
                 </Form>
 
+
             </Modal>
         </div>
     )
 }
 
-export default ModalKitDetail
+export default ModalLabDetail
