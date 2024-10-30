@@ -30,6 +30,7 @@ export const PATH = {
   CLIENT_COMBO_DETAIL: "/combo/:id",
   BLOG_PAGE: "/blog",
   USER_PROFILE: "/profile",
+  CHECKOUT: "/check-out",
   //Customer
   CUSTOMER: '/customer/*',
   CUSTOMER_PROFILE: "/profile",

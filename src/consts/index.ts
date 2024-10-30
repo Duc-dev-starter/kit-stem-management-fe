@@ -23,7 +23,16 @@ export const priceDiscounted = (price: number, discount: number) => {
   return (price - (price * discount / 100)).toLocaleString("vi-VN");
 }
 
-export const currencyUnit = "VND"
+export const calculatePriceDiscounted = (price: number, discount: number) => {
+  return (price - (price * discount / 100))
+}
+export const CartStatusEnum = {
+  NEW: 'new',
+  WAITING_PAID: 'waiting_paid',
+  CANCEL: 'cancel',
+  COMPLETED: 'completed',
+};
+export const currencyUnit = "$"
 
 export const kitStatus = (status: string) => {
   switch (status) {

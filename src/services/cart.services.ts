@@ -39,8 +39,16 @@ export const createCartSerivce = async (id: string, type: string) => {
     return response;
 }
 
-export const updateCategory = async (id: string, name: string, updateCategory: Category) => {
-    const response = await BaseService.put({ url: `${API.GET_UPDATE_DELETE_CATEGORY}/${id}`, payload: updateCategory });
+export interface itemsCart{
+    _id: string;
+    cart_no: string
+}
+export const updateCart = async (status: string, items: itemsCart[]) => {
+    console.log("items: ", items)
+    const response = await BaseService.put({ url: `${API.UPDATE_STATUS_CART}`, payload: {
+        "status": status,
+        "items": items
+    } });
     return response;
 }
 

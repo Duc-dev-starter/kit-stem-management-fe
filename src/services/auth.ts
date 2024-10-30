@@ -133,7 +133,7 @@ export const logout = async ( navigate: ReturnType<typeof useNavigate>)=>  {
       navigate(PATH.ADMIN_LOGIN)
       break;
       default:
-      navigate(PATH.HOME);
+      navigate(PATH.LOGIN);
   }
   message.info("You logout from the system");
   const kitInWishList = localStorage.getItem("kitInWishList");

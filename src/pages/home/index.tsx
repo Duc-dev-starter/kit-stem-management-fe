@@ -18,9 +18,9 @@ const HomePage: React.FC = () => {
                 ></iframe>
             </div>
             <Title className="text-center mt-2" level={1}>How CrunchLabs Works</Title>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 text-center">
                 <div>
-                    <Title level={3} className="font-bold text-center">Build</Title>
+                    <Title level={3} className="font-bold ">Build</Title>
                     <Image src="https://cdn.shopify.com/s/files/1/0634/1535/3575/files/CrunchLabs_HIW_01.png?v=1713021949" />
                 </div>
                 <div>
