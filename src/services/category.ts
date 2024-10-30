@@ -4,7 +4,7 @@ import { API } from "../consts";
 import { BaseService } from "./BaseService";
 import { Category } from "../models";
 
-export const getCategories = async (keyword: string ="", pageNum: number, pageSize: number) => {
+export const getCategories = async (keyword: string ="", pageNum: number = 1, pageSize: number = 10) => {
   try {
     const response = await BaseService.post({
       url: API.GET_CATEGORIES, payload: {

@@ -53,6 +53,7 @@ axiosInstance.interceptors.request.use(
               case 403: {
               if (!isTokenExpired) {
                 isTokenExpired = true
+                console.log('test')
                 message.error(data.message);
                 const user = getUserFromLocalStorage();
                 setTimeout(() => {
@@ -76,7 +77,6 @@ axiosInstance.interceptors.request.use(
                    }else{
                      return;
                    }
-                  console.log('test')
                   localStorage.clear();
                   isTokenExpired = false;
                  }, 1300);

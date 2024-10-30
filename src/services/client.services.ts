@@ -216,4 +216,10 @@ export const getComboByClientService = async (id: string) => {
       }
     };
   }
+  
 };
+
+export const clientGetBlog = async (id: string) => {
+  const response = await BaseService.getById({url: '/api/client/blog', id});
+  return response;
+}

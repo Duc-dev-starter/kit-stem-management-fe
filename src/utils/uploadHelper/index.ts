@@ -12,6 +12,8 @@ export const getBase64 = (file: FileType): Promise<string> =>
 
 
 export const uploadFile = async (file: File) => {
+  console.log(file);
+
   const storageRef = ref(storage, file.name);
   const response = await uploadBytes(storageRef, file);
   const downloadURL = await getDownloadURL(response.ref);

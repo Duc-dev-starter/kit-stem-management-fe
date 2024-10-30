@@ -31,7 +31,7 @@ const Navbar = () => {
 
   useEffect(() => {
     getUser()
-  }, [])
+  }, [user?.role])
 
   const showDrawer = () => {
     setOpen(true);

@@ -18,11 +18,12 @@ export const nameRules: Rule[] = [
   { max: 20, message: "Name must be at most 20 characters!" },
   {
     validator: (_, value) => {
-      if (!value || value.trim() === "") {
-        return Promise.reject(new Error('Name cannot be just spaces!'));
+      const cleanedValue = value.trim().replace(/\s+/g, " ");
+      if (cleanedValue.length === 0) {
+        return Promise.reject(new Error("Name cannot be empty or only spaces"));
       }
       return Promise.resolve();
-    }
+    },
   }
 ]
 
@@ -73,7 +74,15 @@ export const contentRules: Rule[] = [
 
 export const titleRules: Rule[] = [
   { required: true, message: "Please input the title!" },
-  { pattern: /^\S*$/, message: "Title must not contain spaces!" },
+  {
+    validator: (_, value) => {
+      const cleanedValue = value.trim().replace(/\s+/g, " ");
+      if (cleanedValue.length === 0) {
+        return Promise.reject(new Error("Title cannot be empty or only spaces"));
+      }
+      return Promise.resolve();
+    }
+  }
 ]
 
 export const rejectRules: Rule[] = [

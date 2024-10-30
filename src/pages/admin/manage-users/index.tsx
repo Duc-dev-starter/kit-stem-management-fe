@@ -14,7 +14,7 @@ import {
   Select,
   Avatar,
 } from "antd";
-import { EditOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
 import type { GetProp, TableColumnsType, TablePaginationConfig, UploadFile, UploadProps } from "antd";
 import { User, UserRole } from "../../../models/User.ts";
 
@@ -81,11 +81,17 @@ const AdminManageUsers: React.FC = () => {
         pagination.current,
         pagination.pageSize
       );
-      const sortedUsers = responseUsers.data.pageData.sort((a: User, b: User) => {
+      const filteredUsers = responseUsers.data.pageData.filter((user: User) => {
+        return user.role !== "manager" && user.role !== "admin";
+      });
+
+      // Sắp xếp danh sách users đã được lọc
+      const sortedUsers = filteredUsers.sort((a: User, b: User) => {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
         return dateB - dateA;
       });
+
 
 
       setDataUsers(sortedUsers);
@@ -99,6 +105,13 @@ const AdminManageUsers: React.FC = () => {
       console.log(error);
     }
   }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, searchText, debouncedSearch]);
+
+  const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
 
   const handlePaginationChange = (page: number, pageSize?: number) => {
     setPagination((prev) => ({
@@ -116,12 +129,18 @@ const AdminManageUsers: React.FC = () => {
     async (values: User) => {
       try {
         let avatarUrl = values.avatar;
+        console.log(avatarUrl);
+
 
         if (values.avatar && typeof values.avatar !== "string" && values.avatar?.file?.originFileObj) {
           avatarUrl = await uploadFile(values.avatar.file.originFileObj);
         }
+        console.log(avatarUrl);
 
         const userData = { ...values, avatar: avatarUrl };
+        console.log('====================================');
+        console.log(userData);
+        console.log('====================================');
         const response = await createUser(userData);
         const newUser = response.data.data;
         setDataUsers((prevData) => [newUser, ...prevData]);
@@ -255,7 +274,7 @@ const AdminManageUsers: React.FC = () => {
       render: (role: UserRole, record: User) => (
         <CustomSelect
           value={role}
-          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF]}
+          options={[roles.CUSTOMER, roles.STAFF]}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={(value) => handleRoleChange(value, record._id)}
@@ -357,7 +376,7 @@ const AdminManageUsers: React.FC = () => {
         <CustomSelect
           className="w-full mt-2 mb-2 md:w-32 md:mt-0 md:ml-2"
           value={selectedRole}
-          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF, 'all']}
+          options={[roles.CUSTOMER, roles.STAFF, 'all']}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={handleRolefilter}
@@ -405,29 +424,27 @@ const AdminManageUsers: React.FC = () => {
           {modalMode === "Add" && <EmailFormItem />}
           {modalMode === "Add" && (
             <div className="mt-3">
-              <PasswordFormItem name="password" label="Password"/>
+              <PasswordFormItem name="password" label="Password" />
             </div>
           )}
           {modalMode === "Add" && (
 
             <Form.Item name="role" rules={roleRules} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} className="mb-3">
               <Radio.Group>
-                <Radio value={roles.CUSTOMER}>Customer</Radio>
                 <Radio value={roles.STAFF}>Staff</Radio>
-                <Radio value={roles.MANAGER}>Manager</Radio>
               </Radio.Group>
             </Form.Item>
           )}
 
           <Form.Item label="Avatar" name="avatar">
             <Upload
+              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
-              beforeUpload={() => false}
             >
-              {fileList.length >= 1 ? null : <UploadButton />}
+              {fileList.length >= 8 ? null : uploadButton}
             </Upload>
           </Form.Item>
 

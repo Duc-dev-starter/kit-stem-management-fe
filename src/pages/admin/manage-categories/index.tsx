@@ -18,7 +18,6 @@ const AdminManageCategories: React.FC = () => {
   const [form] = Form.useForm();
   const [formData, setFormData] = useState<Partial<Category>>({});
   const [modalMode, setModalMode] = useState<"Add" | "Edit">("Add");
-  const [parentCategories, setParentCategories] = useState<Category[]>([]);
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
 
   const debouncedSearchTerm = useDebounce(searchText, 500);
@@ -28,9 +27,13 @@ const AdminManageCategories: React.FC = () => {
     total: 0,
   });
 
+  useEffect(() => {
+    fetchCategories();
+  }, [debouncedSearchTerm, pagination.current, pagination.pageSize]);
+
   const fetchCategories = useCallback(async () => {
     try {
-      const responseCategories = await getCategories(debouncedSearchTerm, false, pagination.current, pagination.pageSize);
+      const responseCategories = await getCategories(debouncedSearchTerm, pagination.current, pagination.pageSize);
       setDataCategories(responseCategories.data.pageData || responseCategories.data);
       setPagination((prev) => ({
         ...prev,
@@ -43,18 +46,8 @@ const AdminManageCategories: React.FC = () => {
     }
   }, [pagination.current, pagination.pageSize, searchText, debouncedSearchTerm]);
 
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories, searchText]);
 
-  const fetchParentCategories = useCallback(async () => {
-    const responseParentCategories = await getCategories("", false);
-    setParentCategories(responseParentCategories.data.pageData || responseParentCategories.data);
-  }, []);
 
-  useEffect(() => {
-    fetchParentCategories();
-  }, [fetchParentCategories]);
 
   const openModal = useCallback((mode: "Add" | "Edit", category?: Category) => {
     setModalMode(mode);
@@ -63,51 +56,40 @@ const AdminManageCategories: React.FC = () => {
     setValidateOnOpen(true);
 
     if (mode === "Edit" && category) {
-      const parentCategory = parentCategories.find(
-        (cat) => cat._id === category.parent_category_id
-      );
+
 
       form.setFieldsValue({
         ...category,
-        parent_category_id: parentCategory ? parentCategory._id : "none", // Sử dụng ID thay vì tên
       });
     }
-  }, [form, parentCategories]);
+  }, [form]);
 
   const handleDeleteCategory = (id: string, name: string) => {
     deleteCategory(id, name, dataCategories, fetchCategories);
-    setParentCategories(dataCategories)
-    fetchParentCategories();
   };
 
 
   const onFinish = useCallback(
     async (values: Category) => {
-      let parentCategoryId = null;
-      if (values.parent_category_id && values.parent_category_id !== "none") {
-        parentCategoryId = values.parent_category_id;
-      }
+      const cleanedName = values.name.trim().replace(/\s+/g, " "); // Remove extra spaces
 
       try {
         if (modalMode === 'Add') {
-          const response = await createCategory({ ...values, parent_category_id: parentCategoryId });
-          console.log(values._id);
-
+          const response = await createCategory({ ...values, name: cleanedName });
           if (response.success) {
-            setDataCategories((prevData) => [...prevData, response.data]);
+            fetchCategories(); // Refresh the table data
             form.resetFields();
-
-            message.success(`Category ${values.name} created successfully.`);
+            message.success(`Category ${cleanedName} created successfully.`);
             setIsModalVisible(false);
           }
         } else if (modalMode === 'Edit') {
           const updatedCategory: Category = {
             ...values,
-            parent_category_id: parentCategoryId,
+            name: cleanedName,
             updated_at: new Date().toISOString(),
           };
 
-          const response = await updateCategory(formData._id, values.name || '', updatedCategory);
+          const response = await updateCategory(formData._id, cleanedName, updatedCategory);
           if (response.success) {
             setDataCategories((prevData) =>
               prevData.map((category) =>
@@ -118,17 +100,17 @@ const AdminManageCategories: React.FC = () => {
             form.resetFields();
             setFormData({});
             fetchCategories();
-            fetchParentCategories();
-            message.success(`Category ${values.name} updated successfully.`);
+            message.success(`Category ${cleanedName} updated successfully.`);
           }
         }
       } catch (error) {
         console.log(error);
-        message.error("Something went wrong!");
       }
     },
-    [modalMode, dataCategories, form, fetchCategories, fetchParentCategories]
+    [modalMode, formData, form, fetchCategories]
   );
+
+
 
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
@@ -157,17 +139,6 @@ const AdminManageCategories: React.FC = () => {
       key: "name",
     },
     {
-      title: "Parent Category",
-      dataIndex: "parent_category_id",
-      key: "parent_category_id",
-      render: (parent_category_id: string) => {
-        const category = dataCategories.find(
-          (category) => category._id === parent_category_id
-        );
-        return category ? category.name : "None";
-      },
-    },
-    {
       title: "Created Date",
       dataIndex: "created_at",
       key: "created_at",
@@ -192,13 +163,9 @@ const AdminManageCategories: React.FC = () => {
               openModal("Edit", record)
               setFormData(record);
 
-              const parentCategory = parentCategories.find(
-                (category) => category._id === record.parent_category_id
-              );
 
               form.setFieldsValue({
                 ...record,
-                parent_category_id: parentCategory ? parentCategory.name : "none", // Set name instead of ID
               });
               // form.setFieldsValue(record);
             }}
@@ -272,19 +239,6 @@ const AdminManageCategories: React.FC = () => {
         >
           <NameFormItem />
 
-          <Form.Item label="Parent Category" name="parent_category_id" rules={[{ required: false }]}>
-            <Select placeholder="Select parent category">
-              {parentCategories
-                .filter(parentCategory =>
-                  !dataCategories.some(cate => cate.parent_category_id === parentCategory._id)
-                )
-                .map((category) => (
-                  <Select.Option key={category._id} value={category.name}>
-                    {category.name}
-                  </Select.Option>
-                ))}
-            </Select>
-          </Form.Item>
           <Form.Item>
             <Button loading={isLoading} type="primary" htmlType="submit">
               {modalMode === "Add" ? 'Add' : 'Edit'}

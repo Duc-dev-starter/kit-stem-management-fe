@@ -34,15 +34,14 @@ const RegisterPage: React.FC = () => {
   const onFinish: FormProps["onFinish"] = async (values) => {
     setLoading(true);
 
-    if(values.password != values.confirmPassword){
+    if (values.password != values.confirmPassword) {
       message.error("Password and Confirm Password are not the same!")
     }
 
     try {
-     const res = await registerUser(values)
+      const res = await registerUser(values)
       message.success("Successfully registered. Please check your email to login");
       if (res) {
-        console.log("res: ", res);
         setTimeout(() => {
           navigate("/login");
         }, 2000);
@@ -64,7 +63,7 @@ const RegisterPage: React.FC = () => {
           </div>
 
           <span className="text-center mb-3">
-            Step into success with FLearn. Join us today!
+            Step into success with Crunchlabs. Join us today!
           </span>
 
           <div className="mb-3">
@@ -81,8 +80,8 @@ const RegisterPage: React.FC = () => {
                 <EmailFormItem />
                 <PhoneNumberFormItem />
                 <NameFormItem />
-                <PasswordFormItem label="Password" name="password"/>
-                <PasswordFormItem label="Confirm Password" name="confirmPassword"/>
+                <PasswordFormItem label="Password" name="password" />
+                <PasswordFormItem label="Confirm Password" name="confirmPassword" />
                 <Form.Item
                   name="role"
                   rules={roleRules}
@@ -117,8 +116,8 @@ const RegisterPage: React.FC = () => {
         </div>
 
         <Image
-            wrapperStyle={{ display: "none" }}
-          />
+          wrapperStyle={{ display: "none" }}
+        />
         <div
           className="w-1/2 flex items-center justify-center"
           style={{ overflow: "hidden" }}
