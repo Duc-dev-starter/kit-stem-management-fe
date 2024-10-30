@@ -32,7 +32,7 @@ export const getCategoriesByClient = async (keyword: string = "", pageNum: numbe
 };
 
 
-export const getBlogsByClient = async (category_id: string = "", pageNum: number, pageSize: number) => {
+export const getBlogsByClient = async (category_id: string = "", pageNum: number = 1, pageSize: number = 10) => {
   try {
     const response = await BaseService.post({
       url: API.CLIENT_GET_BLOGS, payload: {

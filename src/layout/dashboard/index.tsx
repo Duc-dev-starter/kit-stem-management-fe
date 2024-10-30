@@ -78,7 +78,7 @@ const Dashboard: React.FC = () => {
         getItem('Manage LABs', '/manager/manage-labs', <BookOutlined />),
         getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <DeliveredProcedureOutlined />),
         getItem('Manage Users', '/manager/manage-users', <UserOutlined />),
-       
+
       ]);
     } else if (dataUser.role === roles.ADMIN) {
       setItems([
@@ -87,9 +87,10 @@ const Dashboard: React.FC = () => {
         getItem('Manage Categories', '/admin/manage-categories', <BiCategory />),
         getItem('Manage Blogs', '/admin/manage-blogs', <FaRegNewspaper />),
       ]);
-    }else if (dataUser.role === roles.STAFF) {
+    } else if (dataUser.role === roles.STAFF) {
       setItems([
         getItem('Dashboard', '/staff/dashboard', <AiOutlineDashboard />),
+        getItem('Delivery', '/staff/delivery', <AiOutlineDashboard />),
       ]);
     }
   };

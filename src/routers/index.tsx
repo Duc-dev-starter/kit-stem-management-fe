@@ -21,7 +21,8 @@ import {
     ClientLabDetail,
     ClientComboDetail,
     Checkout,
-    BlogDetailPage
+    BlogDetailPage,
+    StaffDelivery
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -49,8 +50,9 @@ const AppRouter = () => {
             <Route path={PATH.CHECKOUT} element={<Checkout />} />
             <Route path="/blog/:id" element={<BlogDetailPage />} />
             {/* Staff */}
-            <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) && <Dashboard />}>
+            <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) ? <Dashboard /> : <Navigate to={PATH.HOME} />}>
                 <Route path={PATH.STAFF_HOME} element={<StaffDashboard />} />
+                <Route path={'delivery'} element={<StaffDelivery />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
 
