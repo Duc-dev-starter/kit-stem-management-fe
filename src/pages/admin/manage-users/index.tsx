@@ -14,7 +14,7 @@ import {
   Select,
   Avatar,
 } from "antd";
-import { EditOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined, SearchOutlined, UserAddOutlined } from "@ant-design/icons";
 import type { GetProp, TableColumnsType, TablePaginationConfig, UploadFile, UploadProps } from "antd";
 import { User, UserRole } from "../../../models/User.ts";
 
@@ -100,6 +100,13 @@ const AdminManageUsers: React.FC = () => {
     }
   }, [pagination.current, pagination.pageSize, selectedRole, selectedStatus, searchText, debouncedSearch]);
 
+  const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
+
   const handlePaginationChange = (page: number, pageSize?: number) => {
     setPagination((prev) => ({
       ...prev,
@@ -116,12 +123,18 @@ const AdminManageUsers: React.FC = () => {
     async (values: User) => {
       try {
         let avatarUrl = values.avatar;
+        console.log(avatarUrl);
+
 
         if (values.avatar && typeof values.avatar !== "string" && values.avatar?.file?.originFileObj) {
           avatarUrl = await uploadFile(values.avatar.file.originFileObj);
         }
+        console.log(avatarUrl);
 
         const userData = { ...values, avatar: avatarUrl };
+        console.log('====================================');
+        console.log(userData);
+        console.log('====================================');
         const response = await createUser(userData);
         const newUser = response.data.data;
         setDataUsers((prevData) => [newUser, ...prevData]);
@@ -405,7 +418,7 @@ const AdminManageUsers: React.FC = () => {
           {modalMode === "Add" && <EmailFormItem />}
           {modalMode === "Add" && (
             <div className="mt-3">
-              <PasswordFormItem name="password" label="Password"/>
+              <PasswordFormItem name="password" label="Password" />
             </div>
           )}
           {modalMode === "Add" && (
@@ -421,13 +434,13 @@ const AdminManageUsers: React.FC = () => {
 
           <Form.Item label="Avatar" name="avatar">
             <Upload
+              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
-              beforeUpload={() => false}
             >
-              {fileList.length >= 1 ? null : <UploadButton />}
+              {fileList.length >= 8 ? null : uploadButton}
             </Upload>
           </Form.Item>
 
