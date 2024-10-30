@@ -1,5 +1,4 @@
 
-import { message } from "antd";
 import { API } from "../consts";
 import { BaseService } from "./BaseService";
 import { Category } from "../models";
@@ -45,15 +44,7 @@ export const updateCategory = async (id: string, name: string, updateCategory: C
     return response;
 }
 
-export const deleteCategory = async (id: string, name: string, dataCategories: Category[], fetchCategories: () => Promise<void>) => {
-    const isParentCategory = dataCategories.some(
-        (category) => category.parent_category_id === id
-    );
-    if (isParentCategory) {
-        message.error(`Cannot delete category ${name} as it is a parent category of another category.`);
-        return;
-    }
-    await BaseService.delete({ url: `${API.GET_UPDATE_DELETE_CATEGORY}/${id}` });
-    message.success(`Category ${name} deleted successfully.`);
-    fetchCategories();
+export const deleteCartService = async (id: string ) => {
+    const response = await BaseService.delete({ url: `${API.DELETE_CART}/${id}` });
+    return response;
 }

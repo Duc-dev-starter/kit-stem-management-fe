@@ -59,6 +59,8 @@ const Navbar = () => {
                 name={item.cart_no}
                 price={item.price}
                 discount={item.discount}
+                id={item._id}
+                getCarts={getCarts}
               />
             </>
           ))
