@@ -22,7 +22,9 @@ import {
     ClientComboDetail,
     Checkout,
     BlogDetailPage,
-    StaffDelivery
+    StaffDelivery,
+    CustomerPurchase,
+    ManagerManagerPuchase
 } from "../pages"
 import { PATH } from "../consts"
 import { Dashboard } from "../layout"
@@ -48,6 +50,7 @@ const AppRouter = () => {
             <Route path={PATH.CLIENT_LAB_DETAIL} element={<ClientLabDetail />} />
             <Route path={PATH.CLIENT_COMBO_DETAIL} element={<ClientComboDetail />} />
             <Route path={PATH.CHECKOUT} element={<Checkout />} />
+            <Route path={PATH.PURCHASE} element={<CustomerPurchase />} />
             <Route path="/blog/:id" element={<BlogDetailPage />} />
             {/* Staff */}
             <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) ? <Dashboard /> : <Navigate to={PATH.HOME} />}>
@@ -76,6 +79,7 @@ const AppRouter = () => {
                 <Route path={PATH.MANAGER_USER} element={<ManagerManageUsers />} />
                 <Route path={PATH.MANAGER_MANAGE_SUPPORTER} element={<ManageSupporters />} />
                 <Route path={PATH.MANAGER_MANAGE_COMBO} element={<ManagerManageCombo />} />
+                <Route path={PATH.MANAGER_MANAGE_PURCHASE} element={<ManagerManagerPuchase />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
 

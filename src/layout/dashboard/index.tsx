@@ -78,7 +78,7 @@ const Dashboard: React.FC = () => {
         getItem('Manage LABs', '/manager/manage-labs', <BookOutlined />),
         getItem('Manage KIT delivery', '/manager/manage-kit-delivery', <DeliveredProcedureOutlined />),
         getItem('Manage Users', '/manager/manage-users', <UserOutlined />),
-
+        getItem('Manage Purchases', '/manager/manage-purchases', <UserOutlined />),
       ]);
     } else if (dataUser.role === roles.ADMIN) {
       setItems([

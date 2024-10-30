@@ -31,6 +31,7 @@ export const PATH = {
   BLOG_PAGE: "/blog",
   USER_PROFILE: "/profile",
   CHECKOUT: "/check-out",
+  PURCHASE: "/purchase",
   //Customer
   CUSTOMER: '/customer/*',
   CUSTOMER_PROFILE: "/profile",
@@ -55,6 +56,7 @@ export const PATH = {
   MANAGER_USER: "manage-users",
   MANAGER_DASHBOARD: "/manager/dashboard",
   MANAGER_MANAGE_COMBO: 'manage-combos',
+  MANAGER_MANAGE_PURCHASE: 'manage-purchases',
   //admin
   ADMIN: '/admin/*',
   ADMIN_LOGIN: "/admin/login",

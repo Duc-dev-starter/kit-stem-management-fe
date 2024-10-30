@@ -1,7 +1,6 @@
 
 import { API } from "../consts";
 import { BaseService } from "./BaseService";
-import { Category } from "../models";
 
 export const getCartsService = async (product_id: string = "",status: string = "") => {
     try {

@@ -1,8 +1,9 @@
-import { Card } from "antd";
+import { Card, message } from "antd";
 import Meta from "antd/es/card/Meta";
 import { currencyUnit, PATH, priceDiscounted } from "../../consts";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserFromLocalStorage } from "../../utils";
+import { createCartSerivce } from "../../services/cart.services";
 
 interface ProductCard {
     name: string,
@@ -17,10 +18,17 @@ interface ProductCard {
 
 const LabCard = ({ name, image, price, category_name, discount, labId }: ProductCard) => {
     const navigate = useNavigate();
-    const handleAddToCart =()=>{
+    const handleAddToCart =async()=>{
         const user = getUserFromLocalStorage()
         if(!user){
             navigate(PATH.LOGIN)
+        }else{
+            if(labId){
+                const response = await createCartSerivce(labId, "lab");
+                if(response){
+                    message.success("Add Cart Successfully!")
+                }
+            }
         }
     }
     return (

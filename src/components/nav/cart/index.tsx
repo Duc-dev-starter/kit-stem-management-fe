@@ -2,8 +2,6 @@ import { Col, Image, Row } from 'antd';
 import { currencyUnit, priceDiscounted } from '../../../consts';
 import { deleteCartService } from '../../../services/cart.services';
 import { Checkbox } from 'antd';
-import { useEffect } from 'react';
-
 interface iCustomerCart {
     image: string;
     name: string;
@@ -19,7 +17,6 @@ interface iCustomerCart {
 const CustomerCart = ({
     selectedCarts,
     setSelectedCarts,
-    isCheckAll,
     image,
     name,
     price,

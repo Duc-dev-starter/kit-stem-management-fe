@@ -224,8 +224,8 @@ const Navbar = () => {
           <Row gutter={20} align="middle">
             <Col style={{ padding: "28px 14px" }}>
               <Text style={{ color: "black", textDecoration: "none" }}>
-                <a href="#" className="navbar-link">
-                  Subscription Boxes
+                <a href="/" className="navbar-link">
+                  Home
                 </a>
               </Text>
             </Col>

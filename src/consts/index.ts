@@ -35,6 +35,28 @@ export const CartStatusEnum = {
   CANCEL: 'cancel',
   COMPLETED: 'completed',
 };
+
+export const PurchaseStatusEnum = {
+  NEW: 'new',
+  PROCESSING: 'processing',
+  DELIVERING: 'delivering',
+  DELIVERED: 'delivered'
+};
+
+export const purchaseStatusColor = (status: string) => {
+  switch (status) {
+    case PurchaseStatusEnum.NEW:
+      return "purple";
+    case PurchaseStatusEnum.PROCESSING:
+      return "red";
+    case PurchaseStatusEnum.DELIVERING:
+      return "gold";
+    case PurchaseStatusEnum.DELIVERED:
+      return "darkgray";
+  }
+};
+
+
 export const currencyUnit = "$"
 
 export const kitStatus = (status: string) => {

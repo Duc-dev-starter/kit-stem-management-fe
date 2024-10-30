@@ -48,7 +48,7 @@ const DropdownAvatar: React.FC<DropdownAvatarProps> = ({ dataUser }) => {
                 label: (
                     <Link className="text-lg" to="">
                         <HistoryOutlined className="text-[1.3rem] mr-3" />
-                        View History
+                        View Purchase
                     </Link>
                 ),
                 key: '2',
@@ -143,9 +143,9 @@ const DropdownAvatar: React.FC<DropdownAvatarProps> = ({ dataUser }) => {
             { type: 'divider' },
             {
                 label: (
-                    <Link className="text-lg" to="">
+                    <Link className="text-lg" to="/purchase">
                         <HistoryOutlined className="text-[1.3rem] mr-3" />
-                        View History
+                        View Purchase
                     </Link>
                 ),
                 key: '2',
