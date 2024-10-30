@@ -23,7 +23,7 @@
     "client": "file:",
     "date-fns": "^4.1.0",
     "firebase": "^10.13.1",
-    "html-react-parser": "^5.1.16",
+    "html-react-parser": "^5.1.18",
     "jwt-decode": "^4.0.0",
     "mdb-react-ui-kit": "^9.0.0",
     "primereact": "^10.8.4",
