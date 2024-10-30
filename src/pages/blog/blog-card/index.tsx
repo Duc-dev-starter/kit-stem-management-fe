@@ -6,9 +6,10 @@ interface iBlogCard {
   title: string;
   image: string;
   _id: string
+  description: string
 }
 
-const BlogCard = ({ title, image, _id }: iBlogCard) => {
+const BlogCard = ({ title, image, _id, description }: iBlogCard) => {
   return (
     <Link to={`/blog/${_id}`}>
       <Card
@@ -25,7 +26,7 @@ const BlogCard = ({ title, image, _id }: iBlogCard) => {
           </div>
         }
       >
-        <Meta title={<div className="text-red-500">{title}</div>} description="www.instagram.com" />
+        <Meta title={<div className="text-red-500">{title}</div>} description={description} />
       </Card>
     </Link>
   );

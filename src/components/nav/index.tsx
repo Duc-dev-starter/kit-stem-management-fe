@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import ShopDropDown from "./shop";
 import DropdownAvatar from "../dropdown/DropdownAvatar";
 import { useEffect, useState } from "react";
-import CustomerCart from "./cart";
 import { deleteCartService, getCartsService, itemsCart, updateCart } from "../../services/cart.services";
 import { Cart } from "../../models/Cart.model";
 import { imageTemp } from "../../consts/others";
@@ -15,6 +14,8 @@ import { Checkbox } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { currencyUnit, priceDiscounted, reloadApp } from "../../consts";
 import { useLocation } from 'react-router-dom';
+import { PATH } from "../../consts";
+
 const { Text } = Typography;
 
 const Navbar = () => {
@@ -254,12 +255,14 @@ const Navbar = () => {
           className="logo-container"
           style={{ textAlign: "center" }}
         >
-          <Image
-            width={125}
-            src="https://www.crunchlabs.com/cdn/shop/files/dark-logo.svg?v=1676481560&width=500"
-            alt="Logo"
-            preview={false}
-          />
+          <Link className="cursor-pointer" to={PATH.HOME}>
+            <Image
+              width={125}
+              src="https://www.crunchlabs.com/cdn/shop/files/dark-logo.svg?v=1676481560&width=500"
+              alt="Logo"
+              preview={false}
+            />
+          </Link>
         </Col>
 
         {/* Right Icons Section */}
