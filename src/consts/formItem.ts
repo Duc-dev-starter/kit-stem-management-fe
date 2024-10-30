@@ -18,11 +18,12 @@ export const nameRules: Rule[] = [
   { max: 20, message: "Name must be at most 20 characters!" },
   {
     validator: (_, value) => {
-      if (!value || value.trim() === "") {
-        return Promise.reject(new Error('Name cannot be just spaces!'));
+      const cleanedValue = value.trim().replace(/\s+/g, " ");
+      if (cleanedValue.length === 0) {
+        return Promise.reject(new Error("Name cannot be empty or only spaces"));
       }
       return Promise.resolve();
-    }
+    },
   }
 ]
 

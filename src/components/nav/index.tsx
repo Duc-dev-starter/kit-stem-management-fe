@@ -20,14 +20,14 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    if(user){
+    if (user) {
       getCarts();
     }
   }, [user])
 
   useEffect(() => {
     getUser()
-  }, [])
+  }, [user?.role])
 
   const showDrawer = () => {
     setOpen(true);

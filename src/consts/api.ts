@@ -62,4 +62,23 @@ export const API = {
     GET_CART: "/api/cart/search",
     UPDATE_STATUS_CART: "/api/cart/update-status",
     DELETE_CART: "/api/cart",
+
+    //REVIEW
+    CREATE_REVIEW: "/api/review/create",
+    GET_REVIEWS: "/api/review/search",
+    GET_UPDATE_DELETE_REVIEW: "/api/review",
+
+    //PURCHASE
+    GET_PURCHASES_BY_CUSTOMER: "/api/purchase/purchase-history",
+    UPDATE_PURCHASE_STATUS: "/api/purchase/update-status",
+    GET_PURCHASES_BY_STAFF: "/api/purchase/delivery",
+    GET_PURCHASES_BY_MANAGER: "/api/purchase/search",
+
+    //SUPPORT
+    REQUEST_SUPPORT: "/api/support/request",
+    REPLY_SUPPORT: "/api/support/lab",
+    GET_SUPPORTS: "/api/support/lab",
+
+    //TRANSACTION
+    GET_TRANSACTIONS: "/api/transaction",
 }
