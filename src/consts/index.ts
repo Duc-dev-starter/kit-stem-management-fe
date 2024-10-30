@@ -26,6 +26,9 @@ export const priceDiscounted = (price: number, discount: number) => {
 export const calculatePriceDiscounted = (price: number, discount: number) => {
   return (price - (price * discount / 100))
 }
+export const reloadApp = () => {
+  window.location.reload();
+};
 export const CartStatusEnum = {
   NEW: 'new',
   WAITING_PAID: 'waiting_paid',

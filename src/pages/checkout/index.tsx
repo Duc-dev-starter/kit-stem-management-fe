@@ -12,7 +12,7 @@ import { Cart } from "../../models/Cart.model";
 import { getCartsService, updateCart } from "../../services/cart.services";
 import LoadingComponent from "../../components/loading";
 import CustomButton from "../../components/custom-button";
-import { calculatePriceDiscounted, CartStatusEnum, currencyUnit, PATH, priceDiscounted } from "../../consts";
+import { calculatePriceDiscounted, CartStatusEnum, currencyUnit, PATH, priceDiscounted, reloadApp } from "../../consts";
 
 const Checkout: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -72,6 +72,11 @@ const Checkout: React.FC = () => {
       getCart()
     }
   }
+
+  const navigateToHome =()=>{
+    navigate("/kit-shop")
+    reloadApp()
+  }
   return (
     <div className={styles.checkoutContainer}>
       <div className={styles.detailsContainer}>
@@ -126,13 +131,11 @@ const Checkout: React.FC = () => {
                     You must check in at least 1 course in the cart before click on
                     checkout
                   </p>
-                  <Link to={"/combo-shop"}>
-                    <CustomButton
-                     
+                  <CustomButton
+                    handleClick={navigateToHome}
                       title="Keep Shopping"
                       containerStyles="bg-purple-500"
                     />
-                  </Link>
                 </div>
               )}
               {carts.map((cart) => {
@@ -276,7 +279,7 @@ const Checkout: React.FC = () => {
       </div>
       <div className={styles.summary}>
         {carts.length > 0 && (
-          <div onClick={()=>handleUpdateCarts("new")} className="float-right mt-10 mr-10 text-purple-500 cursor-pointer">
+          <div onClick={()=>handleUpdateCarts(CartStatusEnum.CANCEL)} className="float-right mt-10 mr-10 text-purple-500 cursor-pointer">
             Cancel
           </div>
         )}

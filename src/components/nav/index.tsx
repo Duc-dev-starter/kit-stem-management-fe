@@ -13,19 +13,24 @@ import { getUserFromLocalStorage } from "../../utils";
 import { User } from "../../models";
 import { Checkbox } from 'antd';
 import type { CheckboxProps } from 'antd';
-import { currencyUnit, priceDiscounted } from "../../consts";
+import { currencyUnit, priceDiscounted, reloadApp } from "../../consts";
+import { useLocation } from 'react-router-dom';
 const { Text } = Typography;
 
 const Navbar = () => {
+  const location = useLocation(); 
   const [open, setOpen] = useState(false);
   const [carts, setCarts] = useState<Cart[]>([]);
+  const [cancelCarts, setCancelCarts] = useState<Cart[]>([]);
   const navigate = useNavigate();
   const [user, setUser] = useState<User>();
   const [checkAll, setCheckAll] = useState<boolean>(false);
   const [selectedCarts, setSelectedCarts] = useState<itemsCart[]>([]);
+
   useEffect(() => {
-    if (user) {
+    if (user ||  location.pathname === '/') {
       getCarts();
+      getCancelCarts();
     }
   }, [user])
 
@@ -55,8 +60,11 @@ const Navbar = () => {
         _id: item._id, // Sử dụng id để tránh trùng tên với thuộc tính có sẵn
         cart_no: item.cart_no,
       }));
-
-      setSelectedCarts(newItem);
+      const newItem2= cancelCarts.map(item => ({
+        _id: item._id, // Sử dụng id để tránh trùng tên với thuộc tính có sẵn
+        cart_no: item.cart_no,
+      }));
+      setSelectedCarts([...newItem, ...newItem2]);
     } else {
       // Nếu bỏ chọn tất cả, xóa hết cart khỏi state
       setSelectedCarts([]);
@@ -70,6 +78,15 @@ const Navbar = () => {
       setCarts(response.data.pageData)
     } else if (response && response.data) {
       setCarts(response.data)
+    }
+  }
+
+  const getCancelCarts = async () => {
+    const response = await getCartsService("", "cancel")
+    if (response && response.data.pageData) {
+      setCancelCarts(response.data.pageData)
+    } else if (response && response.data) {
+      setCancelCarts(response.data)
     }
   }
 
@@ -90,6 +107,7 @@ const Navbar = () => {
     setOpen(false)
     if (response) {
       navigate("/check-out")
+      reloadApp()
     }
   }
 
@@ -116,6 +134,32 @@ const Navbar = () => {
       <Drawer title="Your Cart" onClose={onClose} open={open}>
         {
           carts.map(item => (
+            <div>
+              <Row>
+                <Col span={8}>
+                  <Row>
+                    <Col span={6} className='flex items-center'>
+                      <Checkbox
+                        checked={isChecked(item)}
+                        onChange={() => updateSelectedCarts(item)}
+                      />
+                    </Col>
+                    <Col span={18}>
+                      <Image src={imageTemp} />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col className='mb-2' span={16}>
+                  <p className='font-bold'>{item.cart_no}</p>
+                  <p>{priceDiscounted(item.price, item.discount)} {currencyUnit}</p>
+                  <p onClick={() => handleRemoveItemFromCart(item._id)} className='text-red-500 cursor-pointer'>Remove</p>
+                </Col>
+              </Row>
+            </div>
+          ))
+        }
+        {
+          cancelCarts.map(item => (
             <div>
               <Row>
                 <Col span={8}>
