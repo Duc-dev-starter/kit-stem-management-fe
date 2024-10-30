@@ -81,11 +81,17 @@ const AdminManageUsers: React.FC = () => {
         pagination.current,
         pagination.pageSize
       );
-      const sortedUsers = responseUsers.data.pageData.sort((a: User, b: User) => {
+      const filteredUsers = responseUsers.data.pageData.filter((user: User) => {
+        return user.role !== "manager" && user.role !== "admin";
+      });
+
+      // Sắp xếp danh sách users đã được lọc
+      const sortedUsers = filteredUsers.sort((a: User, b: User) => {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
         return dateB - dateA;
       });
+
 
 
       setDataUsers(sortedUsers);
@@ -255,7 +261,7 @@ const AdminManageUsers: React.FC = () => {
       render: (role: UserRole, record: User) => (
         <CustomSelect
           value={role}
-          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF]}
+          options={[roles.CUSTOMER, roles.STAFF]}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={(value) => handleRoleChange(value, record._id)}
@@ -357,7 +363,7 @@ const AdminManageUsers: React.FC = () => {
         <CustomSelect
           className="w-full mt-2 mb-2 md:w-32 md:mt-0 md:ml-2"
           value={selectedRole}
-          options={[roles.ADMIN, roles.CUSTOMER, roles.MANAGER, roles.STAFF, 'all']}
+          options={[roles.CUSTOMER, roles.STAFF, 'all']}
           getColor={getRoleColor}
           getLabel={getRoleLabel}
           onChange={handleRolefilter}
@@ -405,16 +411,14 @@ const AdminManageUsers: React.FC = () => {
           {modalMode === "Add" && <EmailFormItem />}
           {modalMode === "Add" && (
             <div className="mt-3">
-              <PasswordFormItem name="password" label="Password"/>
+              <PasswordFormItem name="password" label="Password" />
             </div>
           )}
           {modalMode === "Add" && (
 
             <Form.Item name="role" rules={roleRules} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} className="mb-3">
               <Radio.Group>
-                <Radio value={roles.CUSTOMER}>Customer</Radio>
                 <Radio value={roles.STAFF}>Staff</Radio>
-                <Radio value={roles.MANAGER}>Manager</Radio>
               </Radio.Group>
             </Form.Item>
           )}

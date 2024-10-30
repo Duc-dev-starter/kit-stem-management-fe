@@ -74,7 +74,15 @@ export const contentRules: Rule[] = [
 
 export const titleRules: Rule[] = [
   { required: true, message: "Please input the title!" },
-  { pattern: /^\S*$/, message: "Title must not contain spaces!" },
+  {
+    validator: (_, value) => {
+      const cleanedValue = value.trim().replace(/\s+/g, " ");
+      if (cleanedValue.length === 0) {
+        return Promise.reject(new Error("Title cannot be empty or only spaces"));
+      }
+      return Promise.resolve();
+    }
+  }
 ]
 
 export const rejectRules: Rule[] = [
