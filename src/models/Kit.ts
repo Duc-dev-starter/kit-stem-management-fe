@@ -32,6 +32,7 @@ export interface Lab {
     created_at: Date;
     updated_at: Date;
     is_deleted: boolean;
+    price_paid: number;
     user_name: string;
     category_name: string;
     lab_count: number;
