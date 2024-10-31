@@ -58,6 +58,7 @@ const ClientComboDetail = () => {
         <div className="mt-10 container px-20">
             <Row>
                 <Col span={12}>
+                <Title level={2}>Kit of combo</Title>
                     <Image
                         width={"60%"}
                         src={combo?.image_url ||imageTemp}
@@ -103,6 +104,7 @@ const ClientComboDetail = () => {
                     price={combo?.labs.price}
                     category_name={combo?.category_name || ""}
                     discount={combo?.labs.discount}
+                    labId={combo?.labs._id}
                 />
             </div>
 

@@ -4,6 +4,7 @@ import { currencyUnit, PATH, priceDiscounted } from "../../consts";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserFromLocalStorage } from "../../utils";
 import { createCartSerivce } from "../../services/cart.services";
+import { imageTemp } from "../../consts/others";
 
 interface ProductCard {
     name: string,
@@ -37,7 +38,7 @@ const LabCard = ({ name, image, price, category_name, discount, labId,lab_url }:
             hoverable
             style={{ width: 240 }}
             cover={<Link to={`/lab/${labId}`} style={{ height: 200, overflow: 'hidden' }}>
-                <img alt="example" src={image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img alt="example" src={image || imageTemp} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </Link>
             }
         >

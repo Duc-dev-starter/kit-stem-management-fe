@@ -9,6 +9,7 @@ import { Lab } from "../../models/Kit";
 import { getUserFromLocalStorage } from "../../utils";
 import { createCartSerivce } from "../../services/cart.services";
 import { FaStar } from "react-icons/fa";
+import { imageTemp } from "../../consts/others";
 
 const ClientLabDetail = () => {
     const { id } = useParams();
@@ -55,9 +56,9 @@ const ClientLabDetail = () => {
         <div className="mt-10 container px-20">
             <Row>
                 <Col span={12}>
-                    <iframe
+                    <img
                         width={"60%"}
-                        src={lab?.lab_url}
+                        src={lab?.image ||imageTemp}
                     />
 
 
@@ -83,7 +84,7 @@ const ClientLabDetail = () => {
                     </Title>
                     <div className="flex">
                         <p className="mt-3 font-bold text-2xl text-red-600">
-                            {lab?.price_paid.toLocaleString("vi-VN")} {currencyUnit}
+                            {lab?.price_paid?.toLocaleString("vi-VN")} {currencyUnit}
                         </p>
                         <p className="mt-3 text-gray-500 line-through text-lg">
                             {lab?.price.toLocaleString("vi-VN")} {currencyUnit}
