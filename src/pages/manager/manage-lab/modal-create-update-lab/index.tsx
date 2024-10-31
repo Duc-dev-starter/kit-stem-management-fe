@@ -85,14 +85,15 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                         label="Name"
                         name="name"
                         rules={[{ required: true, message: 'Please input your name!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Name cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                const cleanedValue = value.trim().replace(/\s+/g, " ");
+                                if (cleanedValue.length === 0) {
+                                    return Promise.reject(new Error("Name cannot be empty or only spaces"));
                                 }
-                            }
+                                return Promise.resolve();
+                            },
+                        }
                         ]}
                     >
                         <Input />
@@ -117,14 +118,14 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                         label="Description"
                         name="description"
                         rules={[{ required: true, message: 'Please input your description!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Description cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.trim() === "") {
+                                    return Promise.reject(new Error('Description cannot be just spaces!'));
                                 }
-                            }]}
+                                return Promise.resolve();
+                            }
+                        }]}
                     >
                         <Input />
                     </Form.Item>
@@ -132,14 +133,14 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                         label="Content"
                         name="content"
                         rules={[{ required: true, message: 'Please input your content!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Content cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.trim() === "") {
+                                    return Promise.reject(new Error('Content cannot be just spaces!'));
                                 }
-                            }]}
+                                return Promise.resolve();
+                            }
+                        }]}
                     >
                         <Input />
                     </Form.Item>
@@ -147,14 +148,14 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                         label="Lab URL"
                         name="lab_url"
                         rules={[{ required: true, message: 'Please input your lab_url!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Lab URL cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.trim() === "") {
+                                    return Promise.reject(new Error('Lab URL cannot be just spaces!'));
                                 }
-                            }]}
+                                return Promise.resolve();
+                            }
+                        }]}
                     >
                         <Input />
                     </Form.Item>
@@ -162,14 +163,14 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                         label="Price"
                         name="price"
                         rules={[{ required: true, message: 'Please input your price!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Price cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.trim() === "") {
+                                    return Promise.reject(new Error('Price cannot be just spaces!'));
                                 }
-                            }]}
+                                return Promise.resolve();
+                            }
+                        }]}
                     >
                         <Input type="number" />
                     </Form.Item>
