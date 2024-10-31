@@ -11,6 +11,7 @@ import { getUserFromLocalStorage } from "../../utils";
 import { createCartSerivce } from "../../services/cart.services";
 import { imageTemp } from "../../consts/others";
 import LabCard from "../../components/lab-card";
+import { FaStar } from "react-icons/fa";
 
 const ClientComboDetail = () => {
     const { id } = useParams();
@@ -103,6 +104,39 @@ const ClientComboDetail = () => {
                     category_name={combo?.category_name || ""}
                     discount={combo?.labs.discount}
                 />
+            </div>
+
+            <div className="product-reviews">
+                <h2 className="text-4xl my-5">Product Reviews</h2>
+                {combo?.reviews && combo?.reviews.length > 0 ? (
+                    <ul>
+                        {combo?.reviews.map(review => (
+                            <li
+                                key={review._id}
+                                className="bg-white shadow-md rounded-lg p-4 border border-gray-200 mb-2"
+                            >
+                                <p className="text-lg font-semibold text-gray-800 mb-2">
+                                    <span className="font-bold">User Name:</span> {review.user_name}
+                                </p>
+                                <p className="text-gray-600 mb-2">
+                                    <span className="font-bold">Comment:</span> {review.comment}
+                                </p>
+                                <p className="flex items-center mb-2">
+                                    <span className="font-bold text-gray-800 mr-2">Rating:</span>
+                                    {Array.from({ length: review.rating }, (_, index) => (
+                                        <FaStar key={index} className="text-yellow-400" />
+                                    ))}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    <span className="font-bold">Created At:</span>{" "}
+                                    {new Date(review.created_at).toLocaleString()}
+                                </p>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No comments for this product.</p>
+                )}
             </div>
         </div>
     )
