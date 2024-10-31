@@ -175,7 +175,7 @@ const ManagerManageCombo = () => {
             title: 'Lab',
             render: (record: Combo) => (
                 <div className='text-blue-500 cursor-pointer' onClick={() => showModalLabDetail(record?.items[1].details)}>
-                    {record?.items[1].details.name}
+                    {record?.items[1].details?.name}
                 </div>
             )
         },

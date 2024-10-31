@@ -237,16 +237,16 @@ const ManageKit = () => {
                 </div>
             )
         },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status: string) => (
-                <Tag className="cursor-pointer" onClick={showModalChangeStautsKit} color={kitStatusColor(status)}>
-                    {kitStatus(status)}
-                </Tag>
-            )
-        },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     render: (status: string) => (
+        //         <Tag className="cursor-pointer" onClick={showModalChangeStautsKit} color={kitStatusColor(status)}>
+        //             {kitStatus(status)}
+        //         </Tag>
+        //     )
+        // },
         {
             title: 'Action',
             render: (record: Kit) => (
@@ -427,7 +427,12 @@ const ManageKit = () => {
                                         return Promise.reject(new Error('Image URL cannot be just spaces!'));
                                     }
                                     return Promise.resolve();
-                                }
+                                },
+                                
+                            },{
+                                // Sử dụng pattern để kiểm tra URL có bắt đầu bằng http hoặc https
+                                pattern: /^https?:\/\/.+$/,
+                                message: 'The URL must start with http:// or https://',
                             }]}
                         >
                             <Input />
@@ -455,40 +460,27 @@ const ManageKit = () => {
                         label="Price"
                         name="price"
                         rules={[{ required: true, message: 'Please input your price!' },
-                        {
-                            validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Price cannot be just spaces!'));
-                                }
-                                return Promise.resolve();
-                            }
-                        }]}
+                     ]}
                     >
                         <Input type="number" />
                     </Form.Item>
-
+                    <Form.Item
+                        label="Quantity"
+                        name="quantity"
+                        rules={[{ required: true, message: 'Please input your quantity!' },
+                     ]}
+                    >
+                        <Input type="number" />
+                    </Form.Item>
                     <Form.Item
                         label="Discount"
                         name="discount"
                         rules={[
-                            { required: true, message: 'Please input your discount must be between 0.1 and 1!' },
-                            {
-                                type: 'number',
-                                min: 0.1,
-                                max: 1,
-                                message: 'Discount must be between 0.1 and 1',
-                            },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Discount cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
-                                }
-                            }
+                            { required: true, message: 'Please input your discount must be between 1 and 100!' },
+                           
                         ]}
                     >
-                        <InputNumber type="number" min={0.1} max={1} step={0.1} />
+                        <Input type="number" min={0} max={100} step={0.1} />
                     </Form.Item>
 
 

@@ -121,24 +121,32 @@ const ManageLab = () => {
                 </div>
             )
         },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     render: (status: string) => (
+        //         <Tag color={labStatusColor(status)} className="cursor-pointer" >
+        //             {labStatus(status)}
+        //         </Tag>
+        //     )
+        // },
+        // {
+        //     title: 'LAB Video',
+        //     dataIndex: 'lab_url',
+        //     key: 'lab_url',
+        //     render: (lab_url: string) => (
+        //         <div>
+        //             <iframe src={lab_url}></iframe>
+        //         </div>
+        //     )
+        // },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status: string) => (
-                <Tag color={labStatusColor(status)} className="cursor-pointer" >
-                    {labStatus(status)}
-                </Tag>
-            )
-        },
-        {
-            title: 'LAB Video',
-            dataIndex: 'lab_url',
-            key: 'lab_url',
-            render: (lab_url: string) => (
-                <div>
-                    <iframe src={lab_url}></iframe>
-                </div>
+            title: 'Supporters',
+            render: (record: Lab) => (
+                <Link to={`/manager/manage-lab/${record._id}/manage-supporters`}>
+                    <p className="text-blue-500">{record.supporterDetails.length}</p>
+                </Link>
             )
         },
         {
@@ -150,14 +158,7 @@ const ManageLab = () => {
                 </>
             )
         },
-        {
-            title: 'Supporters',
-            render: (record: Lab) => (
-                <Link to={`/manager/manage-lab/${record._id}/manage-supporters`}>
-                    <p className="text-blue-500">{record.supporterDetails.length}</p>
-                </Link>
-            )
-        }
+
     ];
 
     return (

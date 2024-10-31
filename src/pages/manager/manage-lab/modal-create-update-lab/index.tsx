@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { getCategories } from '../../../../services';
 import { Lab } from '../../../../models/Kit';
 import { createLab, updateLab } from '../../../../services/lab.services';
+import TextArea from 'antd/es/input/TextArea';
 export interface iModalCreateUpdate {
     isModalOpen: boolean,
     handleOk: () => void;
@@ -127,7 +128,7 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                             }
                         }]}
                     >
-                        <Input />
+                        <TextArea />
                     </Form.Item>
                     <Form.Item
                         label="Content"
@@ -142,58 +143,59 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                             }
                         }]}
                     >
-                        <Input />
+                        <TextArea />
                     </Form.Item>
                     <Form.Item
                         label="Lab URL"
                         name="lab_url"
-                        rules={[{ required: true, message: 'Please input your lab_url!' },
-                        {
-                            validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Lab URL cannot be just spaces!'));
+                        rules={[
+                            { required: true, message: 'Please input your lab_url!' },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value.trim() === "") {
+                                        return Promise.reject(new Error('Lab URL cannot be just spaces!'));
+                                    }
+                                    return Promise.resolve();
                                 }
-                                return Promise.resolve();
+                            },
+                            {
+                                // Sử dụng pattern để kiểm tra URL có bắt đầu bằng http hoặc https
+                                pattern: /^https?:\/\/.+$/,
+                                message: 'The URL must start with http:// or https://',
                             }
-                        }]}
+                        ]}
                     >
                         <Input />
                     </Form.Item>
+
+
                     <Form.Item
                         label="Price"
                         name="price"
                         rules={[{ required: true, message: 'Please input your price!' },
-                        {
-                            validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Price cannot be just spaces!'));
-                                }
-                                return Promise.resolve();
-                            }
-                        }]}
+                        ]}
                     >
                         <Input type="number" />
                     </Form.Item>
-
+                    <Form.Item
+                        label="Quantity"
+                        name="quantity"
+                        rules={[{ required: true, message: 'Please input your quantity!' },
+                        ]}
+                    >
+                        <Input type="number" />
+                    </Form.Item>
                     <Form.Item
                         label="Discount"
                         name="discount"
                         rules={[
-                            { required: true, message: 'Please input your discount must be between 0.1 and 1!' },
+                            { required: true, message: 'Please input your discount must be between 0 and 100!' },
                             {
                                 type: 'number',
-                                min: 0.1,
-                                max: 1,
-                                message: 'Discount must be between 0.1 and 1',
+                                min: 0,
+                                max: 100,
+                                message: 'Discount must be from 0 to 100',
                             },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Discount cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
-                                }
-                            }
                         ]}
                     >
                         <InputNumber type="number" min={0.1} max={1} step={0.1} />

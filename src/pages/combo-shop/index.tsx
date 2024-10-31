@@ -39,12 +39,12 @@ const ComboShop = () => {
         setFilterByCateName(e.name)
     }
 
-    const handleAddToCart =()=>{
-        const user = getUserFromLocalStorage()
-        if(!user){
-            navigate(PATH.LOGIN)
-        }
-    }
+    // const handleAddToCart =()=>{
+    //     const user = getUserFromLocalStorage()
+    //     if(!user){
+    //         navigate(PATH.LOGIN)
+    //     }
+    // }
 
     return (
         <div className="container px-10 mt-2">
@@ -64,7 +64,7 @@ const ComboShop = () => {
                 {
                     combos.map(combo => (
                         (combo.quantity && combo.quantity > 0) &&     <ComboCard name={combo.name}
-                        image={combo.items[0].details.image_url}
+                        image={combo.image_url}
                         price={combo.price}
                         category_name={combo.category_name}
                         comboId={combo._id}
