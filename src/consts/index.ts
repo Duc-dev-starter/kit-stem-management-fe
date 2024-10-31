@@ -52,7 +52,7 @@ export const purchaseStatusColor = (status: string) => {
     case PurchaseStatusEnum.DELIVERING:
       return "gold";
     case PurchaseStatusEnum.DELIVERED:
-      return "darkgray";
+      return "green";
   }
 };
 
