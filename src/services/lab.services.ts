@@ -75,11 +75,38 @@ export const RemoveSupporters = async (labId: string, supporterIds: string []) =
   return response;
 }
 
+export interface ApiRequestModel {
+  url: string;
+  payload?: any;
+  headers?: any;
+  responseType?: string;  // Thêm thuộc tính này để hỗ trợ responseType
+}
 
 export const downloadPDF = async (labId: string) => {
-  const response = await BaseService.get({ url: `${API.DOWNLOAD_PDF}/${labId}` });
-  return response;
-}
+  try {
+    const response = await BaseService.get({
+      url: `${API.DOWNLOAD_PDF}/${labId}`,
+      headers: { 'Content-Type': 'application/pdf' },  // Đảm bảo định dạng PDF trong headers
+      responseType: 'blob'  // Đảm bảo phản hồi là Blob
+    });
+
+    // Tạo một URL từ Blob
+    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+
+    // Tạo một thẻ <a> để tải xuống
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `lab_${labId}.pdf`);  // Đặt tên cho file tải về
+    document.body.appendChild(link);
+    link.click();
+
+    // Xóa đối tượng URL sau khi tải
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+  }
+};
 
 export interface supporterIds {
   id: string[];
