@@ -1,5 +1,5 @@
 import { FileDoneOutlined, PlaySquareOutlined, TeamOutlined } from "@ant-design/icons";
-import { Badge, Card, Col, Image, Rate, Row, Skeleton } from "antd";
+import { Badge, Card, Col, Image, Modal, Rate, Row, Skeleton, Table } from "antd";
 
 // import { CustomBreadcrumb } from "../../../components";
 // import { fetchCoursesByClient, getBlogs, getCourses, getUsers } from "../../../services";
@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import CustomBreadcrumb from "../../../components/breadcrumb";
 import { RevenueChart } from "../../admin/chart/revenuechart";
 import { UserChart } from "../../admin/chart/userChart";
-import { BaseService } from "../../../services";
+import { BaseService, getBlogs, getUsers } from "../../../services";
 import { useEffect, useState } from "react";
 import { formatCurrency } from "../../../utils";
 
@@ -25,7 +25,7 @@ interface Course {
 	discount: number;
 }
 
-const AdminDashboard: React.FC = () => {
+const ManagerDashboard: React.FC = () => {
 	// const [topCourses, setTopCourses] = useState<Course[]>([]);
 	// const [numBlogs, setNumBlogs] = useState(0);
 	// const [numCourses, setNumCourses] = useState(0);
@@ -69,16 +69,89 @@ const AdminDashboard: React.FC = () => {
 	// 	fetchTopCourses();
 	// }, [fetchData, fetchTopCourses]);
 	const [transaction, setTransaction] = useState('');
+	const [history, setHistory] = useState<[]>([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10); // Số mục mỗi trang
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [blog, setBlog] = useState(0);
+	const [user, setUser] = useState(0);
 
+	const showModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const handleOk = () => {
+		setIsModalOpen(false);
+	};
+
+	const handleCancel = () => {
+		setIsModalOpen(false);
+	};
+
+	const columns = [
+		{
+			title: 'Type',
+			dataIndex: 'type',
+			key: 'type',
+		},
+		{
+			title: 'Amount',
+			dataIndex: 'amount',
+			key: 'amount',
+			render: (amount: number) => formatCurrency(amount, 'USD'), // format as currency
+		},
+		{
+			title: 'Balance Old',
+			dataIndex: 'balance_old',
+			key: 'balance_old',
+			render: (balance: number) => formatCurrency(balance, 'USD'),
+		},
+		{
+			title: 'Balance New',
+			dataIndex: 'balance_new',
+			key: 'balance_new',
+			render: (balance: number) => formatCurrency(balance, 'USD'),
+		},
+		{
+			title: 'Date',
+			dataIndex: 'created_at',
+			key: 'created_at',
+			render: (date: string) => new Date(date).toLocaleString(), // format date
+		},
+	];
 	useEffect(() => {
 		fetchTransactions()
+		fetchBlog()
+		fetchUser()
 	}, [])
 
 	const fetchTransactions = async () => {
 		const transactions = await BaseService.get({ url: '/api/transaction' });
 		console.log(transactions)
+		const sortedTransactions = transactions.data.transactions.sort((a, b) => {
+			const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+			const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+			return dateB - dateA;
+		});
+		setHistory(sortedTransactions)
 		setTransaction(formatCurrency(transactions.data.balance, 'USD'))
 	}
+
+	const fetchBlog = async () => {
+		const response = await getBlogs();
+		console.log(response);
+		setBlog(response.data.pageInfo.totalItems);
+	}
+
+	const fetchUser = async () => {
+		const response = await getUsers();
+		setUser(response.data.pageInfo.totalItems);
+	}
+
+	const paginatedHistory = history.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+	const totalTransactions = history.length; // 
+
+
 	const topCourses: Course[] = [
 		{
 			id: "1",
@@ -140,26 +213,29 @@ const AdminDashboard: React.FC = () => {
 					<div className="flex justify-between drop-shadow-xl gap-4">
 						<Badge.Ribbon text="CrunchLabs" color="blue">
 							<Card title="Total money in the system" bordered={false} style={{ width: 300 }}>
-								<div className="flex justify-center gap-2">
-									<h1>{transaction}</h1>
+								<div onClick={showModal} className="flex justify-center gap-2 cursor-pointer">
+									<h1 className="hover:text-blue-500">{transaction}</h1>
 									<PlaySquareOutlined style={{ fontSize: "20px", color: "red" }} />
 								</div>
+								<Modal width={1000} title="Transaction history" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+									<Table columns={columns} dataSource={paginatedHistory} rowKey="_id" pagination={{
+										current: currentPage,
+										pageSize: pageSize,
+										total: totalTransactions,
+										onChange: (page, pageSize) => {
+											setCurrentPage(page); // Cập nhật trang hiện tại
+											setPageSize(pageSize); // Cập nhật kích thước trang nếu cần
+										},
+									}} />
+								</Modal>
 							</Card>
 						</Badge.Ribbon>
 
-						<Badge.Ribbon text="CrunchLabs" color="orange">
-							<Card title="Total Student in the system" bordered={false} style={{ width: 300 }}>
-								<div className="flex justify-center gap-2">
-									<h1>{numStudents}</h1>
-									<TeamOutlined style={{ fontSize: "20px", color: "gray" }} />
-								</div>
-							</Card>
-						</Badge.Ribbon>
 
 						<Badge.Ribbon text="CrunchLabs" color="green">
-							<Card title="Total Instructor in the system" bordered={false} style={{ width: 300 }}>
+							<Card title="Total User in the system" bordered={false} style={{ width: 300 }}>
 								<div className="flex justify-center gap-2">
-									<h1>{numInstructors}</h1>
+									<h1>{user}</h1>
 									<TeamOutlined style={{ fontSize: "20px", color: "gray" }} />
 								</div>
 							</Card>
@@ -168,7 +244,7 @@ const AdminDashboard: React.FC = () => {
 						<Badge.Ribbon text="CrunchLabs" color="red">
 							<Card title="Total Blogs in the system" bordered={false} style={{ width: 300 }}>
 								<div className="flex justify-center gap-2">
-									<h1>{numBlogs}</h1>
+									<h1>{blog}</h1>
 									<FileDoneOutlined style={{ fontSize: "20px", color: "blue" }} />
 								</div>
 							</Card>
@@ -238,4 +314,4 @@ const AdminDashboard: React.FC = () => {
 	);
 };
 
-export default AdminDashboard;
+export default ManagerDashboard;
