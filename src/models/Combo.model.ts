@@ -13,6 +13,8 @@ export type Combo = {
     updated_at: string;
     __v: number;
     category_name: string;
+    quantity: number;
+    image_url: string
   };
   
   export type Item = {

@@ -10,6 +10,7 @@ interface ComboValues {
   quantity: number;
   description: string;
   category_id: string;
+  image_url: string
 }
 
 
@@ -58,7 +59,43 @@ export const createComboService = async (values: ComboValues) => {
         price: values.price,
         discount: values.discount,
         description: values.description,
-        category_id: values.category_id
+        category_id: values.category_id,
+        image_url: values.image_url
+      }
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return {
+      data: {
+        pageInfo: {
+          totalItems: 0,
+          pageNum:1,
+          pageSize:100
+        },
+        pageData: []
+      }
+    };
+  }
+};
+
+
+export const editComboService = async (values: ComboValues, id: string) => {
+  try {
+    const response = await BaseService.put({
+      url: `${API.EDIT_COMBO}/${id}`,
+      payload: {
+        name: values.name,
+        items: [
+          { itemType: "kit", itemId: values.kitId },
+          { itemType: "lab", itemId: values.labId }
+        ],
+        price: values.price,
+        discount: values.discount,
+        description: values.description,
+        category_id: values.category_id,
+        image_url: values.image_url,
+        quantity: values.quantity
       }
     });
     return response;

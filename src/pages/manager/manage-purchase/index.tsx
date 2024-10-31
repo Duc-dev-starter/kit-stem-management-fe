@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button, Input, Space, Table, Modal, Form, Select, Tag } from "antd";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { getUsers, updatePurchase } from "../../../services";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { ColumnType } from "antd/es/table";
 import { useDebounce } from "../../../hooks";
-import { formatDate, getUserFromLocalStorage } from "../../../utils";
+import { formatDate } from "../../../utils";
 import { LoadingOverlay, CustomBreadcrumb } from "../../../components";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
@@ -23,8 +23,6 @@ const ManagerManagePurchase: React.FC = () => {
     const [statusFilter, setStatusFilter] = useState<string>(""); // New status filter state
     const [form] = Form.useForm();
     const isLoading = useSelector((state: RootState) => state.loading.isLoading);
-    const user = getUserFromLocalStorage();
-    const userId = user._id;
     const [purchaseIds, setPurchasesIds] = useState<string[]>([])
     const [selectAll, setSelectAll] = useState<boolean>(false)
     const [staffs, setStaffs] = useState<User[]>([])
@@ -94,7 +92,8 @@ const ManagerManagePurchase: React.FC = () => {
         console.log(`checked = ${e.target.checked}`);
         if (selectAll === false) {
             setSelectAll(true)
-            const ids = dataPurchase.map((item: Purchase) => item._id)
+            const dataFilter = dataPurchase.filter((item:Purchase)=>item.status === "new")
+            const ids = dataFilter.map((item: Purchase) => item._id)
             setPurchasesIds(ids)
         } else {
             setSelectAll(false)
@@ -119,6 +118,11 @@ const ManagerManagePurchase: React.FC = () => {
             title: "Customer Name",
             dataIndex: "user_name",
             key: "user_name",
+        },
+        {
+            title: "Staff Name",
+            dataIndex: "staff_name",
+            key: "staff_name",
         },
         {
             title: "Status",

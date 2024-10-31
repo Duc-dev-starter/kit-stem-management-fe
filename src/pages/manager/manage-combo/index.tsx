@@ -7,12 +7,15 @@ import { Category, Kit } from '../../../models';
 import { Lab } from '../../../models/Kit';
 import { getCategories, getKits, getLabs } from '../../../services';
 import Title from 'antd/es/typography/Title';
-import { createComboService, getCombosByClientService } from '../../../services/combo.services';
+import { createComboService, editComboService, getCombosByClientService } from '../../../services/combo.services';
 import { Combo } from '../../../models/Combo.model';
 import ModalKitDetail from './modal-kit-detail';
 import ModalLabDetail from './modal-lab-detail';
 import { currencyUnit, priceDiscounted } from '../../../consts';
+import TextArea from 'antd/es/input/TextArea';
+import { EditOutlined } from '@ant-design/icons';
 const ManagerManageCombo = () => {
+    const [form] = Form.useForm();
     const [kits, setKits] = useState<Kit[]>([])
     const [kitDetail, setKitDetail] = useState<Kit>()
     const [labs, setLabs] = useState<Lab[]>([])
@@ -22,6 +25,8 @@ const ManagerManageCombo = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalKitDetailOpen, setIsModalKitDetailOpen] = useState(false);
     const [isModalLabDetailOpen, setIsModalLabDetailOpen] = useState(false);
+    const [comboEdit, setComboEdit] = useState<Combo>()
+    const [comboIdEdit, setComboIdEdit] = useState<string>('')
     useEffect(() => {
         getKitsFromManager()
         getLabsFromManager()
@@ -29,6 +34,21 @@ const ManagerManageCombo = () => {
         getCombosByCLient()
     }, [])
 
+    useEffect(() => {
+        if (comboIdEdit && comboEdit ) {
+            form.setFieldsValue({
+                name: comboEdit.name,
+                category_id: comboEdit.category_id,
+                description: comboEdit.description,
+                kitId: comboEdit.items[0].itemId,
+                labId: comboEdit.items[1].itemId,
+                price: comboEdit.price,
+                discount: comboEdit.discount,
+                quantity: comboEdit.quantity,
+                image_url: comboEdit.image_url,
+            });
+        }
+    }, [comboEdit, comboIdEdit])
 
     const getCombosByCLient = async () => {
         const response = await getCombosByClientService("", "", 1, 100)
@@ -68,33 +88,55 @@ const ManagerManageCombo = () => {
         kitId: string;
         labId: string;
         category_id: string;
-        description:string;
+        description: string;
+        image_url: string;
     };
 
-    const onFinish: FormProps<FieldType>['onFinish'] = async(values) => {
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         console.log('Success:', values);
-        const response = await createComboService(values)
-        if(response){
-            message.success("Create Combo Successfully!")
-            setIsModalOpen(false);
-            getCombosByCLient()
+        if (!comboIdEdit) {
+            const response = await createComboService(values)
+            console.log("res: ", response)
+            if (response.data) {
+                message.success("Create Combo Successfully!")
+                setIsModalOpen(false);
+                getCombosByCLient()
+                form.resetFields();
+            }
+        }else{
+            const response = await editComboService(values, comboIdEdit)
+            console.log("res: ", response)
+            if (response.data) {
+                message.success("Update Combo Successfully!")
+                setIsModalOpen(false);
+                getCombosByCLient()
+                form.resetFields();
+            }
         }
     };
 
-    const showModal = () => {
+    const showModal = (record?: Combo) => {
         setIsModalOpen(true);
+        if (record) {
+            setComboEdit(record)
+            setComboIdEdit(record._id)
+        }
     };
 
     const handleOk = () => {
         setIsModalOpen(false);
         setIsModalKitDetailOpen(false);
         setIsModalLabDetailOpen(false);
+        form.resetFields()
+        setComboIdEdit('')
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
         setIsModalKitDetailOpen(false);
         setIsModalLabDetailOpen(false);
+        form.resetFields()
+        setComboIdEdit('')
     };
 
     const handleChangeKITname = (value: string) => {
@@ -124,7 +166,7 @@ const ManagerManageCombo = () => {
         {
             title: 'Kit',
             render: (record: Combo) => (
-                <div className='text-blue-500 cursor-pointer' onClick={()=>showModalKitDetail(record?.items[0].details)}>
+                <div className='text-blue-500 cursor-pointer' onClick={() => showModalKitDetail(record?.items[0].details)}>
                     {record?.items[0].details.name}
                 </div>
             )
@@ -132,33 +174,33 @@ const ManagerManageCombo = () => {
         {
             title: 'Lab',
             render: (record: Combo) => (
-                <div className='text-blue-500 cursor-pointer' onClick={()=>showModalLabDetail(record?.items[1].details)}>
+                <div className='text-blue-500 cursor-pointer' onClick={() => showModalLabDetail(record?.items[1].details)}>
                     {record?.items[1].details.name}
                 </div>
             )
         },
         {
             title: 'Price Discounted',
-            render:(record: Combo)=>(
+            render: (record: Combo) => (
                 <div>
-                {priceDiscounted(record.price, record.discount)} {currencyUnit} 
+                    {priceDiscounted(record.price, record.discount)} {currencyUnit}
                 </div>
             )
         },
         {
             title: 'Price',
-            render:(record: Combo)=>(
+            render: (record: Combo) => (
                 <div>
-                {record.price} {currencyUnit} 
+                    {record.price} {currencyUnit}
                 </div>
             )
 
         },
         {
             title: 'Discount',
-            render:(record: Combo)=>(
+            render: (record: Combo) => (
                 <div>
-                {record.discount}% 
+                    {record.discount}%
                 </div>
             )
         },
@@ -169,28 +211,41 @@ const ManagerManageCombo = () => {
         },
         {
             title: 'Action',
-            render: () => {
-
-            }
+            render: (record: Combo) => (
+                <>
+                    <EditOutlined onClick={() => showModal(record)} className="m-2 text-blue-500" />
+                    {/* <DeleteOutlined onClick={() => showModalDelete(record)} className="m-2 text-red-500" /> */}
+                </>
+            )
         },
     ];
-
+    const validateImageLink = (_, value) => {
+        const base64Pattern = /^data:image\/(png|jpg|jpeg|webp);base64,/;
+        if (!value) {
+            return Promise.reject(new Error('Please provide an image link'));
+        }
+        if (!base64Pattern.test(value)) {
+            return Promise.reject(new Error('Invalid base64 image link'));
+        }
+        return Promise.resolve();
+    };
     return (
         <div className='container mx-auto mt-3'>
             <ModalKitDetail
-            kit={kitDetail}
-            handleCancel={handleCancel}
-            handleOk={handleOk}
-            isModalOpen={isModalKitDetailOpen}
+                kit={kitDetail}
+                handleCancel={handleCancel}
+                handleOk={handleOk}
+                isModalOpen={isModalKitDetailOpen}
             />
-             <ModalLabDetail
-            lab={labDetail}
-            handleCancel={handleCancel}
-            handleOk={handleOk}
-            isModalOpen={isModalLabDetailOpen}
+            <ModalLabDetail
+                lab={labDetail}
+                handleCancel={handleCancel}
+                handleOk={handleOk}
+                isModalOpen={isModalLabDetailOpen}
             />
-            <Modal footer="" title="Create Combo" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer="" title={comboIdEdit ? "Edit Combo" : "Create Combo"} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Form
+                    form={form}
                     name="basic"
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
@@ -202,19 +257,17 @@ const ManagerManageCombo = () => {
                     <Form.Item<FieldType>
                         label="Combo name"
                         name="name"
-                        rules={[{ required: true, message: "Please input combo's name!" },
-                        {
-                            validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Combo name cannot be just spaces!'));
-                                }
-                                return Promise.resolve();
-                            }
-                        }]}
+                        rules={[{ required: true, message: "Please input combo's name!" }]}
                     >
                         <Input />
                     </Form.Item>
-
+                    <Form.Item
+                            name="image_url"
+                            label="Image URL"
+                            rules={[{ validator: validateImageLink }]}
+                        >
+                            <Input placeholder="Paste your base64 image link here" />
+                        </Form.Item>
                     <Form.Item<FieldType>
                         label="KIT name"
                         name="kitId"
@@ -259,49 +312,25 @@ const ManagerManageCombo = () => {
                         />
                     </Form.Item>
                     <Form.Item<FieldType>
-                        label="Quantity"
-                        name="quantity"
-                        rules={[{ required: true, message: "Please input combo's quantity!" },
-                        {
-                            validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Quantity cannot be just spaces!'));
-                                }
-                                return Promise.resolve();
-                            }
-                        }]}
-                    >
-                        <Input type='number'/>
-                    </Form.Item>
+                            label="Quantity"
+                            name="quantity"
+                            rules={[{ required: true, message: "Please input combo's quantity!" }]}
+                        >
+                            <Input type='number' />
+                        </Form.Item>
                     <Form.Item<FieldType>
                         label="Price"
                         name="price"
-                        rules={[{ required: true, message: "Please input combo's price!" },
-                        {
-                            validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Price cannot be just spaces!'));
-                                }
-                                return Promise.resolve();
-                            }
-                        }]}
+                        rules={[{ required: true, message: "Please input combo's price!" }]}
                     >
-                        <Input type='number'/>
+                        <Input type='number' />
                     </Form.Item>
                     <Form.Item<FieldType>
                         label="Discount"
                         name="discount"
-                        rules={[{ required: true, message: "Please input combo's discount!" },
-                        {
-                            validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Discount cannot be just spaces!'));
-                                }
-                                return Promise.resolve();
-                            }
-                        }]}
+                        rules={[{ required: true, message: "Please input combo's discount!" }]}
                     >
-                        <Input type='number'/>
+                        <Input type='number' />
                     </Form.Item>
                     <Form.Item<FieldType>
                         label="Description"
@@ -316,7 +345,7 @@ const ManagerManageCombo = () => {
                             }
                         }]}
                     >
-                        <Input />
+                        <TextArea />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" htmlType="submit">
@@ -326,7 +355,7 @@ const ManagerManageCombo = () => {
                 </Form>
             </Modal>
             <Title level={1} className='text-center'>Manage Combo</Title>
-            <Button onClick={showModal} className='float-right mb-3' type='primary'>Add new</Button>
+            <Button onClick={() => showModal()} className='float-right mb-3' type='primary'>Add new</Button>
             <Table dataSource={combos} columns={columns} />
         </div>
     )

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Button, Input, Space, Table, Modal, Form, Select } from "antd";
+import { Button, Input, Space, Table, Modal, Form, Select, FormProps } from "antd";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { staffGetPurchase, updatePurchase } from "../../../services";
 import type { TablePaginationConfig } from "antd/es/table/interface";
@@ -9,19 +9,20 @@ import { formatDate, getUserFromLocalStorage } from "../../../utils";
 import { LoadingOverlay, CustomBreadcrumb } from "../../../components";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import { Purchase } from "../../../models/Purchase.model";
 
 const StaffDelivery: React.FC = () => {
   const [dataPurchase, setDataPurchase] = useState<[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState<Purchase>();
   const [validateOnOpen, setValidateOnOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>(""); // New status filter state
   const [form] = Form.useForm();
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const user = getUserFromLocalStorage();
   const userId = user._id;
-
+  const [purchaseId, setPurchaseId] = useState<string[]>([])
   const debouncedSearchTerm = useDebounce(searchText, 500);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
@@ -40,7 +41,7 @@ const StaffDelivery: React.FC = () => {
         "",
         "",
         "",
-        statusFilter || "processing", // Use status filter here
+        statusFilter, // Use status filter here
         userId,
         false
       );
@@ -103,13 +104,13 @@ const StaffDelivery: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (_: unknown, record) => (
+      render: (record: Purchase) => (
         <div>
           {record.status === "processing" && (
             <EditOutlined
               className="text-blue-500"
               onClick={() => {
-                setFormData(record);
+                setPurchaseId([...purchaseId, record._id]);
                 form.setFieldsValue({ ...record });
                 setIsModalVisible(true);
               }}
@@ -120,7 +121,14 @@ const StaffDelivery: React.FC = () => {
     }
 
   ];
-
+  const onFinish: FormProps['onFinish'] = async (values) => {
+    const res = await updatePurchase(purchaseId, values.status, userId)
+    if (res) {
+      setIsModalVisible(false)
+      fetchPurchases()
+      setPurchaseId([])
+    }
+  };
   return (
     <div>
       {isLoading && <LoadingOverlay />}
@@ -171,7 +179,7 @@ const StaffDelivery: React.FC = () => {
         <Form
           form={form}
           labelCol={{ span: 24 }}
-          onFinish={(values) => updatePurchase(formData.purchase_ids, values.status, userId)}
+          onFinish={onFinish}
         >
           <Form.Item label="Status" name="status">
             <Select placeholder="Select Status">

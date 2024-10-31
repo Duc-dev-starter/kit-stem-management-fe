@@ -56,7 +56,7 @@ export const API = {
     //COMBO
     CREATE_COMBO: "/api/combo/create",
     GET_COMBOS: "/api/combo/search",
-
+    EDIT_COMBO: "/api/combo",
     //CART
     CREATE_CART: "/api/cart/create",
     GET_CART: "/api/cart/search",
