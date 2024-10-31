@@ -30,6 +30,7 @@ import { PATH } from "../consts"
 import { Dashboard } from "../layout"
 import { useRoleRedirect } from "../hooks"
 import { roles } from "../enum"
+import StaffSupport from "../pages/staff/support"
 
 const AppRouter = () => {
     const { canAccess } = useRoleRedirect();
@@ -56,6 +57,7 @@ const AppRouter = () => {
             <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) ? <Dashboard /> : <Navigate to={PATH.HOME} />}>
                 <Route path={PATH.STAFF_HOME} element={<StaffDashboard />} />
                 <Route path={'delivery'} element={<StaffDelivery />} />
+                <Route path={'support'} element={<StaffSupport />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
 

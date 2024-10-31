@@ -91,6 +91,7 @@ const Dashboard: React.FC = () => {
       setItems([
         getItem('Dashboard', '/staff/dashboard', <AiOutlineDashboard />),
         getItem('Delivery', '/staff/delivery', <AiOutlineDashboard />),
+        getItem('Support', '/staff/support', <AiOutlineDashboard />),
       ]);
     }
   };

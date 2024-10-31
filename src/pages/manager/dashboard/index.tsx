@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 import CustomBreadcrumb from "../../../components/breadcrumb";
 import { RevenueChart } from "../../admin/chart/revenuechart";
 import { UserChart } from "../../admin/chart/userChart";
+import { BaseService } from "../../../services";
+import { useEffect, useState } from "react";
+import { formatCurrency } from "../../../utils";
 
 
 interface Course {
@@ -65,7 +68,17 @@ const AdminDashboard: React.FC = () => {
 	// 	fetchData();
 	// 	fetchTopCourses();
 	// }, [fetchData, fetchTopCourses]);
+	const [transaction, setTransaction] = useState('');
 
+	useEffect(() => {
+		fetchTransactions()
+	}, [])
+
+	const fetchTransactions = async () => {
+		const transactions = await BaseService.get({ url: '/api/transaction' });
+		console.log(transactions)
+		setTransaction(formatCurrency(transactions.data.balance, 'USD'))
+	}
 	const topCourses: Course[] = [
 		{
 			id: "1",
@@ -126,9 +139,9 @@ const AdminDashboard: React.FC = () => {
 				<>
 					<div className="flex justify-between drop-shadow-xl gap-4">
 						<Badge.Ribbon text="CrunchLabs" color="blue">
-							<Card title="Total courses in the system" bordered={false} style={{ width: 300 }}>
+							<Card title="Total money in the system" bordered={false} style={{ width: 300 }}>
 								<div className="flex justify-center gap-2">
-									<h1>{numCourses}</h1>
+									<h1>{transaction}</h1>
 									<PlaySquareOutlined style={{ fontSize: "20px", color: "red" }} />
 								</div>
 							</Card>

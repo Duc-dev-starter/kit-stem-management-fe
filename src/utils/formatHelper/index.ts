@@ -6,9 +6,10 @@ export const formatMinute = (time: number) => {
     return hours;
 }
 
-export const formatCurrency = (amount: number): string => {
-    return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+export const formatCurrency = (amount: number, currency: string = "VND"): string => {
+    return amount.toLocaleString("vi-VN", { style: "currency", currency });
 };
+
 
 
 export const formatDate = (date: string | number | Date | undefined, dateFormat: string = "dd/MM/yyyy"): string => {

@@ -41,8 +41,8 @@ const useRoleRedirect = () => {
         }
         break;
         case roles.STAFF:
-          if (!path.includes(roles.STAFF)|| path.includes(PATH.LOGIN) || path.includes(PATH.REGISTER) || path.includes(PATH.FORGOT_PASSWORD)) {
-            navigate(PATH.MANAGER_DASHBOARD);
+          if (path.includes(PATH.LOGIN) || path.includes(PATH.REGISTER) || path.includes(PATH.FORGOT_PASSWORD)) {
+            navigate(PATH.STAFF_DASHBOARD);
           }
           break;
       default:

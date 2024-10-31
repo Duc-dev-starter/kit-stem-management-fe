@@ -148,3 +148,9 @@ export const getPurchasesByCustomer = async (
     };
   }
 }
+
+
+export const getSupportHistory = async (id: string) => {
+  const response = await BaseService.getById({url: '/api/support/lab', id})
+  return response;
+}
