@@ -35,7 +35,7 @@ const ManagerManageCombo = () => {
     }, [])
 
     useEffect(() => {
-        if (comboIdEdit && comboEdit ) {
+        if (comboIdEdit && comboEdit) {
             form.setFieldsValue({
                 name: comboEdit.name,
                 category_id: comboEdit.category_id,
@@ -103,7 +103,7 @@ const ManagerManageCombo = () => {
                 getCombosByCLient()
                 form.resetFields();
             }
-        }else{
+        } else {
             const response = await editComboService(values, comboIdEdit)
             console.log("res: ", response)
             if (response.data) {
@@ -257,17 +257,28 @@ const ManagerManageCombo = () => {
                     <Form.Item<FieldType>
                         label="Combo name"
                         name="name"
-                        rules={[{ required: true, message: "Please input combo's name!" }]}
+                        rules={[{ required: true, message: "Please input combo's name!" },
+                        {
+                            validator: (_, value) => {
+                                const cleanedValue = value.trim().replace(/\s+/g, " ");
+                                if (cleanedValue.length === 0) {
+                                    return Promise.reject(new Error("Name cannot be empty or only spaces"));
+                                }
+                                return Promise.resolve();
+                            },
+                        }
+                        ]}
+
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                            name="image_url"
-                            label="Image URL"
-                            rules={[{ validator: validateImageLink }]}
-                        >
-                            <Input placeholder="Paste your base64 image link here" />
-                        </Form.Item>
+                        name="image_url"
+                        label="Image URL"
+                        rules={[{ validator: validateImageLink }]}
+                    >
+                        <Input placeholder="Paste your base64 image link here" />
+                    </Form.Item>
                     <Form.Item<FieldType>
                         label="KIT name"
                         name="kitId"
@@ -312,12 +323,12 @@ const ManagerManageCombo = () => {
                         />
                     </Form.Item>
                     <Form.Item<FieldType>
-                            label="Quantity"
-                            name="quantity"
-                            rules={[{ required: true, message: "Please input combo's quantity!" }]}
-                        >
-                            <Input type='number' />
-                        </Form.Item>
+                        label="Quantity"
+                        name="quantity"
+                        rules={[{ required: true, message: "Please input combo's quantity!" }]}
+                    >
+                        <Input type='number' />
+                    </Form.Item>
                     <Form.Item<FieldType>
                         label="Price"
                         name="price"

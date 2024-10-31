@@ -347,11 +347,12 @@ const ManageKit = () => {
                         rules={[{ required: true, message: 'Please input your name!' },
                         {
                             validator: (_, value) => {
-                                if (!value || value.trim() === "") {
-                                    return Promise.reject(new Error('Name cannot be just spaces!'));
+                                const cleanedValue = value.trim().replace(/\s+/g, " ");
+                                if (cleanedValue.length === 0) {
+                                    return Promise.reject(new Error("Name cannot be empty or only spaces"));
                                 }
                                 return Promise.resolve();
-                            }
+                            },
                         }]}
                     >
                         <Input />
