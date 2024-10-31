@@ -16,7 +16,7 @@ interface ProductCard {
     labId?: string;
 }
 
-const LabCard = ({ name, image, price, category_name, discount, labId }: ProductCard) => {
+const LabCard = ({ name, image, price, category_name, discount, labId,lab_url }: ProductCard) => {
     const navigate = useNavigate();
     const handleAddToCart =async()=>{
         const user = getUserFromLocalStorage()
