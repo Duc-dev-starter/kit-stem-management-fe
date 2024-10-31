@@ -1,13 +1,16 @@
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Image, Row } from "antd";
+
+import { Col, Image, message, Row } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getComboByClientService } from "../../services/client.services";
-import { currencyUnit, PATH } from "../../consts";
+import { currencyUnit, PATH, priceDiscounted, reloadApp } from "../../consts";
 import { Combo } from "../../models/Combo.model";
-import ProductCard from "../../components/card";
+
 import { getUserFromLocalStorage } from "../../utils";
+import { createCartSerivce } from "../../services/cart.services";
+import { imageTemp } from "../../consts/others";
+import LabCard from "../../components/lab-card";
 
 const ClientComboDetail = () => {
     const { id } = useParams();
@@ -36,10 +39,18 @@ const ClientComboDetail = () => {
             setCount(count - 1)
         }
     }
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         const user = getUserFromLocalStorage()
         if (!user) {
             navigate(PATH.LOGIN)
+        } else {
+            if (id) {
+                const response = await createCartSerivce(id, "combo");
+                if (response) {
+                    message.success("Add Cart Successfully!")
+                    reloadApp()
+                }
+            }
         }
     }
     return (
@@ -48,7 +59,7 @@ const ClientComboDetail = () => {
                 <Col span={12}>
                     <Image
                         width={"60%"}
-                        src={combo?.kits.image_url}
+                        src={combo?.image_url ||imageTemp}
                     />
                     <p className="mt-3">
                         {combo?.description}
@@ -58,9 +69,9 @@ const ClientComboDetail = () => {
                     <Title level={4}>
                         {combo?.name}
                     </Title>
-                    <Title level={3} className="mt-3 font-bold">{combo?.price.toLocaleString("vi-VN")} {currencyUnit}</Title>
+                    <Title level={3} className="mt-3 font-bold">{priceDiscounted(combo?.price || 0, combo?.discount||0)} {currencyUnit}</Title>
                     <div className="mt-2 grid grid-cols-3" style={{ padding: 0 }}>
-                        <button
+                        {/* <button
                             onClick={() => handleSetCountMinus()}
                             type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm py-2.5 text-center me-2 mb-2">
                             <MinusOutlined />
@@ -72,7 +83,7 @@ const ClientComboDetail = () => {
                             onClick={() => handleSetCountPlus()}
                             type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm  py-2.5 text-center me-2 mb-2">
                             <PlusOutlined />
-                        </button>
+                        </button> */}
                     </div>
                     <div className="flex justify-center mt-3">
                         <button onClick={() => handleAddToCart()} type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
@@ -83,23 +94,14 @@ const ClientComboDetail = () => {
             </Row>
             {/* <Link to={`/lab/${combo?.labs._id}`}>
             </Link> */}
-            <div className="flex">
+            <div>
                 <Title level={2}>Lab of combo</Title>
-                <ProductCard
+                <LabCard
                     name={combo?.labs.name}
-                    lab_url={combo?.labs.lab_url}
+                    lab_url={combo?.labs.lab_url ||imageTemp}
                     price={combo?.labs.price}
                     category_name={combo?.category_name || ""}
                     discount={combo?.labs.discount}
-                />
-
-                <Title level={2}>Kit of combo</Title>
-                <ProductCard
-                    name={combo?.kits.name}
-                    image={combo?.kits.image_url}
-                    price={combo?.kits.price}
-                    category_name={combo?.category_name || ""}
-                    discount={combo?.kits.discount}
                 />
             </div>
         </div>
