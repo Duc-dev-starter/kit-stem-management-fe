@@ -130,7 +130,7 @@ const DropdownAvatar: React.FC<DropdownAvatarProps> = ({ dataUser }) => {
                 ),
                 key: '2',
             },
-            {
+            !dataUser.google_id && {
                 label: (
                     <Link className="text-lg mb-0" to={PATH.CHANGE_PASSWORD}>
                         <div className="flex items-center">
