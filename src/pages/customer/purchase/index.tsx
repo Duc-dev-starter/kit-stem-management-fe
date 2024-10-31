@@ -1,4 +1,4 @@
-import { Button, message, Table, Tag } from 'antd';
+import { Button, message, Modal, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Purchase } from '../../../models/Purchase.model';
 import { getPurchasesByCustomer, updatePurchase } from '../../../services/purchase.service';
@@ -11,9 +11,21 @@ import { downloadPDF } from '../../../services/lab.services';
 const CustomerPurchase = () => {
     const [purchases, setPurchases] = useState<Purchase[]>([])
     const [ids, setIds] = useState<string[]>([])
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
     useEffect(() => {
         getPurchases();
     }, [])
+
+    const handleOpenModal = (purchase: Purchase) => {
+        setSelectedPurchase(purchase);
+        setIsModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalVisible(false);
+        setSelectedPurchase(null);
+    };
 
     useEffect(() => {
         if (ids.length > 0) {
@@ -33,6 +45,11 @@ const CustomerPurchase = () => {
             title: 'Purchase No',
             dataIndex: 'purchase_no',
             key: 'purchase_no',
+            render: (text: string, record: Purchase) => (
+                <Button type="link" onClick={() => handleOpenModal(record)}>
+                    {text}
+                </Button>
+            )
         },
         {
             title: 'Product Name',
@@ -96,7 +113,7 @@ const CustomerPurchase = () => {
         {
             title: 'Action',
             render: (record: Purchase) => (
-                <div  className='text-center'>
+                <div className='text-center'>
                     {
                         record.status === PurchaseStatusEnum.DELIVERING &&
                         <Button onClick={() => handleSetIds(record._id)} type='primary'>
@@ -105,16 +122,16 @@ const CustomerPurchase = () => {
                     }
                     {
                         (record.status === PurchaseStatusEnum.DELIVERED && record.product_type === "lab") &&
-                        <ArrowDownOutlined onClick={()=>handleDownloadPdf(record.product_id)} className='text-blue-500 cursor-pointer'/>
+                        <ArrowDownOutlined onClick={() => handleDownloadPdf(record.product_id)} className='text-blue-500 cursor-pointer' />
                     }
                 </div>
             )
         },
     ];
 
-    const handleDownloadPdf =async(id: string)=>{
+    const handleDownloadPdf = async (id: string) => {
         const res = await downloadPDF(id)
-        if(res){
+        if (res) {
             message.success("Downloading...")
             console.log("handleDownloadPdf: ", res)
         }
@@ -133,6 +150,27 @@ const CustomerPurchase = () => {
         <div className='mt-2 container mx-auto'>
             <Title className='text-center' level={1}>Purchased</Title>
             <Table dataSource={purchases} columns={columns} />;
+
+            <Modal
+                title="Purchase Details"
+                visible={isModalVisible}
+                onCancel={handleCloseModal}
+                footer={null}
+            >
+                {selectedPurchase && (
+                    <div>
+                        <p><strong>Purchase No:</strong> {selectedPurchase.purchase_no}</p>
+                        <p><strong>Product Name:</strong> {selectedPurchase.product_name}</p>
+                        <p><strong>Shipper Name:</strong> {selectedPurchase.staff_name}</p>
+                        <p><strong>Status:</strong> {selectedPurchase.status}</p>
+                        <p><strong>Price:</strong> {selectedPurchase.price} {currencyUnit}</p>
+                        <p><strong>Discount:</strong> {selectedPurchase.discount}%</p>
+                        <p><strong>Type:</strong> {selectedPurchase.product_type}</p>
+                        <p><strong>Created At:</strong> {formatDate(selectedPurchase.created_at)}</p>
+                        {/* Add more fields as needed */}
+                    </div>
+                )}
+            </Modal>
         </div>
     )
 }
