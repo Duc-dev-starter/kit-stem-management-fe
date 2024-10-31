@@ -31,6 +31,7 @@ import { Dashboard } from "../layout"
 import { useRoleRedirect } from "../hooks"
 import { roles } from "../enum"
 import StaffSupport from "../pages/staff/support"
+import PdfDownload from "../pages/pdf"
 
 const AppRouter = () => {
     const { canAccess } = useRoleRedirect();
@@ -53,6 +54,7 @@ const AppRouter = () => {
             <Route path={PATH.CHECKOUT} element={<Checkout />} />
             <Route path={PATH.PURCHASE} element={<CustomerPurchase />} />
             <Route path="/blog/:id" element={<BlogDetailPage />} />
+            <Route path="/downloadpdf" element={<PdfDownload />} />
             {/* Staff */}
             <Route path={PATH.STAFF} element={canAccess([roles.STAFF]) ? <Dashboard /> : <Navigate to={PATH.HOME} />}>
                 <Route path={PATH.STAFF_HOME} element={<StaffDashboard />} />

@@ -36,9 +36,9 @@ const ClientComboDetail = () => {
             setCount(count - 1)
         }
     }
-    const handleAddToCart =()=>{
+    const handleAddToCart = () => {
         const user = getUserFromLocalStorage()
-        if(!user){
+        if (!user) {
             navigate(PATH.LOGIN)
         }
     }
@@ -55,7 +55,7 @@ const ClientComboDetail = () => {
                     </p>
                 </Col>
                 <Col span={12}>
-                    <Title  level={4}>
+                    <Title level={4}>
                         {combo?.name}
                     </Title>
                     <Title level={3} className="mt-3 font-bold">{combo?.price.toLocaleString("vi-VN")} {currencyUnit}</Title>
@@ -75,7 +75,7 @@ const ClientComboDetail = () => {
                         </button>
                     </div>
                     <div className="flex justify-center mt-3">
-                        <button onClick={()=>handleAddToCart()}  type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                        <button onClick={() => handleAddToCart()} type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                             Add To Cart
                         </button>
                     </div>
@@ -83,14 +83,25 @@ const ClientComboDetail = () => {
             </Row>
             {/* <Link to={`/lab/${combo?.labs._id}`}>
             </Link> */}
-            <Title level={2}>Labs of combo</Title>
-            <ProductCard
-                name={combo?.labs.name}
-                lab_url={combo?.labs.lab_url}
-                price={combo?.labs.price}
-                category_name={combo?.category_name||""}
-                discount={combo?.labs.discount}
+            <div className="flex">
+                <Title level={2}>Lab of combo</Title>
+                <ProductCard
+                    name={combo?.labs.name}
+                    lab_url={combo?.labs.lab_url}
+                    price={combo?.labs.price}
+                    category_name={combo?.category_name || ""}
+                    discount={combo?.labs.discount}
                 />
+
+                <Title level={2}>Kit of combo</Title>
+                <ProductCard
+                    name={combo?.kits.name}
+                    image={combo?.kits.image_url}
+                    price={combo?.kits.price}
+                    category_name={combo?.category_name || ""}
+                    discount={combo?.kits.discount}
+                />
+            </div>
         </div>
     )
 }

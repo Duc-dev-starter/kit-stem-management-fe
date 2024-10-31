@@ -86,7 +86,7 @@ axiosInstance.interceptors.request.use(
   
             case 404:
               message.error(data.message);
-              // window.location.href = PATH.NOTFOUND;
+              window.location.href = PATH.NOTFOUND;
               break;
   
             case 500:
