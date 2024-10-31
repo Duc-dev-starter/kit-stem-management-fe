@@ -3,13 +3,30 @@ import { Rule } from "antd/es/form";
 export const emailRules: Rule[] = [
   { required: true, message: "Please input your email!" },
   { type: "email", message: "Please enter the correct email format!" },
-  { pattern: /^\S*$/, message: "Email must not contain spaces!" },
+  {
+    validator: (_, value) => {
+      const cleanedValue = value.trim().replace(/\s+/g, " ");
+      if (cleanedValue.length === 0) {
+        return Promise.reject(new Error("Email cannot be empty or only spaces"));
+      }
+      return Promise.resolve();
+    },
+  }
 ];
 
 export const passwordRules: Rule[] = [
   { required: true, message: "Please input your password!" },
   { min: 6, message: "Password must be at least 6 characters!" },
   { pattern: /^\S*$/, message: "Password must not contain spaces!" },
+  {
+    validator: (_, value) => {
+      const cleanedValue = value.trim().replace(/\s+/g, " ");
+      if (cleanedValue.length === 0) {
+        return Promise.reject(new Error("Password cannot be empty or only spaces"));
+      }
+      return Promise.resolve();
+    },
+  }
 ];
 
 export const nameRules: Rule[] = [
@@ -60,7 +77,16 @@ export const avatarUrlRules: Rule[] = [
 ]
 
 export const commentRules: Rule[] = [
-  { required: true, message: 'Please provide a review' }
+  { required: true, message: 'Please provide a review' },
+  {
+    validator: (_, value) => {
+      const cleanedValue = value.trim().replace(/\s+/g, " ");
+      if (cleanedValue.length === 0) {
+        return Promise.reject(new Error("Comment cannot be empty or only spaces"));
+      }
+      return Promise.resolve();
+    },
+  }
 ]
 
 export const ratingRules: Rule[] = [

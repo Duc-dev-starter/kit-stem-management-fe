@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { getKitByClientService } from "../../services/client.services";
 import { Kit } from "../../models";
 import { currencyUnit } from "../../consts";
+import { FaStar } from "react-icons/fa";
 
 const KitDetailFromCLient = () => {
     const { id } = useParams();
@@ -43,11 +44,11 @@ const KitDetailFromCLient = () => {
                         src={kit?.image_url}
                     />
                     <p className="mt-3">
-                        {kit?.description}
+                        Description: {kit?.description}
                     </p>
                 </Col>
                 <Col span={12}>
-                    <Title  level={4}>
+                    <Title level={4}>
                         {kit?.name}
                     </Title>
                     <Title level={3} className="mt-3 font-bold">{kit?.price.toLocaleString("vi-VN")} {currencyUnit}</Title>
@@ -82,6 +83,39 @@ const KitDetailFromCLient = () => {
                     </div>
                 </Col>
             </Row>
+
+            <div className="product-reviews">
+                <h2 className="text-4xl my-5">Product Reviews</h2>
+                {kit?.reviews && kit?.reviews.length > 0 ? (
+                    <ul>
+                        {kit?.reviews.map(review => (
+                            <li
+                                key={review._id}
+                                className="bg-white shadow-md rounded-lg p-4 border border-gray-200 mb-2"
+                            >
+                                <p className="text-lg font-semibold text-gray-800 mb-2">
+                                    <span className="font-bold">User Name:</span> {review.user_name}
+                                </p>
+                                <p className="text-gray-600 mb-2">
+                                    <span className="font-bold">Comment:</span> {review.comment}
+                                </p>
+                                <p className="flex items-center mb-2">
+                                    <span className="font-bold text-gray-800 mr-2">Rating:</span>
+                                    {Array.from({ length: review.rating }, (_, index) => (
+                                        <FaStar key={index} className="text-yellow-400" />
+                                    ))}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    <span className="font-bold">Created At:</span>{" "}
+                                    {new Date(review.created_at).toLocaleString()}
+                                </p>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No comments for this product.</p>
+                )}
+            </div>
         </div>
     )
 }
