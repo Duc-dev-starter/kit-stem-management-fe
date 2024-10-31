@@ -1,13 +1,16 @@
-import { Button, message, Modal, Table, Tag } from 'antd';
+import { Button, Input, message, Modal, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Purchase } from '../../../models/Purchase.model';
 import { getPurchasesByCustomer, updatePurchase } from '../../../services/purchase.service';
 import { currencyUnit, priceDiscounted, purchaseStatusColor, PurchaseStatusEnum } from '../../../consts';
 import Title from 'antd/es/typography/Title';
-import { formatDate } from '../../../utils';
+import { formatDate, getUserFromLocalStorage } from '../../../utils';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { downloadPDF } from '../../../services/lab.services';
 import TextArea from 'antd/es/input/TextArea';
+import ContentFormItem from '../../../components/formItem/contentItem';
+import { Form } from 'antd';
+import { BaseService } from '../../../services';
 
 const CustomerPurchase = () => {
     const [purchases, setPurchases] = useState<Purchase[]>([])
@@ -18,6 +21,32 @@ const CustomerPurchase = () => {
     useEffect(() => {
         getPurchases();
     }, [])
+
+    const [form] = Form.useForm();
+
+    const handleOpenModal = (purchase: Purchase) => {
+        setSelectedPurchase(purchase);
+        setIsModalVisible(true);
+        // Đặt giá trị initialValues cho form khi mở modal
+        form.setFieldsValue({ content: '', product_id: purchase.product_id });
+    };
+    const user = getUserFromLocalStorage();
+    const onFinish = async (values) => {
+        console.log('Submitted values:', values);
+        console.log(selectedPurchase?.product_id)
+        const { content } = values; // lấy giá trị content và product_id từ form
+        await BaseService.post({
+            url: '/api/support/request',
+            payload: {
+                labId: selectedPurchase?.product_id, // sử dụng product_id để gửi đi
+                content,
+                customerId: user._id
+            },
+        });
+        message.success('Request sent successfully!');
+        handleCancel();
+    };
+
 
     const showModal = () => {
         setIsModaContentOpen(true);
@@ -31,10 +60,6 @@ const CustomerPurchase = () => {
         setIsModaContentOpen(false);
     };
 
-    const handleOpenModal = (purchase: Purchase) => {
-        setSelectedPurchase(purchase);
-        setIsModalVisible(true);
-    };
 
     const handleCloseModal = () => {
         setIsModalVisible(false);
@@ -162,11 +187,35 @@ const CustomerPurchase = () => {
 
     return (
         <div className='mt-2 container mx-auto'>
-            <Modal title="Basic Modal" open={isModalContentOpen} onOk={handleOk} onCancel={handleCancel}>
-                <TextArea/>
+            <Modal title="Basic Modal" open={isModalContentOpen} onCancel={handleCancel}>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    initialValues={{ content: '', product_id: selectedPurchase?.product_id }}
+                >
+                    <Form.Item
+                        name="content"
+                        label="Content"
+                        rules={[{ required: true, message: 'Please enter content' }]}
+                    >
+                        <Input.TextArea rows={4} placeholder="Enter content here..." />
+                    </Form.Item>
+
+                    <Form.Item name="product_id" hidden>
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
             </Modal>
+
             <Title className='text-center' level={1}>Purchased</Title>
-            <Table dataSource={purchases} columns={columns} />;
+            <Table dataSource={purchases} columns={columns} />
 
             <Modal
                 title="Purchase Details"
@@ -182,10 +231,11 @@ const CustomerPurchase = () => {
                         <p><strong>Status:</strong> {selectedPurchase.status}</p>
                         <p><strong>Price:</strong> {selectedPurchase.price} {currencyUnit}</p>
                         <p><strong>Discount:</strong> {selectedPurchase.discount}%</p>
+                        <p><strong>ProductId:</strong> {selectedPurchase.product_id}%</p>
                         <p><strong>Type:</strong> {selectedPurchase.product_type}</p>
                         <p><strong>Created At:</strong> {formatDate(selectedPurchase.created_at)}</p>
-                        {selectedPurchase.status === PurchaseStatusEnum.DELIVERED 
-                        && <Button onClick={showModal} type='primary'>Content</Button>
+                        {selectedPurchase.status === PurchaseStatusEnum.DELIVERED
+                            && <Button onClick={showModal} type='primary'>Content</Button>
                         }
                         {/* Add more fields as needed */}
                     </div>
