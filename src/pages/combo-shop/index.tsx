@@ -63,7 +63,7 @@ const ComboShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     combos.map(combo => (
-                        <ComboCard name={combo.name}
+                        (combo.quantity && combo.quantity > 0) &&     <ComboCard name={combo.name}
                         image={combo.items[0].details.image_url}
                         price={combo.price}
                         category_name={combo.category_name}

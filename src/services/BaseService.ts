@@ -6,28 +6,28 @@ import { ApiRequestModel } from "../interfaces"
 
 
 export const BaseService = {
-    async get<T = any>({ url, payload, headers, responseType }: ApiRequestModel): Promise<AxiosResponse<T>> {
+    async get<T = any>({ url, payload, headers, responseType }: ApiRequestModel & { responseType?: string }): Promise<AxiosResponse<T>> {
         if (!url) {
-          throw new Error("URL is required for GET request");
+            throw new Error("URL is required for GET request");
         }
         store.dispatch(showLoading());
         try {
-          const params = { ...payload };
-          for (const key in params) {
-            if ((params as any)[key] === '' && (params as any)[key] !== 0) {
-              delete (params as any)[key];
+            const params = { ...payload };
+            for (const key in params) {
+                if ((params as any)[key] === '' && (params as any)[key] !== 0) {
+                    delete (params as any)[key];
+                }
             }
-          }
-          const response = await axiosInstance.get<T, AxiosResponse<T>>(url, {
-            params: params,
-            headers: headers || {},
-            responseType: responseType || 'json',  // Mặc định là 'json' nếu không có giá trị nào được truyền
-          });
-          return response;
+            const response = await axiosInstance.get<T, AxiosResponse<T>>(url, {
+                params: params,
+                headers: headers || {},
+                responseType: responseType || 'json',  // Đảm bảo 'responseType' được truyền
+            });
+            return response;
         } finally {
-          store.dispatch(hideLoading());
+            store.dispatch(hideLoading());
         }
-      },
+    },
 
     async post<T = any>({ url, payload, headers }: ApiRequestModel): Promise<AxiosResponse<T>> {
         if (!url) {
@@ -47,22 +47,22 @@ export const BaseService = {
         if (!url) {
             throw new Error("URL is required for PUT request");
         }
-        store.dispatch(showLoading()); 
+        store.dispatch(showLoading());
         try {
             const response = await axiosInstance.put<T, AxiosResponse<T>>(url, payload, {
                 headers: headers || {},
             });
             return response;
         } finally {
-            store.dispatch(hideLoading()); 
+            store.dispatch(hideLoading());
         }
     },
-    
+
     async delete<T = any>({ url, payload, headers }: ApiRequestModel): Promise<AxiosResponse<T>> {
         if (!url) {
             throw new Error("URL is required for DELETE request");
         }
-        store.dispatch(showLoading()); 
+        store.dispatch(showLoading());
         try {
             const params = { ...payload };
             for (const key in params) {
@@ -76,20 +76,20 @@ export const BaseService = {
             });
             return response;
         } finally {
-            store.dispatch(hideLoading());  
+            store.dispatch(hideLoading());
         }
     }
     ,
 
     async getById<T = any>({ url, id, headers }: { url: string; id: string | number; headers?: any }): Promise<AxiosResponse<T>> {
-        store.dispatch(showLoading()); 
+        store.dispatch(showLoading());
         try {
             const response = await axiosInstance.get<T, AxiosResponse<T>>(`${url}/${id}`, {
                 headers: headers || {},
             });
             return response;
         } finally {
-            store.dispatch(hideLoading()); 
+            store.dispatch(hideLoading());
         }
     },
 
@@ -97,7 +97,7 @@ export const BaseService = {
         if (!url) {
             throw new Error("URL is required for downloading file");
         }
-        store.dispatch(showLoading());  
+        store.dispatch(showLoading());
         try {
             const params = { ...payload };
             for (const key in params) {
@@ -125,7 +125,7 @@ export const BaseService = {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(fileUrl);
         } finally {
-            store.dispatch(hideLoading());  
+            store.dispatch(hideLoading());
         }
     }
 }

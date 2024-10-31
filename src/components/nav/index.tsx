@@ -118,6 +118,7 @@ const Navbar = () => {
     const response = await deleteCartService(id);
     if (response) {
       getCarts();
+      getCancelCarts();
     }
   };
   

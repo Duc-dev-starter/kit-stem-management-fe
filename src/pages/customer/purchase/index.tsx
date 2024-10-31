@@ -7,15 +7,29 @@ import Title from 'antd/es/typography/Title';
 import { formatDate } from '../../../utils';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { downloadPDF } from '../../../services/lab.services';
+import TextArea from 'antd/es/input/TextArea';
 
 const CustomerPurchase = () => {
     const [purchases, setPurchases] = useState<Purchase[]>([])
     const [ids, setIds] = useState<string[]>([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
+    const [isModalContentOpen, setIsModaContentOpen] = useState(false);
     useEffect(() => {
         getPurchases();
     }, [])
+
+    const showModal = () => {
+        setIsModaContentOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModaContentOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModaContentOpen(false);
+    };
 
     const handleOpenModal = (purchase: Purchase) => {
         setSelectedPurchase(purchase);
@@ -148,6 +162,9 @@ const CustomerPurchase = () => {
 
     return (
         <div className='mt-2 container mx-auto'>
+            <Modal title="Basic Modal" open={isModalContentOpen} onOk={handleOk} onCancel={handleCancel}>
+                <TextArea/>
+            </Modal>
             <Title className='text-center' level={1}>Purchased</Title>
             <Table dataSource={purchases} columns={columns} />;
 
@@ -167,6 +184,9 @@ const CustomerPurchase = () => {
                         <p><strong>Discount:</strong> {selectedPurchase.discount}%</p>
                         <p><strong>Type:</strong> {selectedPurchase.product_type}</p>
                         <p><strong>Created At:</strong> {formatDate(selectedPurchase.created_at)}</p>
+                        {selectedPurchase.status === PurchaseStatusEnum.DELIVERED 
+                        && <Button onClick={showModal} type='primary'>Content</Button>
+                        }
                         {/* Add more fields as needed */}
                     </div>
                 )}

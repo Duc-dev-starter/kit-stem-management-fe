@@ -18,6 +18,7 @@ export interface Lab {
     supporterDetails: Supporter[];
     max_support_count?: number;
     support_histories?: [];
+    quantity:number
   }
   
   export interface Kit {

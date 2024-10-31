@@ -80,23 +80,28 @@ export interface ApiRequestModel {
   payload?: any;
   headers?: any;
   responseType?: string;  // Thêm thuộc tính này để hỗ trợ responseType
-}
-
-export const downloadPDF = async (labId: string) => {
+}export const downloadPDF = async (labId: string) => {
   try {
     const response = await BaseService.get({
       url: `${API.DOWNLOAD_PDF}/${labId}`,
-      headers: { 'Content-Type': 'application/pdf' },  // Đảm bảo định dạng PDF trong headers
-      responseType: 'blob'  // Đảm bảo phản hồi là Blob
+      headers: { 'Accept': 'application/pdf' },
+      responseType: 'blob',  // Đảm bảo phản hồi là Blob
     });
+
+    console.log('Response:', response);  // Kiểm tra chi tiết phản hồi từ server
+
+    // Kiểm tra dữ liệu trả về từ server
+    if (!response.data || !(response.data instanceof Blob)) {
+      throw new Error('Invalid PDF response from server');
+    }
 
     // Tạo một URL từ Blob
     const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
 
-    // Tạo một thẻ <a> để tải xuống
+    // Tạo một thẻ <a> để tải xuống file
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `lab_${labId}.pdf`);  // Đặt tên cho file tải về
+    link.setAttribute('download', `lab_${labId}.pdf`);  // Đặt tên file tải về
     document.body.appendChild(link);
     link.click();
 
@@ -107,6 +112,8 @@ export const downloadPDF = async (labId: string) => {
     console.error('Error downloading PDF:', error);
   }
 };
+
+
 
 export interface supporterIds {
   id: string[];

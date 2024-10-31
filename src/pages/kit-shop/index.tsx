@@ -31,9 +31,9 @@ const KitShop = () => {
             setKits(response.data.pageData)
         }
     }
-  
 
-   const handleFilterByCate = (e: DropdownChangeEvent) => {
+
+    const handleFilterByCate = (e: DropdownChangeEvent) => {
         console.log("e: ", e)
         setFilterByCate(e._id)
         setFilterByCateName(e.name)
@@ -56,13 +56,13 @@ const KitShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     kits.map(kit => (
-                        <KitCard name={kit.name}
-                        image={kit.image_url}
-                        price={kit.price}
-                        category_name={kit.category_name}
-                        kitId={kit._id}
-                        discount={kit.discount}
-                    />
+                        (kit.quantity && kit.quantity > 0) && <KitCard name={kit.name}
+                            image={kit.image_url}
+                            price={kit.price}
+                            category_name={kit.category_name}
+                            kitId={kit._id}
+                            discount={kit.discount}
+                        />
                     ))
                 }
             </div>

@@ -38,6 +38,7 @@ const LabShop = () => {
         setFilterByCate(e._id)
         setFilterByCateName(e.name)
     }
+
     return (
         <div className="container px-10 mt-2">
             <img src="https://www.crunchlabs.com/cdn/shop/files/crunchlabs-education-hero_ce8466b9-af5a-4f5f-a421-1efd4be7526b.png?v=1684885608" alt="" />
@@ -55,14 +56,14 @@ const LabShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     labs.map(lab => (
-                        <LabCard
-                                name={lab.name}
-                                lab_url={lab.lab_url}
-                                price={lab.price}
-                                category_name={lab.category_name}
-                                labId={lab._id}
-                                discount={lab.discount}
-                            />
+                      (lab.quantity && lab.quantity > 0) &&  <LabCard
+                            name={lab.name}
+                            lab_url={lab.lab_url}
+                            price={lab.price}
+                            category_name={lab.category_name}
+                            labId={lab._id}
+                            discount={lab.discount}
+                        />
                     ))
                 }
             </div>
