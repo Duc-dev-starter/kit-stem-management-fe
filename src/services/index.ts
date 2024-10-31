@@ -6,4 +6,4 @@ export {changePassword,changeStatusUser,changeUserRole,deleteUser,getUserDetail,
 export {getKits} from './kit.services'
 export {getLabs} from './lab.services'
 export {getCategoriesByClient,clientGetBlog} from './client.services'
-export {staffGetPurchase,updatePurchase} from './purchase.service'
+export {staffGetPurchase,updatePurchase, getSupportHistory} from './purchase.service'

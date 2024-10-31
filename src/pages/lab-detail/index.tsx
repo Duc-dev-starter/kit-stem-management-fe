@@ -42,12 +42,26 @@ const ClientLabDetail = () => {
                         width={"60%"}
                         src={lab?.lab_url}
                     />
+
+
                     <p className="mt-3">
-                        {lab?.description}
+                        Category : {lab?.category_name}
+                    </p>
+
+                    <p className="mt-3">
+                        Quantity : {lab?.quantity}
+                    </p>
+
+                    <p className="mt-3">
+                        Support count: {lab?.max_support_count}
+                    </p>
+
+                    <p className="my-3">
+                        Description: {lab?.description}
                     </p>
                 </Col>
                 <Col span={12}>
-                    <Title  level={4}>
+                    <Title level={4}>
                         {lab?.name}
                     </Title>
                     <Title level={3} className="mt-3 font-bold">{lab?.price.toLocaleString("vi-VN")} {currencyUnit}</Title>
