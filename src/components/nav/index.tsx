@@ -96,9 +96,11 @@ const Navbar = () => {
       _id: cart._id,
       cart_no: cart.cart_no
     }
-    if (selectedCarts.includes(newItem)) {
-      setSelectedCarts(selectedCarts.filter(item => item !== newItem))
+    if (selectedCarts.some(item=>item._id === newItem._id)) {
+      console.log("a")
+      setSelectedCarts(selectedCarts.filter(item => item._id !== newItem._id))
     } else {
+      console.log("b")
       setSelectedCarts([...selectedCarts, newItem])
     }
   };
@@ -118,6 +120,7 @@ const Navbar = () => {
       getCarts();
     }
   };
+  
   const isChecked = (cart: Cart) => {
     const newItem = {
       _id: cart._id,

@@ -42,7 +42,7 @@ export const API = {
     CHANGE_STATUS_LAB: "/api/lab/change-status",
     ADD_SUPPORTERS: "/api/lab/add-supporter",
     REMOVE_SUPPORTERS: "/api/lab/remove-supporter",
-
+    DOWNLOAD_PDF: "/api/lab/download",
     //CLIENT
     CLIENT_GET_CATEGORIES: "/api/client/category/search",
     CLIENT_GET_BLOGS: "/api/client/blog/search",

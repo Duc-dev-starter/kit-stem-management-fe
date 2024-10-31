@@ -75,6 +75,12 @@ export const RemoveSupporters = async (labId: string, supporterIds: string []) =
   return response;
 }
 
+
+export const downloadPDF = async (labId: string) => {
+  const response = await BaseService.get({ url: `${API.DOWNLOAD_PDF}/${labId}` });
+  return response;
+}
+
 export interface supporterIds {
   id: string[];
 }

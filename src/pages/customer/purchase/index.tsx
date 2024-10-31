@@ -1,10 +1,12 @@
-import { Button, Table, Tag } from 'antd';
+import { Button, message, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Purchase } from '../../../models/Purchase.model';
 import { getPurchasesByCustomer, updatePurchase } from '../../../services/purchase.service';
 import { currencyUnit, priceDiscounted, purchaseStatusColor, PurchaseStatusEnum } from '../../../consts';
 import Title from 'antd/es/typography/Title';
 import { formatDate } from '../../../utils';
+import { ArrowDownOutlined } from '@ant-design/icons';
+import { downloadPDF } from '../../../services/lab.services';
 
 const CustomerPurchase = () => {
     const [purchases, setPurchases] = useState<Purchase[]>([])
@@ -14,7 +16,7 @@ const CustomerPurchase = () => {
     }, [])
 
     useEffect(() => {
-        if(ids.length > 0){
+        if (ids.length > 0) {
             handleUpdateStatus(ids)
             setIds([])
         }
@@ -94,20 +96,35 @@ const CustomerPurchase = () => {
         {
             title: 'Action',
             render: (record: Purchase) => (
-                record.status === PurchaseStatusEnum.DELIVERING &&
-                <Button onClick={()=>handleSetIds(record._id)} type='primary'>
-                    Lab delivered
-                </Button>
+                <div  className='text-center'>
+                    {
+                        record.status === PurchaseStatusEnum.DELIVERING &&
+                        <Button onClick={() => handleSetIds(record._id)} type='primary'>
+                            Lab delivered
+                        </Button>
+                    }
+                    {
+                        (record.status === PurchaseStatusEnum.DELIVERED && record.product_type === "lab") &&
+                        <ArrowDownOutlined onClick={()=>handleDownloadPdf(record.product_id)} className='text-blue-500 cursor-pointer'/>
+                    }
+                </div>
             )
         },
     ];
 
-    const handleSetIds = (id: string)=>{
+    const handleDownloadPdf =async(id: string)=>{
+        const res = await downloadPDF(id)
+        if(res){
+            message.success("Downloading...")
+            console.log("handleDownloadPdf: ", res)
+        }
+    }
+    const handleSetIds = (id: string) => {
         setIds([...ids, id]);
     }
     const handleUpdateStatus = async (ids: string[]) => {
         const response = await updatePurchase(ids, PurchaseStatusEnum.DELIVERED)
-        if(response){
+        if (response) {
             getPurchases();
         }
     }
