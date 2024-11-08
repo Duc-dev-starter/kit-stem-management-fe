@@ -156,7 +156,7 @@ const CustomerPurchase = () => {
                     {
                         record.status === PurchaseStatusEnum.DELIVERING &&
                         <Button onClick={() => handleSetIds(record._id)} type='primary'>
-                            Lab delivered
+                             delivered
                         </Button>
                     }
                     {

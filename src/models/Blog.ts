@@ -29,7 +29,7 @@ export class Blog {
         this.title = title;
         this.user_id = user_id;
         this.user_name = user_name;
-        this.category_id = category_id;
+        this.category_id = category_id;     
         this.description = description;
         this.content = content
         this.image_url = image_url;

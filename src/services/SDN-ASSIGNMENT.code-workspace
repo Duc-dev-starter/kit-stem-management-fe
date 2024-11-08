@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"name": "SDN-ASSIGNMENT",
+			"path": "../../../SDN-ASSIGNMENT"
+		},
+		{
+			"name": "SDN_FE",
+			"path": "../../../SDN_FE"
+		},
+		{
+			"name": "kit-stem-management-fe",
+			"path": "../.."
+		},
+		{
+			"name": "kit-stem-management-be",
+			"path": "../../../kit-stem-management-be"
+		},
+		{
+			"name": "online-course-management",
+			"path": "../../../CURSUS - FINAL-PROJECT/online-course-management"
+		}
+	]
+}

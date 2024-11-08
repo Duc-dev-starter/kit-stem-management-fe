@@ -275,9 +275,9 @@ const ManagerManageCombo = () => {
                     <Form.Item
                         name="image_url"
                         label="Image URL"
-                        rules={[{ validator: validateImageLink }]}
+                        rules={[{ required: true, message: "Please input image" }]}
                     >
-                        <Input placeholder="Paste your base64 image link here" />
+                        <Input placeholder="Paste your image link here" />
                     </Form.Item>
                     <Form.Item<FieldType>
                         label="KIT name"
