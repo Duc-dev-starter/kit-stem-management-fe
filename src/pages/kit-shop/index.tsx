@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getCategoriesByClient } from "../../services";
 
 import { getKitsByClientService } from "../../services/client.services";
-import { Link } from "react-router-dom";
+
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import KitCard from "../../components/kit-card";
 const KitShop = () => {
@@ -56,13 +56,13 @@ const KitShop = () => {
             <div className="grid grid-cols-4 pl-10">
                 {
                     kits.map(kit => (
-                        (kit.quantity && kit.quantity > 0) && <KitCard name={kit.name}
+                        kit.quantity && kit.quantity > 0 ? <KitCard name={kit.name}
                             image={kit.image_url}
                             price={kit.price}
                             category_name={kit.category_name}
                             kitId={kit._id}
                             discount={kit.discount}
-                        />
+                        />: <></>
                     ))
                 }
             </div>

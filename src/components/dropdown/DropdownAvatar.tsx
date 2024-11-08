@@ -63,7 +63,7 @@ const DropdownAvatar: React.FC<DropdownAvatarProps> = ({ dataUser }) => {
                 label: (
                     <Link to="/settings" className="text-lg mb-0 flex">
                         <IoSettingsOutline className="text-center mr-4 text-[1.3rem] mt-1" />
-                        Settings
+          Settings              
                     </Link>
                 ),
                 key: '6',
@@ -158,9 +158,9 @@ const DropdownAvatar: React.FC<DropdownAvatarProps> = ({ dataUser }) => {
             { type: 'divider' },
             {
                 label: (
-                    <Link to="/settings" className="text-lg mb-0 flex">
+                    <Link to="/check-out" className="text-lg mb-0 flex">
                         <IoSettingsOutline className="text-center mr-4 text-[1.3rem] mt-1" />
-                        Settings
+                        Checkout
                     </Link>
                 ),
                 key: '6',
