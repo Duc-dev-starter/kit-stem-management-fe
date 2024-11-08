@@ -148,22 +148,7 @@ const ModalCreateUpdate = (props: iModalCreateUpdate) => {
                     <Form.Item
                         label="Lab URL"
                         name="lab_url"
-                        rules={[
-                            { required: true, message: 'Please input your lab_url!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Lab URL cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
-                                }
-                            },
-                            {
-                                // Sử dụng pattern để kiểm tra URL có bắt đầu bằng http hoặc https
-                                pattern: /^https?:\/\/.+$/,
-                                message: 'The URL must start with http:// or https://',
-                            }
-                        ]}
+                        rules={[{ required: true, message: "Please input image" }]}
                     >
                         <Input />
                     </Form.Item>

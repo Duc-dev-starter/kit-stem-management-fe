@@ -420,20 +420,7 @@ const ManageKit = () => {
                         <Form.Item
                             label="Image URL"
                             name="image_url"
-                            rules={[{ required: !hideVideo, message: 'Please input your image URL!' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value || value.trim() === "") {
-                                        return Promise.reject(new Error('Image URL cannot be just spaces!'));
-                                    }
-                                    return Promise.resolve();
-                                },
-                                
-                            },{
-                                // Sử dụng pattern để kiểm tra URL có bắt đầu bằng http hoặc https
-                                pattern: /^https?:\/\/.+$/,
-                                message: 'The URL must start with http:// or https://',
-                            }]}
+                            rules={[{ required: true, message: "Please input image" }]}
                         >
                             <Input />
                         </Form.Item>
