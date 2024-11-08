@@ -111,7 +111,7 @@ const Checkout: React.FC = () => {
                     <p className={styles.detailLabel}>
                       <strong>Total Price:</strong>
                     </p>
-                    <p className={styles.detailValue}>{formatCurrency(totalPrice)}</p>
+                    <p className={styles.detailValue}>{(totalPrice).toLocaleString("vi-VN")} {currencyUnit}</p>
                   </div>
                 </>
               </div>
@@ -176,104 +176,7 @@ const Checkout: React.FC = () => {
                 );
               })}
             </div>
-            {carts.length > 0 && (
-              <div className={styles.paymentMethod}>
-                <h2 className={styles.sectionTitle}>
-                  <strong>Payment Method</strong>
-                </h2>
-                <Radio.Group
-                  options={paymentMethods}
-                  onChange={handlePaymentMethod}
-                  value={paymentMethod}
-                  className={styles.radioGroup}
-                />
-                {paymentMethod && (
-                  <Form form={form} layout="vertical" className={styles.paymentForm}>
-                    {paymentMethod === "credit_card" && (
-                      <>
-                        <Form.Item
-                          name="cardNumber"
-                          label="Card Number"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input your card number!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="1234 5678 9012 3456" />
-                        </Form.Item>
-                        <Form.Item
-                          name="cardExpiry"
-                          label="Expiry Date"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input your card expiry date!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="MM/YY" />
-                        </Form.Item>
-                        <Form.Item
-                          name="cardCVC"
-                          label="CVC"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input your card CVC!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="123" />
-                        </Form.Item>
-                      </>
-                    )}
-                    {paymentMethod === "paypal" && <EmailFormItem />}
-                    {paymentMethod === "bank_transfer" && (
-                      <>
-                        <Form.Item
-                          name="bankName"
-                          label="Bank Name"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input your bank name!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Bank Name" />
-                        </Form.Item>
-                        <Form.Item
-                          name="accountNumber"
-                          label="Account Number"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input your account number!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="1234567890" />
-                        </Form.Item>
-                        <Form.Item
-                          name="routingNumber"
-                          label="Routing Number"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input your routing number!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="123456789" />
-                        </Form.Item>
-                      </>
-                    )}
-                  </Form>
-                )}
-              </div>
-            )}
+            
           </div>
         </div>
       </div>
@@ -287,6 +190,9 @@ const Checkout: React.FC = () => {
           <strong>Summary</strong>
         </h2>
         <div className={styles.summaryDescription}>
+        <p>
+            <strong>Payment method:</strong> Ship COD
+          </p>
           <p>
             <strong>Original Price:</strong> {totalPrice.toLocaleString("vi-VN")}
           </p>

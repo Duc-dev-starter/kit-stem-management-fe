@@ -156,11 +156,11 @@ const CustomerPurchase = () => {
                     {
                         record.status === PurchaseStatusEnum.DELIVERING &&
                         <Button onClick={() => handleSetIds(record._id)} type='primary'>
-                            Lab delivered
+                            Confirm delivered
                         </Button>
                     }
                     {
-                        (record.status === PurchaseStatusEnum.DELIVERED && record.product_type === "lab") &&
+                        (record.status === PurchaseStatusEnum.DELIVERED && record.product_type != "kit") &&
                         <ArrowDownOutlined onClick={() => handleDownloadPdf(record.product_id)} className='text-blue-500 cursor-pointer' />
                     }
                 </div>
